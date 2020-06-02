@@ -17,5 +17,5 @@
 * [Main part for SSD1306 Display and push button](OBS-D-001-V1.stl)
 * [Bottom part protecting contacts](OBS-D-002-V1.stl)
 * [Clamp for handlebar fixing](OBS-D-003-V1.stl)
-* [Lid for display](OBS-D-004-V1.stl)
+* [Lid for display](OBS-D-004-V1.stl)
 * [Splash-water proof lid vor very bright displays](OBS-D-005-V1.stl)
