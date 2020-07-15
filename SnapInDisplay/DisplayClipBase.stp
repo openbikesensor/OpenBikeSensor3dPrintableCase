@@ -12,7 +12,7 @@ FILE_NAME(
 /* name */ 
 'C:\\Users\\Uwe\\3DDrucke\\OpenBikeSensor3dPrintableCase\\SnapInDispla
 y\\DisplayClipBase.stp',
-/* time_stamp */ '2020-07-15T10:13:53+02:00',
+/* time_stamp */ '2020-07-15T10:20:12+02:00',
 /* author */ ('hpcwoess'),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v18.1',
@@ -1964,16 +1964,16 @@ SOLID_ANGLE_UNIT()
 #1881=PRODUCT_DEFINITION_SHAPE('',$,#1884);
 #1882=SHAPE_REPRESENTATION('',(#1172),#1874);
 #1883=PRODUCT_DEFINITION_CONTEXT('part definition',#1888,'design');
-#1884=PRODUCT_DEFINITION('DisplayClipLower','DisplayClipBase',#1885,#1883);
+#1884=PRODUCT_DEFINITION('DisplayClipLower','DisplayClipLower',#1885,#1883);
 #1885=PRODUCT_DEFINITION_FORMATION('',$,#1890);
-#1886=PRODUCT_RELATED_PRODUCT_CATEGORY('DisplayClipBase',
-'DisplayClipBase',(#1890));
+#1886=PRODUCT_RELATED_PRODUCT_CATEGORY('DisplayClipLower',
+'DisplayClipLower',(#1890));
 #1887=APPLICATION_PROTOCOL_DEFINITION('international standard',
 'automotive_design',2009,#1888);
 #1888=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #1889=PRODUCT_CONTEXT('part definition',#1888,'mechanical');
-#1890=PRODUCT('DisplayClipLower','DisplayClipBase',$,(#1889));
+#1890=PRODUCT('DisplayClipLower','DisplayClipLower',$,(#1889));
 #1891=PRESENTATION_STYLE_ASSIGNMENT((#1894));
 #1892=PRESENTATION_STYLE_ASSIGNMENT((#1895));
 #1893=PRESENTATION_STYLE_ASSIGNMENT((#1896));
