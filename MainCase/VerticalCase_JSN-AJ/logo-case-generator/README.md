@@ -67,7 +67,7 @@ openscad -D 'mode="main"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4
 openscad -D 'mode="inner"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4' logo.scad -o lid-my-logo-inner.stl
 ```
 
-If you chose an inverted logo, also add `-D 'logo_depth=true'` to both
+If you chose an inverted logo, also add `-D 'inverted=true'` to both
 commands. If your logo is a very complex shape, and the result looks wrong, try
 setting and increasing the `logo_convexity` parameter as well, from its default
 10 upwards, e.g. to 20 or 30.
