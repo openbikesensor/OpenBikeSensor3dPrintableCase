@@ -1,6 +1,6 @@
 # Logo Case Generator
 
-This is a tool made with OpenSCAD, to take the main case file and add a logo to
+This is a tool made with OpenSCAD, to take the main case or lid file and add a logo to
 it. The script generates a "main" part and a "inner" part, where the main part
 is the normal case file with the logo cut out, and the "inner" part is the
 logo. This can be used in multi-part printing, e.g. in Prusa Slicer. In general
@@ -29,7 +29,7 @@ you will need to follow these steps:
   thickness of lines are ignored. Use the options in the "Path" menu of
   Inkscape, e.g. "Object to Path" and "Union", to generate a single path
   object. Remove its border, fill it black.
-* Open `frame.svg` in Inkscape and copy-paste your logo into it. Transform the
+* Open `frame-lid.svg` or `frame-maincase.svg` in Inkscape and copy-paste your logo into it. Transform the
   logo to place it where you would like to print it.
 * Delete the gray frame shape, leaving only a correctly sized document with the
   logo placed where you want it.
@@ -63,14 +63,17 @@ First, you need to have [OpenSCAD](https://openscad.org/) installed.
 Run the following commands:
 
 ```bash
-openscad -D 'mode="main"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4' logo.scad -o lid-my-logo-main.stl
-openscad -D 'mode="inner"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4' logo.scad -o lid-my-logo-inner.stl
+openscad -D 'mode="main"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4' logo-lid.scad -o lid-my-logo-main.stl
+openscad -D 'mode="inner"' -D 'logo_file="my-logo-framed.svg"' -D 'logo_depth=0.4' logo-lid.scad -o lid-my-logo-inner.stl
 ```
 
 If you chose an inverted logo, also add `-D 'inverted=true'` to both
 commands. If your logo is a very complex shape, and the result looks wrong, try
 setting and increasing the `logo_convexity` parameter as well, from its default
 10 upwards, e.g. to 20 or 30.
+
+You can also combine the inverted `inner` with a with an inverted `main` with 
+`-D 'logo_file="empty_logo.svg"'` to achieve a bridged logo with multiple files.
 
 ### Importing into Prusa Slicer
 
@@ -98,3 +101,10 @@ of the box.
   in between those paths. The printer will then pause and wait for the user to
   change the filament and confirm to resume.
 
+If you don't mind multiple gcode-Files, your printer does not support `M600` and 
+your nozzle shape allows you to print around multiple layers, you can export the 
+gcode for each color by turning the other part into a support blocker. If the bed 
+keeps being heated after the print (eg. no `M140 S0` command at the end of the print), 
+you can change filament and start with the next file. Printing brims can be problematic
+if the printed part only touches the build plate on smaller areas than the rest of the 
+body does.

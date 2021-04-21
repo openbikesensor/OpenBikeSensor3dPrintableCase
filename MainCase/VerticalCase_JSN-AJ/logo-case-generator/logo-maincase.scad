@@ -1,31 +1,22 @@
 logo_depth = 0.4;
 logo_convexity = 10;
-logo_file = "obs-framed.svg";
+logo_file = "obs-framed-maincase.svg";
 
 mode = "main"; // or "inner"
-inverted = true;
+inverted = false;
 
 module main() {
   color([1.0, 0, 0]) {
     union() {
-      // TODO: Proper placement of input file should eliminate the need to
-      // translate and rotate it here.
-      translate([108, 72, -47.1]) {
-        rotate([0,-90,0]) {
-          import("../OBS-C-002 v32.stl");
-        };
-      };
-      // Fill the existing logo in the imported STL file, so we can cut out our own logo.
-      // TODO: Export the original without a logo in it.
-      translate([33, 2, -0.5]) {
-        cube([66, 68, 0.5]);
-      };
+    rotate([0, 0, 0]){
+          import("../OBS-MainCase-A-001_MainCase_without_logo_v0.1.0.stl");
+      }
     };
   };
 };
 
 module slice() {
-  translate([0, 0, -logo_depth]) {
+  translate([0, 0, 0]) {
     cube([1000, 1000, logo_depth]);
   }
 }
@@ -41,8 +32,8 @@ module inner(inverted=false) {
     }
   } else {
     color([0, 1.0, 0]) {
-      mirror([0, 0, 0]) {
-        translate([0, 0, -logo_depth]) {
+      mirror([1, 0, 0]) {
+        translate([0, 0, 0]) {
           linear_extrude(height = logo_depth, center=false, convexity = logo_convexity) {
             import(file = logo_file);
           };
@@ -52,7 +43,7 @@ module inner(inverted=false) {
   }
 }
 
-rotate([0, 180, 0]) {
+rotate([0, 0, 0]) {
   if (mode  == "main" && inverted) {
       difference() {
         main();
