@@ -12,7 +12,7 @@ module main() {
       // translate and rotate it here.
       translate([108, 72, -47.1]) {
         rotate([0,-90,0]) {
-          import("../OBS-C-002 v32.stl");
+          import("../OBS-MainCase-A-002_Lid_v0.1.0.stl");
         };
       };
       // Fill the existing logo in the imported STL file, so we can cut out our own logo.
