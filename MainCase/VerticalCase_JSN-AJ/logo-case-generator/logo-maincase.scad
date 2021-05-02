@@ -9,7 +9,7 @@ module main() {
   color([1.0, 0, 0]) {
     union() {
     rotate([0, 0, 0]){
-          import("../OBS-MainCase-A-001_MainCase_without_logo_v0.1.0.stl");
+          import("../OBS-MainCase-A-001_MainCase_without_logo_v0.1.1.stl");
       }
     };
   };
