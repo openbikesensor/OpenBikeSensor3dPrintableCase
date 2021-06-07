@@ -19,4 +19,4 @@ openscad -D 'mode="inner"' -D 'logo_file="obs-framed-maincase.svg"' -D 'logo_dep
 
 ## empty logo (can be combined with inner-inverted to have the result of maincase-obs-main.stl in two files for manual color change)
 
-openscad -D 'mode="main"' -D 'logo_file="empty_logo.svg"' -D 'logo_depth=0.4' -D 'inverted=true' logo-maincase.scad -o maincase-empty_logo-main.stl
+openscad -D 'mode="main"' -D 'logo_file="empty_logo.svg"' -D 'logo_depth=0.4' -D 'inverted=true' logo-maincase.scad -o ../OBS-MainCase-D-001a_empty_logo_top.stl
