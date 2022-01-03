@@ -59,18 +59,19 @@ module MainCaseLid() {
     union() {
       MainCaseBody(reduce=0, depth=Lid_thickness);
 
-      translate([36, 39, Lid_thickness])
+      mirror([0, 0, 1])
+      translate([36, 39, 0])
       rotate([0, 0, 90])
       BatteryHolder();
 
       intersection() {
-        translate([0, 0, Lid_thickness])
-        render()
+        translate([0, 0, -Lid_rim_thickness])
         difference() {
           linear_extrude(Lid_rim_thickness)
           RimPolygon();
 
-          linear_extrude(Lid_rim_thickness)
+          translate([0, 0, -1])
+          linear_extrude(Lid_rim_thickness + 2)
           offset(r=-Lid_rim_width)
           RimPolygon();
         }
@@ -81,18 +82,18 @@ module MainCaseLid() {
 
     // Channels underneath battery holder, for zip-ties
     for (i = [-1:2:1]) {
-      translate([36+i*BatteryHolderChannel_spacing/2, 39, Lid_thickness])
+      mirror([0, 0, 1])
+      translate([36+i*BatteryHolderChannel_spacing/2, 39, 0])
       rotate([0, 0, 90])
       BatteryHolderChannel();
     }
 
     // Hole for the sensor
     translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
-      translate([0, 0, -5])
+      translate([0, 0, -15])
       cylinder(r=SensorHole_diameter/2, h=20);
     }
-    translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
-      translate([0, 0, Lid_thickness])
+    translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, -20]) {
       cylinder(r=SensorHole_diameter/2 + SensorHole_ledge, h=20);
     }
 
@@ -104,4 +105,6 @@ module MainCaseLid() {
   }
 }
 
+translate([0, 0, Lid_thickness])
+rotate([180, 0, 0])
 MainCaseLid();
