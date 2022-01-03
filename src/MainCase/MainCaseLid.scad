@@ -45,12 +45,7 @@ module MainCaseLid() {
         offset(r=Lid_clearance)
         projection(cut=true)
         translate([0, 0, -OBS_depth])
-        MainCase();
-
-        for (hole = Lid_hole_positions) {
-          translate([hole.x, hole.y, 0])
-          circle(2, $fn=32);
-        }
+        MainCase(without_inserts=true);
       }
     }
   }
