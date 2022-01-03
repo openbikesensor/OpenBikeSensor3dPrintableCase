@@ -14,7 +14,7 @@ module MainCaseBody(reduce=0, depth=OBS_depth) {
   ], fn=$pfn));
 }
 
-module PCB() {
+module DebugPCB() {
   // move to the inside of the box
   translate([wall_thickness, wall_thickness, wall_thickness])
 
@@ -121,6 +121,7 @@ module GpsAntennaLid() {
 module MainCase(without_inserts=false) {
   difference() {
     union() {
+      // Main outer wall and bottom
       difference() {
         MainCaseBody();
 
@@ -128,6 +129,8 @@ module MainCase(without_inserts=false) {
         MainCaseBody(reduce=wall_thickness);
       }
 
+      // PCB standoffs on the bottom of the case, with holes for heatset
+      // inserts
       render()
       intersection() {
         MainCaseBody();
@@ -149,6 +152,10 @@ module MainCase(without_inserts=false) {
         }
       }
 
+      // High columns with holes for heatset inserts on the top, for attaching
+      // the lid. Those are cut away in the middle to make room for the PCB,
+      // the PCB rests on the bottom part and the top part contains the heatset
+      // insert.
       difference() {
         intersection() {
           MainCaseBody();
@@ -216,16 +223,11 @@ module MainCase(without_inserts=false) {
               [0, 100, 0],
             ], fn=$pfn));
           }
-
-          // polygon(polyRound([
-          //   [0, 0, 0],
-          //   [-40, -sin(frontside_angle)*40, 0],
-          //   [-35, -sin(frontside_angle)*35, 2],
-          //   [-35, -35, 5],
-          //   [0, -35, 0],
-          // ], fn=$pfn));
         }
 
+        // A "house" shape that cuts away the middle of the columns, leaving
+        // behind a top piece with a slanted underside (for 3D printing) and a
+        // flat bottom piece, on which the PCB rests.
         difference() {
           translate([0, 88, 0])
           rotate([90,0,0])
@@ -243,13 +245,13 @@ module MainCase(without_inserts=false) {
         }
       }
 
-      // Antenna housing
+      // Housing for the GPS antenna
       translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
       rotate([0, 90, 0])
       GpsAntennaHousing();
     }
 
-    // Hole for the sensor
+    // The hole for the sensor
     translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
       translate([0, 0, -2])
       cylinder(r=SensorHole_diameter/2, h=70+4);
@@ -261,13 +263,15 @@ module MainCase(without_inserts=false) {
       cylinder(r=SensorHole_diameter/2+SensorHole_ledge+Lid_rim_width+Lid_clearance*2, h=70);
     }
 
-    // USB hole underneath the GPS antenna
+    // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
+    // antenna
     translate([OBS_height, USB_offset, OBS_depth/2])
     rotate([0, 90, 0]) {
       cube([16, 19, 8], center=true);
     }
 
-    // Hole for antenna cable
+    // Hole for GPS antenna cable from the inside of the antenna housing to the
+    // inside of the main case
     translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
     rotate([0, 90, 0]) {
       translate([0, -13.5, 0])
@@ -277,15 +281,18 @@ module MainCase(without_inserts=false) {
       cube([4, 8, 4], center=true);
     }
 
-    // Cutout and hole for switch
+    // Cutouts and hole for switch
     translate([Switch_offset_bottom, OBS_width_small+sin(frontside_angle)*Switch_offset_bottom, wall_thickness+4])
     rotate([0, 0, frontside_angle]) {
+      // Square cutout on outside
       translate([0, 0, 11])
       cube([22, 24, 22], center=true);
 
+      // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
       cylinder(d=6, h=20);
 
+      // Rounded cutout on the inside, the main switch body sits in this place.
       translate([0, -wall_thickness, 24])
       linear_extrude(200)
       polygon(polyRound([
@@ -296,8 +303,10 @@ module MainCase(without_inserts=false) {
       ], fn=$pfn));
     }
 
+    // Holes for inserts on top of the columns created earlier. Can be disabled
+    // to generate the outline for the lid without the holes (the lid generates
+    // those holes differently, as they contain M3 screws, not inserts).
     if (!without_inserts) {
-      // Holes for M3 screws
       for (hole = Lid_hole_positions) {
         translate([hole.x, hole.y, OBS_depth])
         HeatsetInsertHole();
@@ -309,4 +318,4 @@ module MainCase(without_inserts=false) {
 MainCase();
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-*PCB();
+*DebugPCB();
