@@ -75,7 +75,12 @@ module SeatPostMountCutout() {
   }
 }
 
-difference() {
-  SeatPostMountBase();
-  SeatPostMountCutout();
+module SeatPostMount() {
+  difference() {
+    SeatPostMountBase();
+    SeatPostMountCutout();
+  }
 }
+
+rotate([90, 0, 0])
+SeatPostMount();
