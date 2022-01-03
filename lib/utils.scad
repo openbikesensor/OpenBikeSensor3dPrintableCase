@@ -31,7 +31,7 @@ module roundedCube(dimen, radii) {
     [dimen[0], 0, radii[1]],
     [dimen[0], dimen[1], radii[2]],
     [0, dimen[1], radii[3]],
-  ]));
+  ], fn=$pfn));
 }
 
 module HeatsetInsertHole(bottom=false) {
@@ -45,4 +45,4 @@ function roundedRectangle(width, height, radius) =
     [-width/2, height/2, radius],
     [-width/2, -height/2, radius],
     [width/2, -height/2, radius],
-  ], fn=polyRoundFn);
+  ], fn=$pfn);

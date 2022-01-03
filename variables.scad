@@ -1,5 +1,7 @@
-$fs = 1;
-$fa = 5;
+$fs = 0.2;
+$fa = 1;
+$fn = $preview ? 32 : undef;
+$pfn = $preview ? 20 : 64; // for polyRound
 
 HeatsetInsert_diameter = 4;
 HeatsetInsert_height = 8.9;
@@ -10,7 +12,6 @@ ScrewHole_diameter_M3 = 3.5;
 SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
 
-polyRoundFn = 20;
 
 wall_thickness = 2;
 

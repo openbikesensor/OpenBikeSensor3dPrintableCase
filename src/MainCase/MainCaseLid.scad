@@ -15,7 +15,7 @@ module MainCaseLid() {
       [BatteryHolder_inner_width/2+3+BatteryHolderChannel_extra_length, BatteryHolderChannel_depth/2+BatteryHolderChannel_radius, 0],
       [BatteryHolder_inner_width/2+3+BatteryHolderChannel_extra_length, -BatteryHolderChannel_depth/2, 0],
       [0, -BatteryHolderChannel_depth/2, 0],
-    ], 180)));
+    ], 180), fn=$pfn));
   }
 
   module BatteryHolder() {
@@ -33,7 +33,7 @@ module MainCaseLid() {
       [BatteryHolder_inner_width / 2 + 3, BatteryHolder_height - 6.85, 0],
       [BatteryHolder_inner_width / 2 + 3, -BatteryHolder_lift, 0],
       // [0, -BatteryHolder_lift, 0],
-    ], 180)));
+    ], 180), fn=$pfn));
   }
 
   module RimPolygon() {

@@ -11,7 +11,7 @@ module MainCaseBody(reduce=0, depth=OBS_depth) {
     [OBS_height-reduce, reduce, 5-reduce],
     [OBS_height-reduce, OBS_width-reduce, 16-reduce],
     [reduce, OBS_width_small-reduce, 16-reduce],
-  ], fn=polyRoundFn));
+  ], fn=$pfn));
 }
 
 module PCB() {
@@ -86,7 +86,7 @@ module GpsAntennaLidCutBody(tab_clearance=0) {
       [0, 0, 0],
       [GpsAntennaLid_tab_width / 2 - tab_clearance, 0, 0],
       [GpsAntennaLid_tab_width / 2-GpsAntennaLid_tab_depth - tab_clearance, -GpsAntennaLid_tab_depth+tab_clearance, 0],
-    ], 180)));
+    ], 180), fn=$pfn));
   }
 }
 
@@ -163,7 +163,7 @@ module MainCase(without_inserts=false) {
               [8, 7, 3],
               [8, 0, 5],
               [12, 0, 0],
-            ], fn=polyRoundFn));
+            ], fn=$pfn));
 
             // Hole 2
             translate([OBS_height-wall_thickness, wall_thickness, 0])
@@ -174,7 +174,7 @@ module MainCase(without_inserts=false) {
               [-8, 7, 3],
               [-8, 0, 5],
               [-12, 0, 0],
-            ], fn=polyRoundFn));
+            ], fn=$pfn));
 
             // Hole 3
             translate([OBS_height-wall_thickness, 75, 0])
@@ -185,7 +185,7 @@ module MainCase(without_inserts=false) {
               [-8, 2, 1],
               [-2, 8, 1],
               [0, 8, 0],
-            ], fn=polyRoundFn));
+            ], fn=$pfn));
 
             // Hole 4
             *translate([OBS_height-TopHole4_offset_top, OBS_width-sin(frontside_angle)*TopHole4_offset_top, 0])
@@ -199,7 +199,7 @@ module MainCase(without_inserts=false) {
                 [-4.5, -9, 3],
                 [-4.5, 0, 3],
                 [-10, 0, 0],
-              ], fn=polyRoundFn));
+              ], fn=$pfn));
             }
 
             // Hole 5
@@ -214,7 +214,7 @@ module MainCase(without_inserts=false) {
               [43, sin(frontside_angle)*43+5, 3],
               [43, 100, 0],
               [0, 100, 0],
-            ], fn=polyRoundFn));
+            ], fn=$pfn));
           }
 
           // polygon(polyRound([
@@ -223,7 +223,7 @@ module MainCase(without_inserts=false) {
           //   [-35, -sin(frontside_angle)*35, 2],
           //   [-35, -35, 5],
           //   [0, -35, 0],
-          // ]));
+          // ], fn=$pfn));
         }
 
         difference() {
@@ -236,7 +236,7 @@ module MainCase(without_inserts=false) {
             [OBS_height-wall_thickness, OBS_depth-20, 0],
             [OBS_height/2, OBS_depth-20+OBS_height/2, 0],
             [wall_thickness, OBS_depth-20, 0],
-          ]));
+          ], fn=$pfn));
 
           translate([0, 78, 0])
           cube([OBS_height-16,30,100]);
@@ -293,7 +293,7 @@ module MainCase(without_inserts=false) {
         [-16, 0, 4],
         [16, 0, 4],
         [16, -20, 0],
-      ]));
+      ], fn=$pfn));
     }
 
     if (!without_inserts) {
