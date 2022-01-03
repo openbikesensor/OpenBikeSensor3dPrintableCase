@@ -51,7 +51,7 @@ module SeatPostMountCutout() {
         translate([-SeatPostMount_diameter/2+SeatPostMount_channel_depth, -20, -105])
         cube([50, 40, 210]);
 
-        for (i = [-1:2:1]) {
+        for (i = [-1, 1]) {
           w = 9;
           translate([0, 0, i*16-SeatPostMount_angle/5])
           difference() {

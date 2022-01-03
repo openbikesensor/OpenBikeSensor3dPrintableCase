@@ -76,7 +76,7 @@ module MainCaseLid() {
     }
 
     // Channels underneath battery holder, for zip-ties
-    for (i = [-1:2:1]) {
+    for (i = [-1, 1]) {
       mirror([0, 0, 1])
       translate([36+i*BatteryHolderChannel_spacing/2, 39, 0])
       rotate([0, 0, 90])

@@ -1,22 +1,45 @@
 $fs = 0.2;
 $fa = 1;
-$fn = $preview ? 32 : undef;
-$pfn = $preview ? 20 : 64; // for polyRound
+$fn = $preview ? 32 : 16;
+$pfn = $preview ? 20 : 20; // for polyRound
 
 HeatsetInsert_diameter = 4;
-HeatsetInsert_height = 8.9;
+HeatsetInsert_height = 5.35;
 
 // Holes for M3 screws, including clearance
-ScrewHole_diameter_M3 = 3.5;
+ScrewHole_diameter_M3 = 3.2;
 
 SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
 
-
 wall_thickness = 2;
 
+UsbCover_height = 10;
+UsbCover_foot_height = 1.5;
+UsbCover_width = 15.5;
+UsbCover_depth = 6.5;
+UsbCover_foot_length = 2.5;
+UsbCover_radius = 1.5;
+UsbCover_magnet_size = 3.0; // increase if your printer needs more clearance for press fit
+UsbCover_magnet_depth = 3.3;
+UsbCover_magnet_spacing = 6.5; // center to center
+
+UsbCover_indent_depth = 1.5;
+UsbCover_indent_radius = 0.85;
+UsbCover_indent_height = 4;
+UsbCover_indent_width = 12;
+
+UsbCover_wing_offset = 1.88;
+UsbCover_wing_width = 2.75;
+UsbCover_wing_length = 2.0;
+
+UsbPort_clearance = 0.2;
+// found through experimentation
+UsbPort_offset = 20.2;
+UsbPort_vertical_offset = 3.13; // center below the board bottom
+
 PCB_dimensions = [64.64, 68.17, 2];
-PCB_offset = [1, 8];
+PCB_offset = [1, UsbCover_depth + 0.5];
 PCB_holes = [
   // x, y, d
   [3.29, 23.75, 3.2],
@@ -123,3 +146,19 @@ SeatPostMount_angled_spacing = 24; // [15:100]
 SeatPostMount_channel_depth = 4; // [1:20]
 
 SeatPostMount_total_width = SeatPostMount_stop_plate_thickness + MountRail_width;
+
+UsbCharger_height = 14;
+UsbCharger_width = 32;
+UsbCharger_depth = PCB_offset.y;
+
+
+MountAttachment_depth = 4;
+MountAttachment_height = 47;
+MountAttachment_width = 27;
+
+MountAttachment_holes_x_offset = -0.5;
+MountAttachment_holes_dx = 15;
+MountAttachment_holes_dy = 33;
+
+HexNutHole_diameter = 6.5;
+HexNutHole_depth = 4;

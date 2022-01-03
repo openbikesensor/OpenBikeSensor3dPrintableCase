@@ -3,6 +3,7 @@ include <../../variables.scad>
 use <Round-Anything/polyround.scad>
 use <../../lib/MountRails.scad>
 use <../../lib/utils.scad>
+use <./UsbCover.scad>
 
 module MainCaseBody(reduce=0, depth=OBS_depth) {
   linear_extrude(depth)
@@ -22,7 +23,7 @@ module DebugPCB() {
   translate([0, 0, HeatsetInsert_height])
 
   // move by the offset
-  translate([PCB_offset[0], PCB_offset[1], 0])
+  translate([PCB_offset.x, PCB_offset.y, 0])
 
   // import the file
   rotate([0, 0, 90])
@@ -167,7 +168,7 @@ module MainCase(without_inserts=false) {
             polygon(polyRound([
               [0, 0, 0],
               [0, 7, 0],
-              [8, 7, 3],
+              [8, 7, 2],
               [8, 0, 5],
               [12, 0, 0],
             ], fn=$pfn));
@@ -231,7 +232,7 @@ module MainCase(without_inserts=false) {
         difference() {
           translate([0, 88, 0])
           rotate([90,0,0])
-          linear_extrude(1000)
+          linear_extrude(OBS_width)
           polygon(polyRound([
             [wall_thickness, wall_thickness+HeatsetInsert_height, 0],
             [OBS_height-wall_thickness, wall_thickness+HeatsetInsert_height, 0],
@@ -242,6 +243,9 @@ module MainCase(without_inserts=false) {
 
           translate([0, 78, 0])
           cube([OBS_height-16,30,100]);
+
+          translate([0, PCB_offset.y + wall_thickness-30, 0])
+          cube([OBS_height-16,30,100]);
         }
       }
 
@@ -249,6 +253,39 @@ module MainCase(without_inserts=false) {
       translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
       rotate([0, 90, 0])
       GpsAntennaHousing();
+
+      // Access for the USB-C port
+      intersection() {
+        MainCaseBody();
+
+        difference() {
+          union() {
+            // not shift on y by wall_thickness
+            translate([wall_thickness, 0, wall_thickness])
+            linear_extrude(UsbCharger_height)
+            polygon(polyRound([
+              [0, 0, 0],
+              [UsbCharger_width, 0, 0],
+              [UsbCharger_width, UsbCharger_depth, 3],
+              [0, UsbCharger_depth, 0],
+            ], fn=$pfn));
+
+            // a little standoff for the PCB
+            translate([wall_thickness, PCB_offset.y + wall_thickness, wall_thickness])
+            linear_extrude(HeatsetInsert_height)
+            polygon(polyRound([
+              [0, 0, 0],
+              [3, 0, 0],
+              [3, 1, 1],
+              [0, 1, 0],
+            ], fn=$pfn));
+          }
+        }
+      }
+
+      translate([OBS_height/2, 0, OBS_depth-4])
+      rotate([90, 90, 0])
+      MountAttachment();
     }
 
     // The hole for the sensor
@@ -303,6 +340,32 @@ module MainCase(without_inserts=false) {
       ], fn=$pfn));
     }
 
+
+    // Hole for USB Cover
+    translate([UsbPort_offset, UsbCover_depth, 0])
+    rotate([0, 0, 180]) {
+      UsbCoverMainBody(clearance=0.15);
+
+      // Magnet holes in USB Charger Port
+      for (i = [-1, 1]) {
+        translate([UsbCover_magnet_spacing * i / 2, UsbCover_depth / 2, UsbCover_height + UsbCover_magnet_depth / 2])
+        cube([UsbCover_magnet_size, UsbCover_magnet_size, UsbCover_magnet_depth], center=true);
+      }
+    }
+
+    // Hole for USB Charger Port
+    translate([UsbPort_offset, 0, HeatsetInsert_height + wall_thickness - UsbPort_vertical_offset])
+    hull()for(i=[-1, 1])for(j=[-1, 1]) {
+      translate([i/2*6.5, 0, j/2*0.7])
+      rotate([-90, 0, 0])
+      cylinder(r=1.5, h=20, center=true);
+    }
+
+    // Holes in the attachment
+    translate([OBS_height/2, wall_thickness, OBS_depth-4])
+    rotate([90, 90, 0])
+    MountAttachmentHolePattern();
+
     // Holes for inserts on top of the columns created earlier. Can be disabled
     // to generate the outline for the lid without the holes (the lid generates
     // those holes differently, as they contain M3 screws, not inserts).
@@ -315,7 +378,82 @@ module MainCase(without_inserts=false) {
   }
 }
 
+module HexNutHole(depth=0) {
+  mirror([0, 0, 1])
+  union() {
+    cylinder(d=HexNutHole_diameter, h=HexNutHole_depth, $fn=6);
+
+    if (depth > HexNutHole_depth) {
+      translate([0, 0, HexNutHole_depth])
+      cylinder(d=ScrewHole_diameter_M3, h=depth - HexNutHole_depth, $fn=32);
+    }
+  }
+}
+
+module MountAttachment() {
+  intersection() {
+    translate([-50, -50, 0])
+    cube([100, 100, 100]);
+
+    hull() {
+      translate([0, 0, -1])
+      linear_extrude(1)
+      polygon(polyRound([
+        [0, MountAttachment_height/2+MountAttachment_depth, 2],
+        [MountAttachment_width+MountAttachment_depth, MountAttachment_height/2+MountAttachment_depth, 5+MountAttachment_depth],
+        [MountAttachment_width+MountAttachment_depth, -MountAttachment_height/2-MountAttachment_depth, 5+MountAttachment_depth],
+        [0, -MountAttachment_height/2-MountAttachment_depth, 2],
+      ], fn=$pfn));
+
+
+      translate([0, 0, MountAttachment_depth-1])
+      linear_extrude(1)
+      polygon(polyRound([
+        [0, MountAttachment_height/2, 2],
+        [MountAttachment_width, MountAttachment_height/2, 5],
+        [MountAttachment_width, -MountAttachment_height/2, 5],
+        [0, -MountAttachment_height/2, 2],
+      ], fn=$pfn));
+    }
+  }
+}
+
+module MountAttachmentHolePattern() {
+  hull() {
+    for (i=[2,8]) {
+      translate([
+        MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
+        0,
+        wall_thickness + MountAttachment_depth - i,
+      ])
+      linear_extrude(1)
+      polygon(roundedRectangle(11+i*2, 7+i*2, i));
+    }
+  }
+
+  translate([
+      MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
+      0,
+      wall_thickness + MountAttachment_depth - 1,
+  ])
+  linear_extrude(1)
+  polygon(roundedRectangle(11+2*2, 7+2*2, 2));
+
+  mirror([0, 0, 1]) {
+    for(i = [-1, 1]) {
+      for(j = [-1, 1]) {
+        translate([
+          MountAttachment_width / 2 + i * MountAttachment_holes_dx / 2 + MountAttachment_holes_x_offset ,
+          j * MountAttachment_holes_dy / 2,
+          0,
+        ])
+        HexNutHole(20);
+      }
+    }
+  }
+}
+
 MainCase();
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-*DebugPCB();
+#DebugPCB();
