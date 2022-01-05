@@ -40,35 +40,37 @@ module 2DTop(inset=0) {
 
 module UsbCoverMainBody(chamfer=0.5, clearance=0) {
     // translation into world coordinates
-    rotate([0,0,90])translate([depth/2,0,0])
 
     if (clearance > 0) {
+        // clearance by minkowski with cylinder
         minkowski(){
-            USBPlugBody(chamfer=0,clearance=0);
+            UsbCoverMainBody(chamfer=0,clearance=0);
             cylinder(r=clearance,h=clearance);
         }
     } else {
-        //rail with chamfer top and bottom
-        hull() {
-            linear_extrude(0.01){2DRail(inset=chamfer);}
-            translate([0,0,chamfer])linear_extrude(inf){2DRail(inset=0);}
-            translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DRail(inset=0);}
-            translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DRail(inset=chamfer);}
+        rotate([0,0,90])translate([depth/2,0,0]) {
+            //rail with chamfer top and bottom
+            hull() {
+                linear_extrude(0.01){2DRail(inset=chamfer);}
+                translate([0,0,chamfer])linear_extrude(inf){2DRail(inset=0);}
+                translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DRail(inset=0);}
+                translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DRail(inset=chamfer);}
+            }
+            // bottom with chamfer up to grip
+            hull()
+            {
+                linear_extrude(0.01){2DBase(inset=chamfer);}
+                translate([0,0,chamfer])linear_extrude(inf){2DBase(inset=0);}
+                translate([0,0,UsbCover_foot_height-inf])linear_extrude(inf){2DBase(inset=0);}
+            }
+            // top with chamfer
+            hull(){
+                translate([0,0,UsbCover_foot_height])linear_extrude(inf){2DTop(inset=0);}
+                translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DTop(inset=0);}
+                translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DTop(inset=chamfer);}
+            }
+            //top chamfers are moved down by slice thickness
         }
-        // bottom with chamfer up to grip
-        hull()
-        {
-            linear_extrude(0.01){2DBase(inset=chamfer);}
-            translate([0,0,chamfer])linear_extrude(inf){2DBase(inset=0);}
-            translate([0,0,UsbCover_foot_height-inf])linear_extrude(inf){2DBase(inset=0);}
-        }
-        // top with chamfer
-        hull(){
-            translate([0,0,UsbCover_foot_height])linear_extrude(inf){2DTop(inset=0);}
-            translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DTop(inset=0);}
-            translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DTop(inset=chamfer);}
-        }
-        //top chamfers are moved down by slice thickness
     }
 }
 
