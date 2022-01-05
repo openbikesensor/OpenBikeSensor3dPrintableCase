@@ -21,8 +21,8 @@ UsbCover_depth = 6.5;
 UsbCover_foot_length = 2.5;
 UsbCover_radius = 1.5;
 
-UsbCover_r1=1.8; // the rounded corners with smaller radius
-UsbCover_r2=2; // the rounded corners with bigger radius
+UsbCover_r1 = 1.8; // the rounded corners with smaller radius
+UsbCover_r2 = 2; // the rounded corners with bigger radius
 UsbCover_magnet_size = 3.0; // decrease if magnets are too loose
 UsbCover_magnet_clearance = 0.25; // increase if your printer needs more clearance for press fit
 UsbCover_magnet_depth = 3.2;
