@@ -1,4 +1,5 @@
 include <../../variables.scad>
+include <../../lib/utils.scad>
 
 use <Round-Anything/polyround.scad>
 use <MainCase.scad>
@@ -58,20 +59,20 @@ module MainCaseLid() {
       translate([36, 39, 0])
       rotate([0, 0, 90])
       BatteryHolder();
+      minkowski(){
+          rotate([180,0,0])ChamferPyramid(0.25);
+          intersection() {
+            translate([0, 0, -Lid_rim_thickness])
+            difference() {
+              linear_extrude(Lid_rim_thickness)
+              RimPolygon();
 
-      intersection() {
-        translate([0, 0, -Lid_rim_thickness])
-        difference() {
-          linear_extrude(Lid_rim_thickness)
-          RimPolygon();
-
-          translate([0, 0, -1])
-          linear_extrude(Lid_rim_thickness + 2)
-          offset(r=-Lid_rim_width)
-          RimPolygon();
-        }
-
-        // TODO: chamfer
+              translate([0, 0, -1])
+              linear_extrude(Lid_rim_thickness + 2)
+              offset(r=-Lid_rim_width+0.5)
+              RimPolygon();
+            }
+          }
       }
     }
 
