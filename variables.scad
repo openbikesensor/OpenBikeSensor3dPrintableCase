@@ -4,7 +4,9 @@ $fn = $preview ? 32 : 16;
 $pfn = $preview ? 20 : 20; // for polyRound
 
 HeatsetInsert_diameter = 4;
-HeatsetInsert_height = 5.35;
+HeatsetInsert_height = 5.75;
+HeatsetInsert_full_depth = 4.5; // how far the normal hole reaches before it expands to the cavity
+HeatsetInsert_extra_radius = 0.5;
 
 // Holes for M3 screws, including clearance
 ScrewHole_diameter_M3 = 3.2;

@@ -101,6 +101,7 @@ module GpsAntennaHousing() {
     // remove the lid
     GpsAntennaLidCutBody();
 
+    // heaset insert hole
     translate([0, GpsAntennaHousing_top_height / 2 - GpsAntennaHousing_screw_offset,  GpsAntennaHousing_depth - GpsAntennaLid_thickness])
     HeatsetInsertHole();
   }

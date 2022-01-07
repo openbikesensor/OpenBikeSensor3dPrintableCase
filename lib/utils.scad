@@ -35,8 +35,18 @@ module roundedCube(dimen, radii) {
 }
 
 module HeatsetInsertHole(bottom=false) {
-  translate([0, 0, bottom ? 0 : -HeatsetInsert_height])
-  cylinder(d=HeatsetInsert_diameter, h=HeatsetInsert_height);
+  translate([0, 0, bottom ? 0 : -HeatsetInsert_height]) {
+
+    rotate_extrude()
+    polygon([
+      [0, 0],
+      [0, HeatsetInsert_height],
+      [HeatsetInsert_diameter/2, HeatsetInsert_height],
+      [HeatsetInsert_diameter/2, HeatsetInsert_height-HeatsetInsert_full_depth],
+      [HeatsetInsert_diameter/2+HeatsetInsert_extra_radius, HeatsetInsert_height-HeatsetInsert_full_depth-HeatsetInsert_extra_radius],
+      [HeatsetInsert_diameter/2+HeatsetInsert_extra_radius, 0],
+    ]);
+  }
 }
 
 function roundedRectangle(width, height, radius) =
