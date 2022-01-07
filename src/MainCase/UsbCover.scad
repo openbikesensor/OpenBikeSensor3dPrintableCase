@@ -1,4 +1,5 @@
 include <../../variables.scad>
+include <../../lib/utils.scad>
 
 $fn = 64;
 inf = 0.01; // infinitesimal thicknes for slabs in hull - can be increased to see if offsets were done right.
@@ -91,12 +92,6 @@ module MagnetHoles() {
         translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_magnet_size/2-i*UsbCover_magnet_spacing/2,UsbCover_height-UsbCover_magnet_depth]) MagnetHole();
 }
 
-module ChamferPyramid(l)       polyhedron(
-  points=[ [l,l,0],[l,-l,0],[-l,-l,0],[-l,l,0], 
-           [0,0,l]  ],                                 
-  faces=[ [0,1,4],[1,2,4],[2,3,4],[3,0,4],             
-              [1,0,3],[2,1,3] ]                     
- );
 
 module 3DGripMould(){
     // translation into world coordinates

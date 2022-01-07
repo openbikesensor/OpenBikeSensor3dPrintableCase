@@ -236,7 +236,7 @@ module MainCase(without_inserts=false) {
           polygon(polyRound([
             [wall_thickness, wall_thickness+HeatsetInsert_height, 0],
             [OBS_height-wall_thickness, wall_thickness+HeatsetInsert_height, 0],
-            [OBS_height-wall_thickness, OBS_depth-10, 0],
+            [OBS_height-wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
             [OBS_height/2, OBS_depth-20+OBS_height/2, 0],
             [wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
           ], fn=$pfn));
