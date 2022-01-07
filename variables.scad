@@ -169,21 +169,21 @@ MountAttachment_holes_dy = 33;
 HexNutHole_diameter = 6.5;
 HexNutHole_depth = 4;
 
-DisplaySliderRail_height = 7;
-DisplaySliderRail_length = 32.4;
+HandlebarRailRail_height = 7;
+HandlebarRailRail_length = 32.4;
 
-DisplaySliderRail_total_height = DisplaySliderRail_height + 1.25 + 1.95 + 1.3;
+HandlebarRailRail_total_height = HandlebarRailRail_height + 1.25 + 1.95 + 1.3;
 
-DisplaySliderStopblock_width = 24;
-DisplaySliderStopblock_radius = 1;
-DisplaySliderStopblock_depth = 6.6;
-DisplaySliderStopblock_height = 26.2;
+HandlebarRailStopblock_width = 24;
+HandlebarRailStopblock_radius = 1;
+HandlebarRailStopblock_depth = 6.6;
+HandlebarRailStopblock_height = 26.2;
 
-DisplaySliderStopblock_magnet_wall_thickness = 0.8;
-DisplaySliderStopblock_magnet_lift = 3.2;
-DisplaySliderStopblock_magnet_height = 10;
-DisplaySliderStopblock_magnet_width = 22;
-DisplaySliderStopblock_magnet_thickness = 1.9;
+HandlebarRailStopblock_magnet_wall_thickness = 0.8;
+HandlebarRailStopblock_magnet_lift = 3.2;
+HandlebarRailStopblock_magnet_height = 10;
+HandlebarRailStopblock_magnet_width = 22;
+HandlebarRailStopblock_magnet_thickness = 1.9;
 
-DisplaySlider_tube_radius = 18;
-DisplaySlider_tube_indent = 1;
+HandlebarRail_tube_radius = 18;
+HandlebarRail_tube_indent = 1;
