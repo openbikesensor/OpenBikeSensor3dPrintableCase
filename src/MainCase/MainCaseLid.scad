@@ -60,7 +60,9 @@ module MainCaseLid() {
       rotate([0, 0, 90])
       BatteryHolder();
       minkowski(){
-          rotate([180,0,0])ChamferPyramid(0.25);
+          if (!$preview) { // this makes the minkowski() a nop in $preview mode
+              rotate([180,0,0])ChamferPyramid(0.25);
+          }
           intersection() {
             translate([0, 0, -Lid_rim_thickness])
             difference() {

@@ -13,6 +13,7 @@ SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
 
 wall_thickness = 2;
+extrude_width = .46; // to ensure minimum wall thickness is given, .46 is PrusaSlicer default for .4mm nozzle
 
 UsbCover_height = 9.7;
 UsbCover_foot_height = 1.5;

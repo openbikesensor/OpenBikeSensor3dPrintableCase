@@ -3,7 +3,7 @@ include <../../variables.scad>
 use <Round-Anything/polyround.scad>
 use <../../lib/MountRails.scad>
 use <../../lib/utils.scad>
-use <./UsbCover.scad>
+use <./UsbCover.scad> 
 
 module MainCaseBody(reduce=0, depth=OBS_depth) {
   linear_extrude(depth)
@@ -238,7 +238,7 @@ module MainCase(without_inserts=false) {
             [OBS_height-wall_thickness, wall_thickness+HeatsetInsert_height, 0],
             [OBS_height-wall_thickness, OBS_depth-10, 0],
             [OBS_height/2, OBS_depth-20+OBS_height/2, 0],
-            [wall_thickness, OBS_depth-10, 0],
+            [wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
           ], fn=$pfn));
 
           translate([0, 78, 0])
@@ -266,8 +266,8 @@ module MainCase(without_inserts=false) {
             polygon(polyRound([
               [0, 0, 0],
               [UsbCharger_width, 0, 0],
-              [UsbCharger_width, UsbCharger_depth+wall_thickness/2, 3],
-              [0, UsbCharger_depth+wall_thickness/2, 0],
+              [UsbCharger_width, UsbCharger_depth+2*extrude_width, 3],
+              [0, UsbCharger_depth+2*extrude_width, 0],
             ], fn=$pfn));
 
             // a little standoff for the PCB
