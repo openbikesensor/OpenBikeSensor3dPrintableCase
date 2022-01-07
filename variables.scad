@@ -13,24 +13,28 @@ SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
 
 wall_thickness = 2;
+extrude_width = .46; // to ensure minimum wall thickness is given, .46 is PrusaSlicer default for .4mm nozzle
 
-UsbCover_height = 10;
+UsbCover_height = 9.7;
 UsbCover_foot_height = 1.5;
 UsbCover_width = 15.5;
 UsbCover_depth = 6.5;
 UsbCover_foot_length = 2.5;
 UsbCover_radius = 1.5;
-UsbCover_magnet_size = 3.0; // increase if your printer needs more clearance for press fit
-UsbCover_magnet_depth = 3.3;
+
+UsbCover_r1 = 1.8; // the rounded corners with smaller radius
+UsbCover_r2 = 2; // the rounded corners with bigger radius
+UsbCover_magnet_size = 3.0; // decrease if magnets are too loose
+UsbCover_magnet_clearance = 0.25; // increase if your printer needs more clearance for press fit
+UsbCover_magnet_depth = 3.2;
 UsbCover_magnet_spacing = 6.5; // center to center
 
 UsbCover_indent_depth = 1.5;
-UsbCover_indent_radius = 0.85;
 UsbCover_indent_height = 4;
 UsbCover_indent_width = 12;
 
-UsbCover_wing_offset = 1.88;
-UsbCover_wing_width = 2.75;
+UsbCover_wing_offset = 2.2;
+UsbCover_wing_width = 2.6;
 UsbCover_wing_length = 2.0;
 
 UsbPort_clearance = 0.2;

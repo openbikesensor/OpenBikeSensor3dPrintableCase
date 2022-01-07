@@ -46,3 +46,10 @@ function roundedRectangle(width, height, radius) =
     [-width/2, -height/2, radius],
     [width/2, -height/2, radius],
   ], fn=$pfn);
+
+
+module ChamferPyramid(l)       polyhedron(
+  //        P0        P1        P2         P3       P4
+  points= [[l,l,0], [l,-l,0], [-l,-l,0], [-l,l,0], [0,0,l]],                                 
+  faces=  [[0,1,4], [1,2,4],  [2,3,4],    [3,0,4], [1,0,3],  [2,1,3] ]                     
+ );

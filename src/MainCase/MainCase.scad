@@ -236,9 +236,9 @@ module MainCase(without_inserts=false) {
           polygon(polyRound([
             [wall_thickness, wall_thickness+HeatsetInsert_height, 0],
             [OBS_height-wall_thickness, wall_thickness+HeatsetInsert_height, 0],
-            [OBS_height-wall_thickness, OBS_depth-20, 0],
+            [OBS_height-wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
             [OBS_height/2, OBS_depth-20+OBS_height/2, 0],
-            [wall_thickness, OBS_depth-20, 0],
+            [wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
           ], fn=$pfn));
 
           translate([0, 78, 0])
@@ -266,8 +266,8 @@ module MainCase(without_inserts=false) {
             polygon(polyRound([
               [0, 0, 0],
               [UsbCharger_width, 0, 0],
-              [UsbCharger_width, UsbCharger_depth, 3],
-              [0, UsbCharger_depth, 0],
+              [UsbCharger_width, UsbCharger_depth + 0.92, 3],
+              [0, UsbCharger_depth + 0.92, 0],
             ], fn=$pfn));
 
             // a little standoff for the PCB
