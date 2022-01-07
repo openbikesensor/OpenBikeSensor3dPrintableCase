@@ -266,8 +266,8 @@ module MainCase(without_inserts=false) {
             polygon(polyRound([
               [0, 0, 0],
               [UsbCharger_width, 0, 0],
-              [UsbCharger_width, UsbCharger_depth+2*extrude_width, 3],
-              [0, UsbCharger_depth+2*extrude_width, 0],
+              [UsbCharger_width, UsbCharger_depth + 0.92, 3],
+              [0, UsbCharger_depth + 0.92, 0],
             ], fn=$pfn));
 
             // a little standoff for the PCB
