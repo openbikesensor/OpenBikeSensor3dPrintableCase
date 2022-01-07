@@ -119,5 +119,4 @@ module UsbCover(chamfer=0.5){
     }
 }
 
-
 UsbCover();
