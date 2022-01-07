@@ -1,6 +1,6 @@
 $fs = 0.2;
 $fa = 1;
-$fn = $preview ? 32 : 16;
+$fn = $preview ? 32 : 128;
 $pfn = $preview ? 20 : 20; // for polyRound
 
 HeatsetInsert_diameter = 4;
@@ -168,3 +168,22 @@ MountAttachment_holes_dy = 33;
 
 HexNutHole_diameter = 6.5;
 HexNutHole_depth = 4;
+
+DisplaySliderRail_height = 7;
+DisplaySliderRail_length = 32.4;
+
+DisplaySliderRail_total_height = DisplaySliderRail_height + 1.25 + 1.95 + 1.3;
+
+DisplaySliderStopblock_width = 24;
+DisplaySliderStopblock_radius = 1;
+DisplaySliderStopblock_depth = 6.6;
+DisplaySliderStopblock_height = 26.2;
+
+DisplaySliderStopblock_magnet_wall_thickness = 0.8;
+DisplaySliderStopblock_magnet_lift = 3.2;
+DisplaySliderStopblock_magnet_height = 10;
+DisplaySliderStopblock_magnet_width = 22;
+DisplaySliderStopblock_magnet_thickness = 1.9;
+
+DisplaySlider_tube_radius = 18;
+DisplaySlider_tube_indent = 1;
