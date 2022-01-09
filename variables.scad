@@ -1,7 +1,7 @@
 $fs = 0.2;
 $fa = 1;
 $fn = $preview ? 32 : 128;
-$pfn = $preview ? 20 : 20; // for polyRound
+$pfn = $preview ? 20 : $fn; // for polyRound
 
 // PRINTER SETTINGS
 // ------------------------
@@ -115,12 +115,13 @@ Lid_hole_positions = [
   [OBS_height-TopHole4_offset_top+4.5, OBS_width-sin(frontside_angle)*TopHole4_offset_top-3],
 ];
 
-MountRail_base_width = 47.6;
-MountRail_base_height = 2.3;
-MountRail_plate_width = 41.6;
-MountRail_plate_height = 2.2;
-MountRail_chamfer_height = (MountRail_base_width - MountRail_plate_width) / 2; // to get 45 degree chamfer
-MountRail_total_height = MountRail_base_height + MountRail_chamfer_height + MountRail_plate_height;
+MountRail_base_width = 48;
+MountRail_base_height = 2.5;
+MountRail_chamfer_height = 3;
+MountRail_plate_width = MountRail_base_width - 2 * MountRail_chamfer_height;
+MountRail_plate_distance = 2;
+MountRail_total_height = MountRail_base_height + MountRail_chamfer_height + MountRail_plate_distance;
+MountRail_clearance = 0.2;
 
 MountRail_width = 29.0;
 

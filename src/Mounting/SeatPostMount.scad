@@ -1,7 +1,7 @@
 include <../../variables.scad>
 
 use <Round-Anything/polyround.scad>
-use <../../lib/MountRails.scad>
+use <../../lib/utils.scad>
 
 max_height = MountRail_total_height + SeatPostMount_angled_spacing + sin(SeatPostMount_angle) * SeatPostMount_stop_plate_width;
 
@@ -9,7 +9,7 @@ module SeatPostMountBase() {
   union() {
 
     translate([0, SeatPostMount_stop_plate_thickness, MountRail_total_height])
-    MountRail();
+    MountRail(MountRail_clearance);
 
     // Stop plate
     // translate([0, -MountRail_total_height, 0])
@@ -31,12 +31,12 @@ module SeatPostMountBase() {
     linear_extrude(MountRail_width)
     polygon(polyRound([
       [0, 0, 0],
-      [-MountRail_plate_width/2, 0, 0],
+      [-MountRail_plate_width/2+MountRail_clearance, 0, 0],
       [-SeatPostMount_stop_plate_width/2, 4, 20],
       [-SeatPostMount_stop_plate_width/2, max_height, 0],
       [SeatPostMount_stop_plate_width/2, max_height, 0],
       [SeatPostMount_stop_plate_width/2, 4, 20],
-      [MountRail_plate_width/2, 0, 0],
+      [MountRail_plate_width/2-MountRail_clearance, 0, 0],
     ]));
   }
 }

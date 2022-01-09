@@ -60,6 +60,32 @@ function roundedRectangle(width, height, radius) =
 
 module ChamferPyramid(l)       polyhedron(
   //        P0        P1        P2         P3       P4
-  points= [[l,l,0], [l,-l,0], [-l,-l,0], [-l,l,0], [0,0,l]],                                 
-  faces=  [[0,1,4], [1,2,4],  [2,3,4],    [3,0,4], [1,0,3],  [2,1,3] ]                     
+  points= [[l,l,0], [l,-l,0], [-l,-l,0], [-l,l,0], [0,0,l]],
+  faces=  [[0,1,4], [1,2,4],  [2,3,4],    [3,0,4], [1,0,3],  [2,1,3] ]
  );
+
+/**
+ * Produces a rail with a smaller plate to attach to, and a bigger base that
+ * holds it in the opposite rail. The rail is centered on one of the long edges
+ * of the plate that can be built upon, ranging wide in both x directions and
+ * short into the positive y direction.
+ */
+module MountRail(clearance=MountRail_clearance) {
+  translate([0, 0, -MountRail_total_height ])
+  rotate([90, 0, 180])
+  mirrorCopy([1, 0, 0])
+  difference() {
+    linear_extrude(MountRail_width)polygon([
+      [0, 0],
+      [MountRail_base_width/2-clearance, 0],
+      [MountRail_base_width/2-clearance, MountRail_base_height-clearance],
+      [MountRail_plate_width/2-clearance, MountRail_base_height+MountRail_chamfer_height-clearance],
+      [MountRail_plate_width/2-clearance, MountRail_total_height],
+      [0, MountRail_base_height+MountRail_chamfer_height+MountRail_plate_distance]
+    ]);
+
+    translate([MountRail_base_width/2, 0, MountRail_width/2])
+    rotate([0, -90, 0])
+      cylinder(r=MountRail_pin_radius, h=MountRail_pin_length, $fn=32);
+  }
+}
