@@ -456,4 +456,4 @@ module MountAttachmentHolePattern() {
 MainCase();
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-#DebugPCB();
+*DebugPCB();
