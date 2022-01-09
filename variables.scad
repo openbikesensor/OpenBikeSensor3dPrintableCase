@@ -222,3 +222,9 @@ DisplayCase_magnet_housing_width = 4.6;
 DisplayCase_outer_radius = 5;
 DisplayCase_outer_width = 30;
 DisplayCase_outer_large_radius = 12;
+
+StandardMountAdapter_width = 29;
+StandardMountAdapter_length = 58;
+StandardMountAdapter_thickness = 7;
+
+StandardMountAdapter_side_width = (StandardMountAdapter_length - MountRail_base_width)/2;
