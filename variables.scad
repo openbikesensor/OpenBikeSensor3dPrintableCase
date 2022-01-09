@@ -9,6 +9,7 @@ $pfn = $preview ? 20 : $fn; // for polyRound
 extrude_width = 0.46; // to ensure minimum wall thickness is given (0.46mm is the PrusaSlicer default for a 0.4mm nozzle)
 enable_easy_print = true; // simplifies printing by adding smart bridges to remove need for supports
 layer_height = 0.2; // used e.g. by easy print algorithms
+default_clearance = 0.2; // distance between two things that should fit into each other
 
 // Variations on MainCase
 // ------------------------
@@ -220,7 +221,6 @@ DisplayCaseTop_height = 8;
 DisplayCase_magnet_length = 20;
 DisplayCase_magnet_thickness = 1.9;
 DisplayCaseTop_magnet_depth = 3.5;
-DisplayCaseBottom_magnet_depth = 6.5;
 DisplayCaseTop_window_depth = 3;
 DisplayCaseTop_window_width = 21.5;
 DisplayCaseTop_window_height = 12.5;
@@ -235,10 +235,27 @@ DisplayCaseTop_button_diameter = 12;
 DisplayCaseTop_button_outside_diameter = 18;
 DisplayCaseTop_button_outside_depth = 4;
 
+DisplayCaseBottom_height = 11;
+DisplayCaseBottom_magnet_depth = 6.5;
+DisplayCaseBottom_standoff_size = 2.8;
+DisplayCaseBottom_standoff_height = 2;
+DisplayCaseBottom_standoff_bridge_height = 0.5;
+
 DisplayCase_magnet_housing_width = 4.6;
 DisplayCase_outer_radius = 5;
 DisplayCase_outer_width = 30;
 DisplayCase_outer_large_radius = 12;
+
+DisplayCaseTop_pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2, DisplayCaseTop_height];
+
+DisplayCaseBottom_pcb_origin = [-DisplayCaseTop_pcb_origin.x, DisplayCaseTop_pcb_origin.y, DisplayCaseBottom_height];
+
+DisplayRail_width = 16.50;
+DisplayRail_chamfer_size = 2;
+DisplayRail_top_height = 2;
+DisplayRail_bottom_height = 1;
+
+DisplayRail_total_height = DisplayRail_chamfer_size + DisplayRail_top_height + DisplayRail_bottom_height;
 
 StandardMountAdapter_width = 29;
 StandardMountAdapter_length = 58;

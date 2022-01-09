@@ -116,12 +116,10 @@ module DisplayCaseBasicShape(height=20, magnet_depth) {
 module DisplayCaseHolePattern() {
   translate([DisplayCase_outer_radius, -DisplayCase_outer_radius])children();
   translate([25, -DisplayCase_outer_radius])children();
-  translate([DisplayCase_outer_radius+2, -(DisplayCase_outer_radius+DisplayCaseTop_pcb_height+DisplayCaseTop_hole_diameter)])rotate([0, 0, 180])children();
+  translate([DisplayCase_outer_radius+2, -(DisplayCase_outer_radius+DisplayCaseTop_pcb_height+DisplayCaseTop_hole_diameter+1)])rotate([0, 0, 180])children();
 }
 
 module DisplayCaseTop() {
-  // translate with pcb_origin to move origin to center of PCB, top side
-  pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2, DisplayCaseTop_height];
   pcb_depth = DisplayCaseTop_height-DisplayCaseTop_window_depth;
 
   standoff_width = (DisplayCaseTop_pcb_width-DisplayCaseTop_cable_clearance)/2;
@@ -153,12 +151,12 @@ module DisplayCaseTop() {
       }
 
       // hole for PCB
-      translate(pcb_origin) {
+      translate(DisplayCaseTop_pcb_origin) {
         cube([DisplayCaseTop_pcb_width, DisplayCaseTop_pcb_height, pcb_depth*2], center=true);
       }
 
       // window
-      translate([pcb_origin.x, pcb_origin.y-DisplayCaseTop_window_offset, 0]) {
+      translate([DisplayCaseTop_pcb_origin.x, DisplayCaseTop_pcb_origin.y-DisplayCaseTop_window_offset, 0]) {
         d = DisplayCaseTop_window_depth/2;
         union () {
           hull() {
@@ -195,7 +193,7 @@ module DisplayCaseTop() {
       }
     }
 
-    translate(pcb_origin)
+    translate(DisplayCaseTop_pcb_origin)
     mirrorCopy([0, 1, 0])
     mirrorCopy([1, 0, 0])
     translate([-DisplayCaseTop_pcb_width/2, -DisplayCaseTop_pcb_height/2, -pcb_depth])
