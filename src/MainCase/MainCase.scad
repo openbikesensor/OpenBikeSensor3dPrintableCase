@@ -3,6 +3,7 @@ include <../../variables.scad>
 use <Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 use <./UsbCover.scad>
+use <../Mounting/StandardMountAdapter.scad>
 
 module MainCaseBody(reduce=0, depth=OBS_depth) {
   linear_extrude(depth)
@@ -283,9 +284,17 @@ module MainCase(without_inserts=false) {
         }
       }
 
-      translate([OBS_height/2, 0, OBS_depth-4])
-      rotate([90, 90, 0])
-      MountAttachment();
+      if (MainCase_back_rider) {
+        translate([OBS_height/2, 0, OBS_depth-4])
+        rotate([90, 90, 0])
+        MountAttachment();
+      }
+
+      if (MainCase_top_rider) {
+        translate([0, OBS_height/2, OBS_depth-4])
+        rotate([0, 90, 180])
+        MountAttachment();
+      }
     }
 
     // The hole for the sensor
@@ -362,9 +371,17 @@ module MainCase(without_inserts=false) {
     }
 
     // Holes in the attachment
-    translate([OBS_height/2, wall_thickness, OBS_depth-4])
-    rotate([90, 90, 0])
-    MountAttachmentHolePattern();
+    if (MainCase_back_rider) {
+      translate([OBS_height/2, wall_thickness, OBS_depth-4])
+      rotate([90, 90, 0])
+      MountAttachmentHolePattern(with_cable_hole=MainCase_back_rider_cable);
+    }
+
+    if (MainCase_top_rider) {
+      translate([wall_thickness, OBS_height/2, OBS_depth-4])
+      rotate([0, 90, 180])
+      MountAttachmentHolePattern(with_cable_hole=MainCase_top_rider_cable);
+    }
 
     // Holes for inserts on top of the columns created earlier. Can be disabled
     // to generate the outline for the lid without the holes (the lid generates
@@ -418,26 +435,30 @@ module MountAttachment() {
   }
 }
 
-module MountAttachmentHolePattern() {
-  hull() {
-    for (i=[2,8]) {
+module MountAttachmentHolePattern(with_cable_hole=true) {
+  if (with_cable_hole) {
+    union () {
+      hull() {
+        for (i=[2,8]) {
+          translate([
+            MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
+            0,
+            wall_thickness + MountAttachment_depth - i,
+          ])
+          linear_extrude(1)
+          polygon(roundedRectangle(11+i*2, 7+i*2, i));
+        }
+      }
+
       translate([
-        MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
-        0,
-        wall_thickness + MountAttachment_depth - i,
+          MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
+          0,
+          wall_thickness + MountAttachment_depth - 1,
       ])
       linear_extrude(1)
-      polygon(roundedRectangle(11+i*2, 7+i*2, i));
+      polygon(roundedRectangle(11+2*2, 7+2*2, 2));
     }
   }
-
-  translate([
-      MountAttachment_width / 2 + MountAttachment_holes_x_offset ,
-      0,
-      wall_thickness + MountAttachment_depth - 1,
-  ])
-  linear_extrude(1)
-  polygon(roundedRectangle(11+2*2, 7+2*2, 2));
 
   mirror([0, 0, 1]) {
     for(i = [-1, 1]) {

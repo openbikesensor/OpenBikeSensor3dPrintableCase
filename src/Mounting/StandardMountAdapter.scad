@@ -23,26 +23,30 @@ module LockingPinHole(depth=16) {
   }
 }
 
+module StandardMountAdapterHalfBaseShape(width=StandardMountAdapter_width) {
+  union () {
+    // base
+    translate([-width/2, 0, 0])
+    cube([width, StandardMountAdapter_length/2, StandardMountAdapter_thickness]);
+
+    // gripper
+    translate([-width/2, StandardMountAdapter_length/2, StandardMountAdapter_thickness])
+    rotate([90, 0, 90])
+    linear_extrude(width)
+    polygon(polyRound([
+      [-StandardMountAdapter_side_width, 0, 0],
+      [-StandardMountAdapter_side_width, MountRail_base_height, 0],
+      [-StandardMountAdapter_side_width-MountRail_chamfer_height, MountRail_base_height+MountRail_chamfer_height, 0],
+      [-StandardMountAdapter_side_width-MountRail_chamfer_height, MountRail_base_height+MountRail_chamfer_height+0.5, 0],
+      [0, MountRail_base_height+MountRail_chamfer_height+0.5, 3],
+      [0, 0, 0],
+    ], fn=$pfn));
+  }
+}
+
 module StandardMountAdapterHalf() {
   difference() {
-    union () {
-      // base
-      translate([-StandardMountAdapter_width/2, 0, 0])
-      cube([StandardMountAdapter_width, StandardMountAdapter_length/2, StandardMountAdapter_thickness]);
-
-      // gripper
-      translate([-StandardMountAdapter_width/2, StandardMountAdapter_length/2, StandardMountAdapter_thickness])
-      rotate([90, 0, 90])
-      linear_extrude(StandardMountAdapter_width)
-      polygon(polyRound([
-        [-StandardMountAdapter_side_width, 0, 0],
-        [-StandardMountAdapter_side_width, MountRail_base_height, 0],
-        [-StandardMountAdapter_side_width-MountRail_chamfer_height, MountRail_base_height+MountRail_chamfer_height, 0],
-        [-StandardMountAdapter_side_width-MountRail_chamfer_height, MountRail_base_height+MountRail_chamfer_height+0.5, 0],
-        [0, MountRail_base_height+MountRail_chamfer_height+0.5, 3],
-        [0, 0, 0],
-      ], fn=$pfn));
-    }
+    StandardMountAdapterHalfBaseShape();
 
     // locking pin hole
     translate([0, StandardMountAdapter_length/2, StandardMountAdapter_thickness])

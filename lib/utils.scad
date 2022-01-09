@@ -12,6 +12,13 @@ module mirrorCopy(v, mirrorOffset=0) {
   children();
 }
 
+module mirrorRotate(r) {
+  children();
+
+  rotate(r)
+  children();
+}
+
 
 module draft(vertical, offs) {
   hull() {
