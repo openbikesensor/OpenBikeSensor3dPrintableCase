@@ -3,6 +3,17 @@ $fa = 1;
 $fn = $preview ? 32 : 128;
 $pfn = $preview ? 20 : 20; // for polyRound
 
+// PRINTER SETTINGS
+// ------------------------
+
+extrude_width = 0.46; // to ensure minimum wall thickness is given (0.46mm is the PrusaSlicer default for a 0.4mm nozzle)
+enable_easy_print = true; // simplifies printing by adding smart bridges to remove need for supports
+layer_height = 0.2; // used e.g. by easy print algorithms
+
+
+// Dimensions for parts
+// ------------------------
+
 HeatsetInsert_diameter = 4;
 HeatsetInsert_height = 5.75;
 HeatsetInsert_full_depth = 4.5; // how far the normal hole reaches before it expands to the cavity
@@ -15,7 +26,6 @@ SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
 
 wall_thickness = 2;
-extrude_width = .46; // to ensure minimum wall thickness is given, .46 is PrusaSlicer default for .4mm nozzle
 
 UsbCover_height = 9.7;
 UsbCover_foot_height = 1.5;
@@ -187,3 +197,27 @@ HandlebarRailStopblock_magnet_thickness = 1.9;
 
 HandlebarRail_tube_radius = 18;
 HandlebarRail_tube_indent = 1;
+
+DisplayCaseTop_height = 8;
+DisplayCase_magnet_length = 20;
+DisplayCase_magnet_thickness = 1.9;
+DisplayCaseTop_magnet_depth = 3.5;
+DisplayCaseBottom_magnet_depth = 6.5;
+DisplayCaseTop_window_depth = 3;
+DisplayCaseTop_window_width = 21.5;
+DisplayCaseTop_window_height = 12.5;
+DisplayCaseTop_window_offset = 2; // to bottom
+DisplayCaseTop_window_radius = 1.5;
+DisplayCaseTop_pcb_width = 26.5;
+DisplayCaseTop_pcb_height = 27.2;
+DisplayCaseTop_pcb_standoff = 1.7;
+DisplayCaseTop_hole_diameter = 3.3;
+DisplayCaseTop_cable_clearance = 12.5;
+DisplayCaseTop_button_diameter = 12;
+DisplayCaseTop_button_outside_diameter = 18;
+DisplayCaseTop_button_outside_depth = 4;
+
+DisplayCase_magnet_housing_width = 4.6;
+DisplayCase_outer_radius = 5;
+DisplayCase_outer_width = 30;
+DisplayCase_outer_large_radius = 12;
