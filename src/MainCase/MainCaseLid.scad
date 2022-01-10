@@ -60,7 +60,7 @@ module MainCaseLid() {
       rotate([0, 0, 90])
       BatteryHolder();
       minkowski(){
-          if (!$preview) { // this makes the minkowski() a nop in $preview mode
+          if (!fast) { // this makes the minkowski() a nop in fast mode
               rotate([180,0,0])ChamferPyramid(0.25);
           }
           intersection() {

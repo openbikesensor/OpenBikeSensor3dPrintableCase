@@ -11,15 +11,15 @@ module 2DBase(inset=0) {
     UsbCover_r1=UsbCover_r1-inset;
     UsbCover_r2=UsbCover_r2-inset;
     rMax=max(UsbCover_r1,UsbCover_r2);
-    
+
     // one side of the rounded rectangle
     difference(){
-      offset(r=UsbCover_r1) square([depth-UsbCover_r1*2-inset*2,UsbCover_width-UsbCover_r1*2-inset*2],center=true);   
+      offset(r=UsbCover_r1) square([depth-UsbCover_r1*2-inset*2,UsbCover_width-UsbCover_r1*2-inset*2],center=true);
       translate([depth/4 + rMax/2,0])square([depth/2+rMax,UsbCover_width+rMax], center=true);
     }
     // other side - slightly different radius
     difference(){
-      offset(r=UsbCover_r2) square([depth-UsbCover_r2*2-inset*2,UsbCover_width-UsbCover_r2*2-inset*2],center=true);     
+      offset(r=UsbCover_r2) square([depth-UsbCover_r2*2-inset*2,UsbCover_width-UsbCover_r2*2-inset*2],center=true);
       translate([-(depth/4 + rMax/2),0])square([depth/2+rMax,UsbCover_width+rMax], center=true);
     }
 }
@@ -96,7 +96,7 @@ module MagnetHoles() {
 module 3DGripMould(){
     // translation into world coordinates
     rotate([0,0,90])translate([depth/2,0,0])
-    
+
     // a lengthy "cube" minkowski-summed with a pyramid
     translate([depth/2-UsbCover_foot_length,-UsbCover_indent_width/2+UsbCover_indent_depth,UsbCover_foot_height])minkowski(){
        //pyramid
@@ -105,7 +105,7 @@ module 3DGripMould(){
        cube([UsbCover_indent_depth, UsbCover_indent_width-2*UsbCover_indent_depth, UsbCover_indent_height-UsbCover_indent_depth/2]);
     }
 }
-    
+
 module UsbCover(chamfer=0.5){
     difference(){
         UsbCoverMainBody(chamfer=chamfer);
@@ -114,4 +114,5 @@ module UsbCover(chamfer=0.5){
     }
 }
 
+rotate([0, 0, 180])
 UsbCover();

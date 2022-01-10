@@ -4,6 +4,7 @@ use <Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
 module DisplayCableStrainRelief() {
+  rotate([0, 0, -90])
   intersection() {
     translate([0, -50, -50])
     cube(100);

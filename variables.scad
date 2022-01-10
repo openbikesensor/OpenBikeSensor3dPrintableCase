@@ -1,15 +1,18 @@
-$fs = 0.2;
-$fa = 1;
-$fn = $preview ? 32 : 128;
-$pfn = $preview ? 20 : $fn; // for polyRound
-
-// PRINTER SETTINGS
+// GLOBAL SETTINGS
 // ------------------------
 
 extrude_width = 0.46; // to ensure minimum wall thickness is given (0.46mm is the PrusaSlicer default for a 0.4mm nozzle)
 enable_easy_print = true; // simplifies printing by adding smart bridges to remove need for supports
 layer_height = 0.2; // used e.g. by easy print algorithms
 default_clearance = 0.2; // distance between two things that should fit into each other
+fast = $preview; // in fast mode, not all features are rendered
+
+// Quality parameters
+
+$fs = 0.2;
+$fa = 1;
+$fn = fast ? 32 : 128;
+$pfn = fast ? 20 : $fn; // for polyRound
 
 // Variations on MainCase
 // ------------------------
