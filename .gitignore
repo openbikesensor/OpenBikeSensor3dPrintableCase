@@ -1,2 +1,3 @@
-build
-render
+export
+render/*
+!render/thumbnails
