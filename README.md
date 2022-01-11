@@ -171,6 +171,25 @@ the magnets.
 
 ![Mounting/HandlebarRail](./render/thumbnails/Mounting/HandlebarRail.png)
 
+#### Bike rack mount
+
+The bike rack mount can be used to attach a "Top Rider" main case to a standard
+bicycle rack. It consists of two parts, the `BikeRackMountSide` (which is
+required twice) and `BikeRackMountCenter`.
+
+The side parts are mounted on the longitudinal rails of the rack, either above
+or hanging below. They are connected with two rods (aluminium or wood) that
+form cross beams, cut to sized depending on the width of the bike rack. In the
+center of these rods sits the center piece, which has the attachment rail for
+the sensor.
+
+The rods can be affixed to the 3D printed parts by M3 bolts that act as set
+screws.
+
+![Mounting/BikeRackMountCenter](./render/thumbnails/Mounting/BikeRackMountCenter.png)
+
+![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/BikeRackMountSide.png)
+
 ### Customization options
 
 There are tons of variables in the `variables.scad` file, mostly dimensions,
