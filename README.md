@@ -66,73 +66,72 @@ versions, both older and newer, might work, but are untested.
 
 This is a list of all available parts, and a description of what they are used for.
 
-### MainCase/MainCase
+### Main case
 
 The main case of the device enclosure. This will contain most of the
-electronics. You need a matching MainCaseLid, a GpsAntennaLid, a UsbCover,
-and at least one adapter for mounting the device to form a complete
-enclosure.
+electronics. The core part are a `MainCase` and a `MainCaseLid`, which is
+installed with five M3x8 bolts in the lid, matching the five threaded heatset
+inserts in the body.
 
-After printing, insert the 9 threaded heatset inserts.
+The PCB is installed into the main body with 3 heatset inserts and M3x8 bolts.
+One additional heatset insert is required for the `GPSAntennaLid` (see below).
+This totals 9 inserts to be placed after printing.
 
 ![MainCase/MainCase](./render/thumbnails/MainCase/MainCase.png)
 
-### MainCase/MainCaseLid
-
-A lid for the main case. The battery is attached in here, and one of the sensor
-piezos. It is held in place with five M3x8 bolts.
-
 ![MainCase/MainCaseLid](./render/thumbnails/MainCase/MainCaseLid.png)
 
-### MainCase/GpsAntennaLid
+#### GPS antenna lid
 
-A small lid that covers the part of the main enclosure with the GPS antenna. It
-is held in place by only one M3x8 bolt and can be removed to reveal the
+The `GpsAntennaLid` covers the part of the main enclosure with the GPS antenna.
+It is held in place by only one M3x8 bolt and can be removed to reveal the
 antenna, behind which there is an access hole for the Micro-USB receptable of
 the ESP32 dev board -- very useful for debugging or developing the firmware.
 
 ![MainCase/GpsAntennaLid](./render/thumbnails/MainCase/GpsAntennaLid.png)
 
-### MainCase/UsbCover
+#### USB-C port cover
 
-A small plug for the USB-C port on the bottom of the device, which is used for
-charging the battery. This plug is held in place by 2 pairs of 3x3x3mm
-neodymium magnets.
+The `UsbCover` is small plug for the USB-C port on the bottom of the device,
+which is used for charging the battery. This plug is held in place by 2 pairs
+of 3x3x3mm neodymium magnets.
 
 ![MainCase/UsbCover](./render/thumbnails/MainCase/UsbCover.png)
 
-### DisplayCase/DisplayCaseTop
+### Display case
 
-This part forms the display case together with DisplayCaseBottom. This contains
-the I2C display and a push button and is attached to the main device with a
-cable that exits through a hole in the bottom part.
+The display case consists of two halfes, `DisplayCaseTop` and
+`DisplayCaseBottom`. The display case contains the I2C display and a push
+button and is attached to the main device with a cable that exits through a
+hole in the bottom part.
+
+The bottom part contains 3 threaded heatset inserts and a pocket for two
+20x10x1.9mm neodymium magnets. The magnets hold the display in the rail on the
+handlebar (see `HandlebarRail`).
 
 ![DisplayCase/DisplayCaseTop](./render/thumbnails/DisplayCase/DisplayCaseTop.png)
 
-
-### DisplayCase/DisplayCaseBottom
-
-See `DisplayCase/DisplayCaseTop`. This part contains 3 threaded heatset inserts
-and a pocket for two 20x10x1.9mm neodymium magnets. The magnets hold the
-display in the rail on the handlebar (`Mounting/HandlebarRail`).
-
 ![DisplayCase/DisplayCaseBottom](./render/thumbnails/DisplayCase/DisplayCaseBottom.png)
 
-### DisplayCase/DisplayCableStrainRelief
+#### Display cable strain relief
 
-Print two of these. They hold the display cable firmly in place inside the
-`DisplayCase/DisplayCaseBottom` to prevent strain on the solder joints or
-crimped connectors inside. The two halves are pushed into the hole at an angle
-one by one, and then screwed together with two M3x8 bolts and hex nuts.
+*Print two copies of this.*
+
+The `DisplayCableStrainRelief` holds the display cable firmly in place inside
+the display case to prevent strain on the solder joints or crimped connectors
+inside. The two halves are pushed into the hole at an angle one after the
+other, and then screwed together with two M3x8 bolts and hex nuts.
 
 ![DisplayCase/DisplayCableStrainRelief](./render/thumbnails/DisplayCase/DisplayCableStrainRelief.png)
 
 
-### Mounting/StandardMountAdapter
+### Mounting
 
-This part is screwed onto the main enclosure. It contains a channel for the
-display cable to sit in, pressing it firmly against the outer wall of the main
-case and relieving any strain from its connector inside.
+#### Standard mount adapter
+
+The `StandardMountAdapter` is screwed onto the main enclosure. It contains a
+channel for the display cable to sit in, pressing it firmly against the outer
+wall of the main case and relieving any strain from its connector inside.
 
 This adapter is used to attach the device to the mount that is permanently
 affixed to the bike. There may be different adapters in the future for
@@ -140,28 +139,29 @@ different attachment needs, but this one is the default.
 
 ![Mounting/StandardMountAdapter](./render/thumbnails/Mounting/StandardMountAdapter.png)
 
-### Mounting/SeatPostMount
+#### Seat post mount
 
-This part gets attached to the seat post of the bicycle with zipties. Hint: A piece
-of an old bicycle tube can prevent it from turning or shifting.
+The `SeatPostMount` gets attached to the seat post of the bicycle with zipties.
 
-This is a counterpart to the `Mounting/StandardMountAdapter`, which can slide
-onto this part's rail and be held in place with a `Mounting/LockingPin`.
+*Hint: A piece of an old bicycle tube can prevent it from turning or shifting.*
+
+This is a counterpart to the `StandardMountAdapter`, which can slide onto this
+part's rail and be held in place with a `LockingPin`.
 
 ![Mounting/SeatPostMount](./render/thumbnails/Mounting/SeatPostMount.png)
 
-### Mounting/LockingPin
+#### Locking pin
 
-Screw an M3x16 to M3x20 bolt through this part, such that the bolt's head sits
-on the long handle's side. Now you have a pin that you can push into the hole
-in the `Mounting/StandardMountAdapter` and turn 180 degrees, holding the pin,
-and the device, in place.
+Screw an M3x16 to M3x20 bolt through the `LockingPin` part, such that the
+bolt's head sits on the long handle's side. Now you have a pin that you can
+push into the hole in the `StandardMountAdapter` and turn 180 degrees, holding
+the pin, and the device, in place.
 
 ![Mounting/LockingPin](./render/thumbnails/Mounting/LockingPin.png)
 
-### Mounting/HandlebarRail
+#### Handlebar rail
 
-Attach this part to the handlebar of your bike with two zipties or a single
+Attach the `HandlebarRail` to the handlebar of your bike with two zipties or a single
 hose clamp. Again, a piece from an old bicycle tube can prevent turning and shifting.
 
 The large wall contains a pocket for two 20x10x1.9mm neodymium magnets, pushed
