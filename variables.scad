@@ -123,12 +123,12 @@ Switch_offset_bottom = 22;
 // TODO: this is only almost correct
 frontside_angle = asin((OBS_width - OBS_width_small) / OBS_height);
 
-Lid_clearance = 0.1;
-Lid_rim_thickness = 4.0;
-Lid_rim_width = 1;
-Lid_thickness = 2.1;
+MainCaseLid_rim_clearance = 0.3;
+MainCaseLid_rim_thickness = 3.0;
+MainCaseLid_rim_width = 1;
+MainCaseLid_thickness = 2.1;
 
-Lid_hole_positions = [
+MainCaseLid_hole_positions = [
   [TopHole_distance+wall_thickness, TopHole_distance+wall_thickness],
   [OBS_height-TopHole_distance-wall_thickness, TopHole_distance+wall_thickness],
   [TopHole_distance+wall_thickness, OBS_width_small-TopHole_distance-wall_thickness-8],

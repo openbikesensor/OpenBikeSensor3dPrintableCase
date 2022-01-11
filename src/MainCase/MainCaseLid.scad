@@ -38,44 +38,66 @@ module MainCaseLid() {
   }
 
   module RimPolygon() {
-    difference() {
-      projection(cut=true)
-      MainCaseBody(1);
+    rim_radius = 10;
+    rim_offset = wall_thickness + MainCaseLid_rim_clearance;
+    hole_x = 75;
 
-      union() {
-        offset(r=Lid_clearance)
-        projection(cut=true)
-        translate([0, 0, -OBS_depth])
-        MainCase(without_inserts=true);
+    dx = function (x) x * sin(frontside_angle);
+    polygon(polyRound([
+      [rim_offset+rim_radius, rim_offset, 0],
+      [rim_offset+rim_radius, rim_offset+rim_radius, rim_radius],
+      [rim_offset, rim_offset+rim_radius, 0],
+
+      [rim_offset, hole_x-rim_radius, 0],
+      [rim_offset+rim_radius, hole_x-rim_radius, rim_radius],
+      [rim_offset+rim_radius, hole_x, 0],
+      [rim_offset+rim_radius, OBS_width_small-rim_offset+dx(rim_offset+rim_radius), 0],
+
+      [OBS_height/2, OBS_width_small+dx(OBS_height/2)-rim_offset, 0],
+      [OBS_height/2, hole_x - rim_offset * 2, rim_radius*2],
+      [OBS_height-rim_offset, hole_x - rim_offset * 2, 0],
+
+      [OBS_height-rim_offset, rim_offset+rim_radius, 0],
+      [OBS_height-rim_offset-rim_radius, rim_offset+rim_radius, rim_radius],
+      [OBS_height-rim_offset-rim_radius, rim_offset, 0],
+    ], fn=$pfn));
+  }
+
+  module Rim(chamfer_size) {
+    translate([0, 0, -MainCaseLid_rim_thickness+chamfer_size])
+    minkowski(){
+      // If the chamfer is not rendered, the minkowski() has only one child
+      // (the base shape), therefore it will only render the child and not
+      // operate on it.
+      if (chamfer_size) {
+        rotate([180,0,0])ChamferPyramid(chamfer_size);
+      }
+
+      intersection() {
+        difference() {
+          linear_extrude(MainCaseLid_rim_thickness-chamfer_size)
+            offset(r=-chamfer_size)
+            RimPolygon();
+
+          translate([0, 0, -1])
+            linear_extrude(MainCaseLid_rim_thickness + 2)
+            offset(r=-(MainCaseLid_rim_width-chamfer_size))
+            RimPolygon();
+        }
       }
     }
   }
 
   difference() {
     union() {
-      MainCaseBody(reduce=0, depth=Lid_thickness);
+      MainCaseBody(reduce=0, depth=MainCaseLid_thickness);
 
       mirror([0, 0, 1])
       translate([36, 39, 0])
       rotate([0, 0, 90])
       BatteryHolder();
-      minkowski(){
-          if (!fast) { // this makes the minkowski() a nop in fast mode
-              rotate([180,0,0])ChamferPyramid(0.25);
-          }
-          intersection() {
-            translate([0, 0, -Lid_rim_thickness])
-            difference() {
-              linear_extrude(Lid_rim_thickness)
-              RimPolygon();
 
-              translate([0, 0, -1])
-              linear_extrude(Lid_rim_thickness + 2)
-              offset(r=-Lid_rim_width+0.5)
-              RimPolygon();
-            }
-          }
-      }
+      Rim(fast ? 0 : 0.25);
     }
 
     // Channels underneath battery holder, for zip-ties
@@ -96,13 +118,13 @@ module MainCaseLid() {
     }
 
     // Holes for M3 screws
-    for (hole = Lid_hole_positions) {
+    for (hole = MainCaseLid_hole_positions) {
       translate([hole.x, hole.y, -1])
       cylinder(d=ScrewHole_diameter_M3, h=10, $fn=32);
     }
   }
 }
 
-translate([0, 0, Lid_thickness])
+translate([0, 0, MainCaseLid_thickness])
 rotate([180, 0, 0])
 MainCaseLid();

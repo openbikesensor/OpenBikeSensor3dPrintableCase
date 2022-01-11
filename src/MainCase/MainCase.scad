@@ -306,7 +306,7 @@ module MainCase(without_inserts=false) {
       // requeste, to account for the width and twice the clearance of the rim
       // in the lid
       translate([0, 0, wall_thickness])
-      cylinder(r=SensorHole_diameter/2+SensorHole_ledge+Lid_rim_width+Lid_clearance*2, h=70);
+      cylinder(r=SensorHole_diameter/2+SensorHole_ledge+MainCaseLid_rim_width+MainCaseLid_rim_clearance*2, h=70);
     }
 
     // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
@@ -387,7 +387,7 @@ module MainCase(without_inserts=false) {
     // to generate the outline for the lid without the holes (the lid generates
     // those holes differently, as they contain M3 screws, not inserts).
     if (!without_inserts) {
-      for (hole = Lid_hole_positions) {
+      for (hole = MainCaseLid_hole_positions) {
         translate([hole.x, hole.y, OBS_depth])
         HeatsetInsertHole();
       }
