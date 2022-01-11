@@ -170,3 +170,81 @@ the display. The display can now slide onto this rail and is held in place by
 the magnets.
 
 ![Mounting/HandlebarRail](./render/thumbnails/Mounting/HandlebarRail.png)
+
+### Customization options
+
+There are tons of variables in the `variables.scad` file, mostly dimensions,
+which can be adjusted to suit your needs. Some of these variables are however
+not necessarily wise to be changed, as other dimensions might inadvertently
+depend on them, or they might produce invalid results in certain ranges.
+
+However, some options are meant to be changed to suit your specific needs. The
+defaults get you most of the way, but certainly, some users will need a
+different set of features, so here is a list of options you might want to
+change:
+
+#### Print settings
+
+Some options exist to control sizes and features that have been added just for
+3D printing ease. Configure these to match your printing setup. The defaults
+should work for most printers, but if you modify your settings greatly (e. g.
+to print faster), you might also need to change these model parameters:
+
+```
+extrude_width
+enable_easy_print
+layer_height
+default_clearance
+```
+
+#### Top Rider vs. Back Rider
+
+A "top rider" variant main case has an attachment port on the bottom (when
+mounted), while a "back rider" has it on the front. The "tranditional" OBS case
+therefore is a back rider variant, as it used to always sit behind the seat
+post, attached horizontally. However, many cyclists configure their bikes in a
+way that there is not enough room for a whole OBS below the seat, so a
+different way of attaching the OBS is needed.
+
+Top riders can sit on the top tube, the luggage rack, or anywhere else where
+there is support from below. Moving the attachment point on the main case makes
+it simple to design compatible mounts with their rail on top, without a
+complicated structure that "goes up and around" to provide a backwards-facing
+rail.
+
+A single case can have both top rider and back rider attachment ports. They
+don't necessarily need to have an adapter attached, though it is recommended to
+do so in order to fill the screw and cable holes.
+
+To configure whether to generate top and/or back riders, set the following
+variables. The `_cable` variables control whether the corresponding attachment port (if it exists) has a hole for the cable or not.
+
+```
+MainCase_back_rider
+MainCase_top_rider
+MainCase_back_rider_cable
+MainCase_top_rider_cable
+```
+
+#### Dimensions
+
+* General
+  * `ScrewHole_diameter_M3`: A hole for an M3 bolt has this diameter. Usually,
+    the bolt is not meant to grab this hole, but slide into and out of it. For
+    (almost) each bolt, there is a corresponding threaded metal part (nut or
+    insert), so increase this value if your bolts are hard to get where they
+    need to go.
+* `SeatPostMount`
+  * `SeatPostMount_angle`: Set to the angle that your seat post is away from
+    the vertical in degrees (usually around 20). This ensures that the device
+    will sit horizontally behind the seat post.
+  * `SeatPostMount_diameter`: Set to the diameter of your seat post (in mm).
+    The default for most bicycles today is 28.
+  * `SeatPostMount_angled_spacing`: Increase this to lengthen the mount,
+    shifting the device further backwards on your bike. You might consider
+    angular force, so don't set it too high, but this can help if your mount is
+    hard to reach, or if the device disappears underneath your seat,
+    potentially blocking GPS signal.
+* `HandlebarRail`
+  * `HandlebarRail_tube_radius`: The radius (half diameter) of your handlebar,
+    in mm.
