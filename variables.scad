@@ -107,6 +107,8 @@ GpsAntennaHousing_bottom_height = GpsAntennaHousing_top_height + 2 * GpsAntennaH
 GpsAntennaHousing_bottom_radius = GpsAntennaHousing_top_radius + GpsAntennaHousing_depth;
 GpsAntennaHousing_screw_offset = 3;
 
+GpsAntennaHousing_cable_hole_diameter = 6;
+
 GpsAntennaLid_thickness = 1.5;
 GpsAntennaLid_offset = 3;
 GpsAntennaLid_tab_width = 10;

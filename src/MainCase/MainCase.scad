@@ -101,7 +101,7 @@ module GpsAntennaHousing() {
     // remove the lid
     GpsAntennaLidCutBody();
 
-    // heaset insert hole
+    // heatset insert hole
     translate([0, GpsAntennaHousing_top_height / 2 - GpsAntennaHousing_screw_offset,  GpsAntennaHousing_depth - GpsAntennaLid_thickness])
     HeatsetInsertHole();
   }
@@ -321,7 +321,7 @@ module MainCase(without_inserts=false) {
     translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
     rotate([0, 90, 0]) {
       translate([0, -13.5, 0])
-      cylinder(d=4, h=4, center=true);
+      cylinder(d=GpsAntennaHousing_cable_hole_diameter, h=GpsAntennaHousing_cable_hole_diameter, center=true);
 
       *translate([0, -13.5+4, 0])
       cube([4, 8, 4], center=true);
