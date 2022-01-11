@@ -311,10 +311,9 @@ module MainCase(without_inserts=false) {
 
     // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
     // antenna
-    translate([OBS_height, USB_offset, OBS_depth/2])
-    rotate([0, 90, 0]) {
-      cube([16, 19, 8], center=true);
-    }
+    translate([OBS_height, MainCase_micro_usb_offset, OBS_depth/2])
+    rotate([0, 90, 0])
+    cube([MainCase_micro_usb_height, MainCase_micro_usb_width, 8], center=true);
 
     // Hole for GPS antenna cable from the inside of the antenna housing to the
     // inside of the main case
