@@ -1,6 +1,6 @@
 include <../../variables.scad>
 
-use <Round-Anything/polyround.scad>
+use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
 // This is the hole in which the locking pin is set. Its origin is on the

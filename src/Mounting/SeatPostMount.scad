@@ -1,6 +1,6 @@
 include <../../variables.scad>
 
-use <Round-Anything/polyround.scad>
+use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
 max_height = MountRail_total_height + SeatPostMount_angled_spacing + sin(SeatPostMount_angle) * SeatPostMount_stop_plate_width;

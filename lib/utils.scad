@@ -1,6 +1,6 @@
 include <../variables.scad>
 
-use <Round-Anything/polyround.scad>
+use <./Round-Anything/polyround.scad>
 
 
 module mirrorCopy(v, mirrorOffset=0) {

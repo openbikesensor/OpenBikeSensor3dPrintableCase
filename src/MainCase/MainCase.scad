@@ -1,6 +1,6 @@
 include <../../variables.scad>
 
-use <Round-Anything/polyround.scad>
+use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 use <./UsbCover.scad>
 use <../Mounting/StandardMountAdapter.scad>

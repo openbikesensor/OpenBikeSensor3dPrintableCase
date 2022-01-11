@@ -1,7 +1,7 @@
 include <../../variables.scad>
 include <../../lib/utils.scad>
 
-use <Round-Anything/polyround.scad>
+use <../../lib/Round-Anything/polyround.scad>
 use <MainCase.scad>
 
 module MainCaseLid() {
