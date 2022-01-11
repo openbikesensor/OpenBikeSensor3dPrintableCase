@@ -1,8 +1,8 @@
 include <variables.scad>
 
 use <src/MainCase/MainCase.scad>
-use <src/MainCase/LockingPin.scad>
 use <src/MainCase/MainCaseLid.scad>
+use <src/Mounting/LockingPin.scad>
 use <src/Mounting/SeatPostMount.scad>
 
 explode = $t;

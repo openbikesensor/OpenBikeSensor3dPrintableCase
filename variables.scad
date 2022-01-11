@@ -126,6 +126,7 @@ frontside_angle = asin((OBS_width - OBS_width_small) / OBS_height);
 MainCaseLid_rim_clearance = 0.3;
 MainCaseLid_rim_thickness = 3.0;
 MainCaseLid_rim_width = 1;
+MainCaseLid_rim_radius = 12;
 MainCaseLid_thickness = 2.1;
 
 MainCaseLid_hole_positions = [

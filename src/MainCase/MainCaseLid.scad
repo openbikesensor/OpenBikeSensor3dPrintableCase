@@ -38,28 +38,27 @@ module MainCaseLid() {
   }
 
   module RimPolygon() {
-    rim_radius = 10;
     rim_offset = wall_thickness + MainCaseLid_rim_clearance;
     hole_x = 75;
 
     dx = function (x) x * sin(frontside_angle);
     polygon(polyRound([
-      [rim_offset+rim_radius, rim_offset, 0],
-      [rim_offset+rim_radius, rim_offset+rim_radius, rim_radius],
-      [rim_offset, rim_offset+rim_radius, 0],
+      [rim_offset+MainCaseLid_rim_radius, rim_offset, 0],
+      [rim_offset+MainCaseLid_rim_radius, rim_offset+MainCaseLid_rim_radius, MainCaseLid_rim_radius],
+      [rim_offset, rim_offset+MainCaseLid_rim_radius, 0],
 
-      [rim_offset, hole_x-rim_radius, 0],
-      [rim_offset+rim_radius, hole_x-rim_radius, rim_radius],
-      [rim_offset+rim_radius, hole_x, 0],
-      [rim_offset+rim_radius, OBS_width_small-rim_offset+dx(rim_offset+rim_radius), 0],
+      [rim_offset, hole_x-MainCaseLid_rim_radius, 0],
+      [rim_offset+MainCaseLid_rim_radius, hole_x-MainCaseLid_rim_radius, MainCaseLid_rim_radius],
+      [rim_offset+MainCaseLid_rim_radius, hole_x, 0],
+      [rim_offset+MainCaseLid_rim_radius, OBS_width_small-rim_offset+dx(rim_offset+MainCaseLid_rim_radius), 0],
 
       [OBS_height/2, OBS_width_small+dx(OBS_height/2)-rim_offset, 0],
-      [OBS_height/2, hole_x - rim_offset * 2, rim_radius*2],
+      [OBS_height/2, hole_x - rim_offset * 2, MainCaseLid_rim_radius *2],
       [OBS_height-rim_offset, hole_x - rim_offset * 2, 0],
 
-      [OBS_height-rim_offset, rim_offset+rim_radius, 0],
-      [OBS_height-rim_offset-rim_radius, rim_offset+rim_radius, rim_radius],
-      [OBS_height-rim_offset-rim_radius, rim_offset, 0],
+      [OBS_height-rim_offset, rim_offset+MainCaseLid_rim_radius, 0],
+      [OBS_height-rim_offset-MainCaseLid_rim_radius, rim_offset+MainCaseLid_rim_radius, MainCaseLid_rim_radius],
+      [OBS_height-rim_offset-MainCaseLid_rim_radius, rim_offset, 0],
     ], fn=$pfn));
   }
 
