@@ -27,17 +27,14 @@ module draft(vertical, offs) {
   }
 }
 
-module roundedCube(dimen, radii) {
-  if (is_num(radii)) {
-    radii = [radii, radii, radii, radii];
-  }
-
-  linear_extrude(dimen[2])
+module roundedCube(dimen, radii, center=false) {
+  translate(center ? [-dimen.x/2, -dimen.y/2, -dimen.z/2] : [0, 0, 0])
+  linear_extrude(dimen.z)
   polygon(polyRound([
-    [0, 0, radii[0]],
-    [dimen[0], 0, radii[1]],
-    [dimen[0], dimen[1], radii[2]],
-    [0, dimen[1], radii[3]],
+    [0, 0, is_num(radii) ? radii : radii[0]],
+    [dimen.x, 0, is_num(radii) ? radii : radii[1]],
+    [dimen.x, dimen.y, is_num(radii) ? radii : radii[2]],
+    [0, dimen.y, is_num(radii) ? radii : radii[3]],
   ], fn=$pfn));
 }
 
@@ -95,4 +92,42 @@ module MountRail(clearance=MountRail_clearance) {
     rotate([0, -90, 0])
       cylinder(r=MountRail_pin_radius, h=MountRail_pin_length, $fn=32);
   }
+}
+
+module ScrewHole(
+  depth, // total depth, including head
+  diameter=ScrewHole_diameter_M3,
+  head_depth=0,
+  head_diameter=0,
+  elongation=0,
+) {
+  union () {
+    // Screw head hole or slot
+    if (head_depth > 0) {
+      head_diameter_actual = head_diameter ? head_diameter  : diameter * 2;
+
+      hull() {
+        for(i=elongation ? [-1,1] : 0)
+        translate([i*elongation/2, 0, -head_depth])
+        cylinder(d=head_diameter_actual, h=head_depth);
+      }
+    }
+
+    // Screw hole or slot
+    hull() {
+      for(i=elongation ? [-1,1] : 0)
+      translate([i*elongation/2, 0, -depth])
+      cylinder(d=diameter, h=depth);
+    }
+  }
+}
+
+module ScrewHoleM3(depth, head_depth=0, elongation=0) {
+  ScrewHole(
+    depth,
+    diameter=ScrewHole_diameter_M3,
+    head_depth=head_depth,
+    head_diameter=ScrewHole_diameter_M3*2,
+    elongation=elongation
+  );
 }

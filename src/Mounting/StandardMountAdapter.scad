@@ -55,23 +55,6 @@ module StandardMountAdapterHalf() {
   }
 }
 
-module SlottedScrewHole(elongation=1.6, d1=ScrewHole_diameter_M3*2, d2=ScrewHole_diameter_M3, h1=6, h2=100) {
-  union () {
-    // Screw head slot
-    hull() {
-      for(i=[-1,1])
-      translate([i*elongation/2, 0, -h1])
-      cylinder(d=d1, h=h1);
-    }
-
-    // Screw slot
-    hull() {
-      for(i=[-1,1])
-      translate([i*elongation/2, 0, -h1-h2])
-      cylinder(d=d2, h=h2);
-    }
-  }
-}
 
 module StandardMountAdapter() {
   difference() {
@@ -86,7 +69,7 @@ module StandardMountAdapter() {
     for(i=[-1,1])for(j=[-1,1])
     translate([i*MountAttachment_holes_dx/2, j*MountAttachment_holes_dy/2, StandardMountAdapter_thickness])
     rotate([0, 0, 90])
-    SlottedScrewHole(elongation=j<0?1.6:0);
+    ScrewHoleM3(depth=100, head_depth=6);
 
     rotate([0, 0, -90])
     StandardMountAdapterCableChannel();

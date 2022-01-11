@@ -190,6 +190,15 @@ screws.
 
 ![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/BikeRackMountSide.png)
 
+#### Attachment cover
+
+If you have a main case that has both attachment points (top rider and back
+rider), you may want to cover the one of them that you are not using, such that
+the screw holes and (optional) cable hole are not left open. The
+`AttachmentCover` is a simple cover that fits the screw pattern.
+
+![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/AttachmentCover.png)
+
 ### Customization options
 
 There are tons of variables in the `variables.scad` file, mostly dimensions,
