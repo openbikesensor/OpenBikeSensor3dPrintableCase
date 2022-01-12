@@ -266,7 +266,7 @@ DisplayRail_bottom_height = 1;
 DisplayRail_total_height = DisplayRail_chamfer_size + DisplayRail_top_height + DisplayRail_bottom_height;
 
 StandardMountAdapter_width = 29;
-StandardMountAdapter_length = 58;
+StandardMountAdapter_length = 62;
 StandardMountAdapter_thickness = 7;
 
 StandardMountAdapter_side_width = (StandardMountAdapter_length - MountRail_base_width)/2;
