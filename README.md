@@ -290,6 +290,3 @@ MainCase_top_rider_cable
 * `HandlebarRail`
   * `HandlebarRail_tube_radius`: The radius (half diameter) of your handlebar,
     in mm.
-
-
-##
