@@ -73,6 +73,7 @@ module StandardMountAdapter() {
 
     rotate([0, 0, -90])
     StandardMountAdapterCableChannel();
+    StandardMountRescueStripChannel();
   }
 }
 
@@ -93,6 +94,12 @@ module StandardMountAdapterCableChannel() {
     translate([-10, 0, -10])
     cube([20, 20, 20]);
   }
+}
+
+module StandardMountRescueStripChannel() {
+  rotate([90, 0, 90])
+  translate([10,0, -50])
+  cylinder(d=3.5, h=100);
 }
 
 translate([0, 0, StandardMountAdapter_width/2])
