@@ -8,7 +8,7 @@ STLS=$(patsubst src/%.scad,export/%.stl,$(SRCS))
 PNGS=$(patsubst src/%.scad,render/%.png,$(SRCS))
 THUMBNAILS=$(patsubst src/%.scad,render/thumbnails/%.png,$(SRCS))
 
-all: export-all
+all: export-all thumbnails
 
 clean:
 	@rm -r export/ || true

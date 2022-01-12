@@ -15,22 +15,29 @@ please ask in the [project forums](https://forum.openbikesensor.org).
 
 This repository contains a lot of files for different options
 
-* The `src/` folder contains OpenSCAD scripts for all parts. Not all parts are
-  needed for printing a working enclosure. Please check the documentation
-  (links on top) to assemble your custom list of parts for the variant you want
-  to build.
-* The `lib/` folder contains common OpenSCAD files with library functions and
-  modules, as well as exports of other objects that can be imported in the part
-  files, e.g. to check dimensions.
-* The `variables.scad` file contains all variables used in any of the parts.
-  You can customize everything by editing this file, or passing new variable
-  values on the OpenSCAD command line.
+* The `export/` folder contains the latest prebuilt `.stl` files for 3D printing.
+  You can use those unless you want to make customizations. If you contribute
+  changes to the models, you can refresh the models you changed using the 
+  ``make export-all`` command.
 * The `legacy/` folder contains old versions of the case, including lots of
   variants that were created but unmaintained. These were built with
   proprietary software packages and often available in their native format(s)
   and therefore mostly uneditable for most of the community. A lot of these
   files are also available in STEP format, and of course exported as STL for
   printing. We keep these files around for reference and convenience.
+* The `lib/` folder contains common OpenSCAD files with library functions and
+  modules, as well as exports of other objects that can be imported in the part
+  files, e.g. to check dimensions.
+* The `src/` folder contains OpenSCAD scripts for all parts. Not all parts are
+  needed for printing a working enclosure. Please check the documentation
+  (links on top) to assemble your custom list of parts for the variant you want
+  to build.
+* The `render/thumbnails/` folder contains rendered views of the parts. These images
+  should be refreshed with changes to the parts using the `make thumbnails`
+  command if you plan to submit your changes. They are used in this `README.md`.
+* The `variables.scad` file contains all variables used in any of the parts.
+  You can customize everything by editing this file, or passing new variable
+  values on the OpenSCAD command line.
 
 ## The Standard Variant
 
@@ -283,3 +290,6 @@ MainCase_top_rider_cable
 * `HandlebarRail`
   * `HandlebarRail_tube_radius`: The radius (half diameter) of your handlebar,
     in mm.
+
+
+##
