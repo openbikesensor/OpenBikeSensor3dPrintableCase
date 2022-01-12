@@ -150,6 +150,18 @@ part's rail and be held in place with a `LockingPin`.
 
 ![Mounting/SeatPostMount](./render/thumbnails/Mounting/SeatPostMount.png)
 
+#### Top tube mount
+
+The `TopTubeMount` gets attached to the top tube of the bicycle frame, similar
+to the seat post mount.
+
+*Hint: A piece of an old bicycle tube can prevent it from turning or shifting.*
+
+This is also compatible with the `StandardMountAdapter` and `LockingPin`. Make
+sure to use a "Top Rider" variant main case (see below for details).
+
+![Mounting/TopTubeMount](./render/thumbnails/Mounting/TopTubeMount.png)
+
 #### Locking pin
 
 Screw an M3x16 to M3x20 bolt through the `LockingPin` part, such that the
@@ -275,7 +287,7 @@ MainCase_top_rider_cable
     will sit horizontally behind the seat post.
   * `SeatPostMount_diameter`: Set to the diameter of your seat post (in mm).
     The default for most bicycles today is 28.
-  * `SeatPostMount_angled_spacing`: Increase this to lengthen the mount,
+  * `SeatPostMount_length`: Increase this to lengthen the mount,
     shifting the device further backwards on your bike. You might consider
     angular force, so don't set it too high, but this can help if your mount is
     hard to reach, or if the device disappears underneath your seat,

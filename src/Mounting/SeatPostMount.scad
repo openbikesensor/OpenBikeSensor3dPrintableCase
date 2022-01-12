@@ -3,7 +3,7 @@ include <../../variables.scad>
 use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
-max_height = MountRail_total_height + SeatPostMount_angled_spacing + sin(SeatPostMount_angle) * SeatPostMount_stop_plate_width;
+HUGE = 1000;
 
 module SeatPostMountBase() {
   union() {
@@ -19,10 +19,10 @@ module SeatPostMountBase() {
     polygon(polyRound([
       [0, 0, 0],
       [-SeatPostMount_stop_plate_width/2, 0, 2],
-      [-SeatPostMount_stop_plate_width/2, max_height+MountRail_total_height, 0],
-      [SeatPostMount_stop_plate_width/2, max_height+MountRail_total_height, 0],
+      [-SeatPostMount_stop_plate_width/2, HUGE+MountRail_total_height, 0],
+      [SeatPostMount_stop_plate_width/2, HUGE+MountRail_total_height, 0],
       [SeatPostMount_stop_plate_width/2, 0, 2],
-    ]));
+    ], fn=$pfn));
 
     // Main holder chunk
     translate([0, SeatPostMount_stop_plate_thickness, MountRail_total_height])
@@ -33,52 +33,64 @@ module SeatPostMountBase() {
       [0, 0, 0],
       [-MountRail_plate_width/2+MountRail_clearance, 0, 0],
       [-SeatPostMount_stop_plate_width/2, 4, 20],
-      [-SeatPostMount_stop_plate_width/2, max_height, 0],
-      [SeatPostMount_stop_plate_width/2, max_height, 0],
+      [-SeatPostMount_stop_plate_width/2, HUGE, 0],
+      [SeatPostMount_stop_plate_width/2, HUGE, 0],
       [SeatPostMount_stop_plate_width/2, 4, 20],
       [MountRail_plate_width/2-MountRail_clearance, 0, 0],
-    ]));
+    ], fn=$pfn));
   }
 }
 
 
-module SeatPostMountCutout() {
-  translate([0, SeatPostMount_width/2, MountRail_total_height + SeatPostMount_angled_spacing + SeatPostMount_stop_plate_width/2* sin(SeatPostMount_angle)]) {
-    rotate([0, -90+SeatPostMount_angle, 0]) {
-      union () {
-        cylinder(d=SeatPostMount_diameter, h=200, center=true);
+module SeatPostMountCutout(diameter, angle, length, cutaway) {
+  width = cutaway ? SeatPostMount_width : (MountRail_width + SeatPostMount_stop_plate_thickness);
 
-        translate([-SeatPostMount_diameter/2+SeatPostMount_channel_depth, -20, -105])
+  translate([0, width/2, max(MountRail_total_height, length) + diameter/cos(angle)/2 + SeatPostMount_stop_plate_width/2 * sin(angle)]) {
+    rotate([0, -90+angle, 0]) {
+      union () {
+        cylinder(d=diameter, h=200, center=true, $fn=$fn*4);
+
+        translate([0, -HUGE/2, -HUGE/2])
+        cube(HUGE);
+
+        translate([-diameter/2+SeatPostMount_channel_depth, -20, -105])
         cube([50, 40, 210]);
 
         for (i = [-1, 1]) {
           w = 9;
-          translate([0, 0, i*16-SeatPostMount_angle/5])
+          translate([0, 0, i*16-angle/5])
           difference() {
-            cube([SeatPostMount_diameter+8, SeatPostMount_diameter+8, w], center=true);
-            cylinder(r=SeatPostMount_diameter/2+3, h=w+2, center=true);
+            cube([diameter+8, diameter+8, w], center=true);
+            cylinder(r=diameter/2+3, h=w+2, center=true);
           }
         }
       }
     }
   }
 
-  cutaway_width = MountRail_width - SeatPostMount_width + SeatPostMount_stop_plate_thickness;
-  translate([-100, SeatPostMount_width, cutaway_width + MountRail_total_height]) {
-    union() {
-      cube([200, cutaway_width * 2, 100]);
+  if (cutaway) {
+    cutaway_width = MountRail_width - SeatPostMount_width + SeatPostMount_stop_plate_thickness;
+    translate([-100, SeatPostMount_width, cutaway_width + MountRail_total_height]) {
+      union() {
+        cube([200, cutaway_width * 2, 100]);
 
-      translate([0, cutaway_width, 0])
-      rotate([0,90, 0])
-      cylinder(r=cutaway_width, h=200);
+        translate([0, cutaway_width, 0])
+        rotate([0,90, 0])
+        cylinder(r=cutaway_width, h=200);
+      }
     }
   }
 }
 
-module SeatPostMount() {
+module SeatPostMount(diameter=0, cutaway=false) {
   difference() {
     SeatPostMountBase();
-    SeatPostMountCutout();
+    SeatPostMountCutout(
+      diameter=SeatPostMount_diameter,
+      length=SeatPostMount_length,
+      angle=SeatPostMount_angle,
+      cutaway=true
+    );
   }
 }
 

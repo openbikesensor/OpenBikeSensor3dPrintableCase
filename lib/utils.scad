@@ -91,7 +91,7 @@ module MountRail(clearance=MountRail_clearance) {
 
     translate([MountRail_base_width/2, 0, MountRail_width/2])
     rotate([0, -90, 0])
-      cylinder(r=MountRail_pin_radius, h=MountRail_pin_length, $fn=32);
+    cylinder(r=MountRail_pin_radius, h=MountRail_pin_length);
   }
 }
 

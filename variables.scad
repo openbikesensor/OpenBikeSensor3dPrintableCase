@@ -183,7 +183,7 @@ SeatPostMount_stop_plate_thickness = 2; // [1:0.1:3]
 SeatPostMount_stop_plate_width = MountRail_base_width  + 4;
 
 // Distance from the bottom to the edge that touches the seat post.
-SeatPostMount_angled_spacing = 24; // [15:100]
+SeatPostMount_length = 20; // [15:100]
 
 // Depth of the round channel
 SeatPostMount_channel_depth = 4; // [1:20]
@@ -281,3 +281,6 @@ BikeRackMount_bottom_spacing = 3;
 
 BikeRackMountSide_length = BikeRackMount_rod_distance + BikeRackMount_rod_diameter + 2 * BikeRackMount_bottom_spacing;
 BikeRackMountSide_height = 28 + BikeRackMount_bottom_spacing;
+
+TopTubeMount_diameter = 72;
+TopTubeMount_height = 20;
