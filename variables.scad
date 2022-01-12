@@ -270,3 +270,14 @@ StandardMountAdapter_length = 58;
 StandardMountAdapter_thickness = 7;
 
 StandardMountAdapter_side_width = (StandardMountAdapter_length - MountRail_base_width)/2;
+
+BikeRackMount_rail_diameter = 14; // add a bit for padding, e.g. 2*1mm for a cut piece rubber tube
+BikeRackMount_rod_diameter = 10.5; // add a bit of clearance, e.g. 0.5mm
+BikeRackMount_rod_distance = 24;
+
+BikeRackMountSide_channel_width = 6;
+
+BikeRackMount_bottom_spacing = 3;
+
+BikeRackMountSide_length = BikeRackMount_rod_distance + BikeRackMount_rod_diameter + 2 * BikeRackMount_bottom_spacing;
+BikeRackMountSide_height = 28 + BikeRackMount_bottom_spacing;

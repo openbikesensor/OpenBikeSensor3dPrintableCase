@@ -175,7 +175,7 @@ the magnets.
 
 The bike rack mount can be used to attach a "Top Rider" main case to a standard
 bicycle rack. It consists of two parts, the `BikeRackMountSide` (which is
-required twice) and `BikeRackMountCenter`.
+required twice) and `BikeRackMountCenter` or `BikeRackMountCenterLongitudinal`.
 
 The side parts are mounted on the longitudinal rails of the rack, either above
 or hanging below. They are connected with two rods (aluminium or wood) that
@@ -183,12 +183,19 @@ form cross beams, cut to sized depending on the width of the bike rack. In the
 center of these rods sits the center piece, which has the attachment rail for
 the sensor.
 
-The rods can be affixed to the 3D printed parts by M3 bolts that act as set
-screws.
+In a rotated version, the rods are aligned longitudinally, a difference center
+piece (`BikeRackMountCenterLongitudinal`, third image) is used to rotate the
+OBS correctly. Use this if you need your bike rack's longitudinal tubes for
+attaching cargo, and you want to mount the OBS on the cross beams of the rack.
+
+The rods can be affixed to the 3D printed parts by gluing them in place, once
+they have been sized and fitted to your rack.
+
+![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/BikeRackMountSide.png)
 
 ![Mounting/BikeRackMountCenter](./render/thumbnails/Mounting/BikeRackMountCenter.png)
 
-![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/BikeRackMountSide.png)
+![Mounting/BikeRackMountCenterLongitudinal](./render/thumbnails/Mounting/BikeRackMountCenterLongitudinal.png)
 
 #### Attachment cover
 

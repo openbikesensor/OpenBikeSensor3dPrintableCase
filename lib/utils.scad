@@ -79,7 +79,8 @@ module MountRail(clearance=MountRail_clearance) {
   rotate([90, 0, 180])
   mirrorCopy([1, 0, 0])
   difference() {
-    linear_extrude(MountRail_width)polygon([
+    linear_extrude(MountRail_width,convexity=2)
+    polygon([
       [0, 0],
       [MountRail_base_width/2-clearance, 0],
       [MountRail_base_width/2-clearance, MountRail_base_height-clearance],

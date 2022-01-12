@@ -3,80 +3,68 @@ include <../../variables.scad>
 use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
-BikeRackMount_rail_diameter = 14; // add a bit for padding
-BikeRackMount_rod_diameter = 10;
-BikeRackMount_rod_distance = 24;
-
-BikeRackMount_with_threaded_inserts = true;
-
-BikeRackMountSide_channel_width = 8;
-
-BikeRackMount_bottom_spacing = BikeRackMount_with_threaded_inserts ? HeatsetInsert_height + 1 : 3;
-
-BikeRackMountSide_length = 80;
-BikeRackMountSide_height = 24 + BikeRackMount_bottom_spacing;
-BikeRackMountSide_width = BikeRackMount_rail_diameter + 10; // 2 sides * (3mm wall + 2mm channel)
-
 module BikeRackMountSide() {
+  r1 = 1;
+  w = 8;
+  W = 20;
+  r2 = BikeRackMount_rail_diameter/2 + w;
+  r3 = 4;
+
   difference() {
-    // main body
-    hull() {
-      r=2;
-      for(i=[-1,1]) {
-        translate([i*(BikeRackMountSide_width/2-r), 0, -r])
-        rotate([90, 0, 0])
-        cylinder(r=r, h=BikeRackMountSide_length, center=true);
+    rotate([90, 0, -90])
+    linear_extrude(BikeRackMountSide_length, center=true, convexity=2)
+    polygon(polyRound([
+      [0, 0, r1],
+      [W, 0, r1],
 
-        translate([i*(BikeRackMountSide_width/2-r-1.5), 0, -(BikeRackMountSide_height-r)])
-        rotate([90, 0, 0])
-        cylinder(r=r, h=BikeRackMountSide_length, center=true);
-      }
-    }
+      [W, -r2/2, r2],
+      // [W - r2, -r2, 0],
+      // [w + r3, -r2, 0],
+      [w, -r2, r2],
+      [w, -BikeRackMountSide_height, r1],
+      [0, -BikeRackMountSide_height, r1],
+    ], fn=$pfn));
 
-    // Channel for bikerack rail
-    translate([0, -BikeRackMountSide_length, 0])
-    rotate([-90, 0, 0])
-    cylinder(d=BikeRackMount_rail_diameter, h=BikeRackMountSide_length*2);
+    // rail
+    translate([-10, -W/2, 0])
+    rotate([90, 0, -90])
+    cylinder(d=BikeRackMount_rail_diameter, h=BikeRackMountSide_length+20, center=true);
 
-    // Channels for ziptie
+    // zip ties
     for(i=[-1,1])
-    translate([0, i*(BikeRackMountSide_length/2-BikeRackMountSide_channel_width), 0])
-    difference() {
-      translate([-BikeRackMountSide_width/2+3, -BikeRackMountSide_channel_width/2, -BikeRackMountSide_height])
-      cube([BikeRackMountSide_width-6, BikeRackMountSide_channel_width, BikeRackMountSide_height]);
+    translate([i*BikeRackMount_rod_distance/2, 0, -2])
+    intersection() {
+      translate([-50, -50, -100])
+      cube(100);
 
-      hull() {
-        translate([-BikeRackMountSide_width/2+5, -BikeRackMountSide_channel_width, -BikeRackMountSide_height+BikeRackMount_rail_diameter])
-        cube([BikeRackMountSide_width-10, BikeRackMountSide_channel_width*2, BikeRackMountSide_height-BikeRackMount_rail_diameter*1.5]);
+      difference() {
+        translate([0, -W/2, 0])
+        rotate([90, 0, -90])
+        cylinder(r=W/2+3, h=BikeRackMountSide_channel_width, center=true);
 
-        translate([0, 0, -BikeRackMountSide_height+BikeRackMount_rail_diameter])
-        rotate([90, 0, 0])
-        cylinder(d=BikeRackMountSide_width-10, h=BikeRackMountSide_channel_width*2, center=true);
+        translate([0, -W/2, 0])
+        rotate([90, 0, -90])
+        cylinder(r=W/2, h=BikeRackMountSide_channel_width, center=true);
       }
     }
 
-    RodHoles(half=!BikeRackMount_with_threaded_inserts);
+    rotate([0, 0, 90])
+    RodHoles();
   }
 }
 
-module RodHoles(half=false) {
+module RodHoles() {
   // holes for cross rods
   for(i=[-1,1])
   translate([0, i*BikeRackMount_rod_distance/2, -BikeRackMountSide_height + BikeRackMount_rod_diameter/2+BikeRackMount_bottom_spacing])
   rotate([0, 90, 0])
-  cylinder(d=BikeRackMount_rod_diameter, h=100, center=!half);
-
-  // holes for heatset inserts to hold the cross rods (unless they are glued)
-  if (BikeRackMount_with_threaded_inserts) {
-    for(i=[-1,1])
-    translate([0, i*BikeRackMount_rod_distance/2, -BikeRackMountSide_height])
-    cylinder(d=HeatsetInsert_diameter, h=HeatsetInsert_height+2);
-  }
+  cylinder(d=BikeRackMount_rod_diameter, h=100, center=true);
 }
 
 
-module BikeRackMountCenter() {
-  vertical_offset = 10;
+vertical_offset = 10;
+
+module BikeRackMountCenter(longitudinal=false) {
 
   difference() {
     union () {
@@ -87,36 +75,63 @@ module BikeRackMountCenter() {
 
       w = MountRail_plate_width - 2 * MountRail_clearance;
       r = 5;
-      hull () {
-        translate([-MountRail_width/2, -w/2, -BikeRackMountSide_height+r])
-        cube([MountRail_width, w, BikeRackMountSide_height-vertical_offset-MountRail_total_height-r]);
 
-        for(i=[-1,1])
-        translate([-MountRail_width/2, i*(w/2-r), -BikeRackMountSide_height+r])
-        rotate([0, 90, 0])
-        cylinder(r=r, h=MountRail_width);
+      if (longitudinal) {
+        difference() {
+          hull()
+          for(x=[-1,1])
+          for(z=[-vertical_offset-r, -BikeRackMountSide_height+r])
+          translate([x*((BikeRackMount_rod_distance+BikeRackMount_rod_diameter+BikeRackMount_bottom_spacing*2)/2-r), 0, z])
+          rotate([-90, 0, 0])
+          cylinder(r=r, h=w/2, center=true);
+
+          // cut away the center so it does not overlap and fill the pin channels in the mount
+          translate([0, 0, -vertical_offset])
+          cube([5, 200, 5], center=true);
+        }
+      } else {
+        hull () {
+          translate([-MountRail_width/2, -w/2, -BikeRackMountSide_height+r])
+          cube([MountRail_width, w, BikeRackMountSide_height-vertical_offset-MountRail_total_height-r]);
+
+          for(i=[-1,1])
+          translate([-MountRail_width/2, i*(w/2-r), -BikeRackMountSide_height+r])
+          rotate([0, 90, 0])
+          cylinder(r=r, h=MountRail_width);
+        }
       }
-
     }
 
-    RodHoles();
+    if (longitudinal) {
+      rotate([0, 0, 90])
+      RodHoles();
+    } else {
+      RodHoles();
+    }
   }
 }
 
 module BikeRackMountDebug() {
   translate([-60, 0, 0])
+  rotate([0, 0, -90])
   BikeRackMountSide();
 
   rotate([0, 0, 180])
   translate([-60, 0, 0])
+  rotate([0, 0, -90])
   BikeRackMountSide();
 
   BikeRackMountCenter();
 
-  *for(i=[-1,1])
+  %for(i=[-1,1])
   translate([0, i*BikeRackMount_rod_distance/2, -BikeRackMountSide_height + BikeRackMount_rod_diameter/2+BikeRackMount_bottom_spacing])
   rotate([0, 90, 0])
   cylinder(d=BikeRackMount_rod_diameter, h=200, center=true);
 }
 
+// !BikeRackMountCenter();
+
+translate([0, 0, MountRail_width/2])
+rotate([0, -90, 0])
+translate([0, 0, BikeRackMountSide_height])
 BikeRackMountCenter();
