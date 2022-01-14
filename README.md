@@ -287,7 +287,14 @@ MainCase_top_rider_cable
     the bolt is not meant to grab this hole, but slide into and out of it. For
     (almost) each bolt, there is a corresponding threaded metal part (nut or
     insert), so increase this value if your bolts are hard to get where they
-    need to go.
+    need to go. Print `Calibration/ScrewHoles` to find a good value for your
+    printer.
+  * `HexNutHole_diameter`: The outer circle around a hex nut's hexagon has this
+    diameter. This is **not** the same as the "wrench size" from [DIN
+    934](https://www.fasteners.eu/standards/DIN/934/) (dimension `S`), but its
+    nominal value is `2 / sqrt(3) * S`. For M3, this equals `6.35mm` nominally.
+    Increase this for more clearance. Print `Calibration/HexNuts.stl` to find a
+    good value for your printer.
 * `SeatPostMount`
   * `SeatPostMount_angle`: Set to the angle that your seat post is away from
     the vertical in degrees (usually around 20). This ensures that the device
