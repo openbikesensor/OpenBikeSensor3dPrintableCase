@@ -113,11 +113,11 @@ module StandardMountRescueStripChannel() {
   cylinder(d=3.5, h=100);
 }
 
-translate([0, 0, StandardMountAdapter_width/2])
-rotate([0, 90, 0])
-StandardMountAdapter();
-
-*translate([-50, 0, StandardMountAdapter_width/2])
-rotate([0, 90, 0])
-color("#FFF176")
-import("../../MainCase/VerticalCase_JSN-AJ/OBS-Mounting-A-001_StandardOBSMount_v0.1.1.stl");
+if (orient_for_printing) {
+  translate([0, 0, StandardMountAdapter_width/2])
+  rotate([0, 90, 0])
+  StandardMountAdapter();
+} else {
+  rotate([0, 0, 90])
+  StandardMountAdapter();
+}

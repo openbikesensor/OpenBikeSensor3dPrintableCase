@@ -8,7 +8,7 @@ module HandlebarRailRail() {
   difference() {
     mirror([0, 1, 0])
     rotate([90, 0, 0])
-    linear_extrude(HandlebarRailRail_length)
+    linear_extrude(HandlebarRailRail_length, convexity=3)
     polygon([
       [0, 0],
       [8, 0],
@@ -85,5 +85,11 @@ module HandlebarRail() {
   }
 }
 
-rotate([0, 0, 90])
-HandlebarRail();
+if (orient_for_printing) {
+  translate([0, 0, HandlebarRailStopblock_depth])
+  rotate([90, 0, 0])
+  HandlebarRail();
+} else {
+  rotate([0, 0, 90])
+  HandlebarRail();
+}

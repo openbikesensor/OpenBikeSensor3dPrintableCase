@@ -1,3 +1,5 @@
+include <../../variables.scad>
+
 LockingPin_diameter = 5.2;
 LockingPin_hole_diameter = 3.0;
 LockingPin_small_hole_diameter = 2.0;
@@ -72,4 +74,10 @@ module LockingPin() {
   }
 }
 
-LockingPin();
+if (orient_for_printing) {
+  LockingPin();
+} else {
+  translate([0, 0, LockingPin_height])
+  rotate([180, 0, 0])
+  LockingPin();
+}

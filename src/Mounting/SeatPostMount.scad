@@ -94,5 +94,10 @@ module SeatPostMount(diameter=0, cutaway=false) {
   }
 }
 
-rotate([90, 0, 0])
-SeatPostMount();
+if (orient_for_printing) {
+  rotate([90, 0, 0])
+  SeatPostMount();
+} else {
+  rotate([0, -90, -180])
+  SeatPostMount();
+}

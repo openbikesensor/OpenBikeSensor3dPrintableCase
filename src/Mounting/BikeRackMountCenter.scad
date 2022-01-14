@@ -131,7 +131,12 @@ module BikeRackMountDebug() {
 
 // !BikeRackMountCenter();
 
-translate([0, 0, MountRail_width/2])
-rotate([0, -90, 0])
-translate([0, 0, BikeRackMountSide_height])
-BikeRackMountCenter();
+if (orient_for_printing) {
+  translate([0, 0, MountRail_width/2])
+  rotate([0, -90, 0])
+  translate([0, 0, BikeRackMountSide_height])
+  BikeRackMountCenter();
+} else {
+  rotate([0, 0, 90])
+  BikeRackMountCenter();
+}

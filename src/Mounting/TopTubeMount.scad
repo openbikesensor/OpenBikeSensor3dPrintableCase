@@ -14,5 +14,10 @@ module TopTubeMount() {
   }
 }
 
-rotate([90, 0, 0])
-TopTubeMount();
+if (orient_for_printing) {
+  rotate([90, 0, 0])
+  TopTubeMount();
+} else {
+  rotate([0, 0, 180])
+  TopTubeMount();
+}

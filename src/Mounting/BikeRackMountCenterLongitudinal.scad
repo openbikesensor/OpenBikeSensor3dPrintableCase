@@ -7,6 +7,10 @@ use <./BikeRackMountCenter.scad>
 // front to back, in the center piece of the mount. This also changes the base
 // shape and print orientation.
 
-translate([0, 0, -10])
-rotate([180, 0, 0])
-BikeRackMountCenter(longitudinal=true);
+if (orient_for_printing) {
+  translate([0, 0, -10])
+  rotate([180, 0, 0])
+  BikeRackMountCenter(longitudinal=true);
+} else {
+  BikeRackMountCenter(longitudinal=true);
+}
