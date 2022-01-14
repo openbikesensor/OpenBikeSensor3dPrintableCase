@@ -17,7 +17,7 @@ This repository contains a lot of files for different options
 
 * The `export/` folder contains the latest prebuilt `.stl` files for 3D printing.
   You can use those unless you want to make customizations. If you contribute
-  changes to the models, you can refresh the models you changed using the 
+  changes to the models, you can refresh the models you changed using the
   ``make export-all`` command.
 * The `legacy/` folder contains old versions of the case, including lots of
   variants that were created but unmaintained. These were built with
@@ -225,6 +225,13 @@ the screw holes and (optional) cable hole are not left open. The
 
 ![Mounting/BikeRackMountSide](./render/thumbnails/Mounting/AttachmentCover.png)
 
+#### Back rider to top rider adapter
+
+This adapter allows the use of a "back rider" main case on a "top rider" mount.
+Print a second locking pin as well.
+
+![Mounting/BackRiderTopRiderAdapter](./render/thumbnails/Mounting/BackRiderTopRiderAdapter.png)
+
 ### Customization options
 
 There are tons of variables in the `variables.scad` file, mostly dimensions,
@@ -271,7 +278,8 @@ don't necessarily need to have an adapter attached, though it is recommended to
 do so in order to fill the screw and cable holes.
 
 To configure whether to generate top and/or back riders, set the following
-variables. The `_cable` variables control whether the corresponding attachment port (if it exists) has a hole for the cable or not.
+variables. The `_cable` variables control whether the corresponding attachment
+port (if it exists) has a hole for the cable or not.
 
 ```
 MainCase_back_rider
@@ -279,6 +287,9 @@ MainCase_top_rider
 MainCase_back_rider_cable
 MainCase_top_rider_cable
 ```
+
+The `Mounting/BackRiderTopRiderAdapter` is available for people who have a back
+rider and would like to use a top rider mount. The opposite is not available.
 
 #### Dimensions
 
