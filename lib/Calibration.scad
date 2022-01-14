@@ -51,13 +51,13 @@ module CalibrationText(text, size=text_size) {
 }
 
 module HolePatternM3Screw() {
-  HolePattern(hex=false, nominal_diameter=3, cmin=0, cmax=0.6, n=13);
+  HolePattern(hex=false, nominal_diameter=3, cmin=0.1, cmax=0.4, n=7);
 }
 
 function round_to(x, digits) = round(x*10^digits) / 10^digits;
 
 module HolePatternM3HexNut() {
   d = round_to(HexWidthToDiameter(5.5), 2);
-  HolePattern(hex=true, nominal_diameter=d, cmin=-0.2, cmax=0.2, n=9);
+  HolePattern(hex=true, nominal_diameter=d, cmin=-0.1, cmax=0.2, n=7);
 }
 
