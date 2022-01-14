@@ -120,7 +120,7 @@ module GpsAntennaLid() {
   }
 }
 
-module MainCase(without_inserts=false) {
+module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=MainCase_back_rider) {
   difference() {
     union() {
       // Main outer wall and bottom
@@ -284,13 +284,13 @@ module MainCase(without_inserts=false) {
         }
       }
 
-      if (MainCase_back_rider) {
+      if (back_rider) {
         translate([OBS_height/2, 0, OBS_depth-4])
         rotate([90, 90, 0])
         MountAttachment();
       }
 
-      if (MainCase_top_rider) {
+      if (top_rider) {
         translate([0, OBS_height/2, OBS_depth-4])
         rotate([0, 90, 180])
         MountAttachment();
@@ -370,13 +370,13 @@ module MainCase(without_inserts=false) {
     }
 
     // Holes in the attachment
-    if (MainCase_back_rider) {
+    if (back_rider) {
       translate([OBS_height/2, wall_thickness, OBS_depth-4])
       rotate([90, 90, 0])
       MountAttachmentHolePattern(with_cable_hole=MainCase_back_rider_cable);
     }
 
-    if (MainCase_top_rider) {
+    if (top_rider) {
       translate([wall_thickness, OBS_height/2, OBS_depth-4])
       rotate([0, 90, 180])
       MountAttachmentHolePattern(with_cable_hole=MainCase_top_rider_cable);
