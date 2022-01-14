@@ -228,7 +228,7 @@ HandlebarRail_tube_indent = 1;
 DisplayCaseTop_height = 8;
 DisplayCase_magnet_length = 20;
 DisplayCase_magnet_thickness = 1.9;
-DisplayCaseTop_magnet_depth = 3.5;
+DisplayCaseTop_magnet_depth = 6.5;
 DisplayCaseTop_window_depth = 3;
 DisplayCaseTop_window_width = 21.5;
 DisplayCaseTop_window_height = 12.5;
@@ -244,7 +244,7 @@ DisplayCaseTop_button_outside_diameter = 18;
 DisplayCaseTop_button_outside_depth = 4;
 
 DisplayCaseBottom_height = 11;
-DisplayCaseBottom_magnet_depth = 6.5;
+DisplayCaseBottom_magnet_depth = 10.4 - DisplayCaseTop_magnet_depth;
 DisplayCaseBottom_standoff_size = 2.8;
 DisplayCaseBottom_standoff_height = 2;
 DisplayCaseBottom_standoff_bridge_height = 0.5;
