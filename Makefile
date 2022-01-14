@@ -1,7 +1,7 @@
 OPENSCAD=/usr/bin/openscad
 OPENSCAD_OPTIONS=-DVERBOSE=false -q
-IMAGE_OPTIONS=--imgsize=1024,768 --colorscheme "Tomorrow Night" --render true
-THUMBNAIL_OPTIONS=--imgsize=400,300 --colorscheme "Tomorrow Night" --render true -D fast=true
+IMAGE_OPTIONS=--imgsize=1024,768 --colorscheme "Tomorrow Night" --render true -D orient_for_printing=false
+THUMBNAIL_OPTIONS=--imgsize=400,300 --colorscheme "Tomorrow Night" --render true -D fast=true -D orient_for_printing=false
 
 SRCS=$(wildcard src/*/*.scad)
 STLS=$(patsubst src/%.scad,export/%.stl,$(SRCS))
@@ -16,7 +16,7 @@ clean:
 
 export/%.stl: src/%.scad
 	@mkdir -p $(shell dirname $@)
-	$(OPENSCAD) $(OPENSCAD_OPTIONS) -o $@ $<
+	$(OPENSCAD) $(OPENSCAD_OPTIONS) -D orient_for_printing=true -o $@ $<
 
 export-all : $(STLS)
 

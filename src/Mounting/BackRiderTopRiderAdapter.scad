@@ -26,7 +26,15 @@ module BackRiderTopRiderAdapter() {
   }
 }
 
-BackRiderTopRiderAdapter();
+
+if (orient_for_printing) {
+  translate([0, 0, MountRail_width/2])
+  rotate([0, 90, 0])
+  BackRiderTopRiderAdapter();
+} else {
+  rotate([0, 0, -90])
+  BackRiderTopRiderAdapter();
+}
 
 // if ($preview)
 // translate([-30, 10, 0])

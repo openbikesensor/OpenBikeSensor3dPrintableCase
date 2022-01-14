@@ -7,6 +7,8 @@ layer_height = 0.2; // used e.g. by easy print algorithms
 default_clearance = 0.2; // distance between two things that should fit into each other
 fast = $preview; // in fast mode, not all features are rendered
 
+orient_for_printing = false; // set to false to generate nice previews and such, to true for printing output in proposed orientation
+
 // Quality parameters
 
 $fs = 0.2;
