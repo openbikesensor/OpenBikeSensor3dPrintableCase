@@ -232,7 +232,7 @@ Print a second locking pin as well.
 
 ![Mounting/BackRiderTopRiderAdapter](./render/thumbnails/Mounting/BackRiderTopRiderAdapter.png)
 
-### Customization options
+## Customization
 
 There are tons of variables in the `variables.scad` file, mostly dimensions,
 which can be adjusted to suit your needs. Some of these variables are however
@@ -244,7 +244,7 @@ defaults get you most of the way, but certainly, some users will need a
 different set of features, so here is a list of options you might want to
 change:
 
-#### Print settings
+### Print settings
 
 Some options exist to control sizes and features that have been added just for
 3D printing ease. Configure these to match your printing setup. The defaults
@@ -258,7 +258,7 @@ layer_height
 default_clearance
 ```
 
-#### Top Rider vs. Back Rider
+### Top Rider vs. Back Rider
 
 A "top rider" variant main case has an attachment port on the bottom (when
 mounted), while a "back rider" has it on the front. The "tranditional" OBS case
@@ -291,7 +291,7 @@ MainCase_top_rider_cable
 The `Mounting/BackRiderTopRiderAdapter` is available for people who have a back
 rider and would like to use a top rider mount. The opposite is not available.
 
-#### Dimensions
+### Dimensions
 
 * General
   * `ScrewHole_diameter_M3`: A hole for an M3 bolt has this diameter. Usually,
