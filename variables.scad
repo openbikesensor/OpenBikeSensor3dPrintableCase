@@ -120,6 +120,7 @@ GpsAntennaLid_tab_height = 1;
 MainCase_micro_usb_offset = 30 + PCB_offset.y + wall_thickness;
 MainCase_micro_usb_width = 16;
 MainCase_micro_usb_height = 14;
+MainCase_small_corner_radius = 5;
 
 TopHole4_offset_top = 35;
 TopHole_distance = 3.5;

@@ -16,7 +16,12 @@ module BackRiderTopRiderAdapter() {
     translate([MountRail_width/2, StandardMountAdapter_length/2, 0])
     rotate([90, 0, -90])
     roundedCube([post_width, center_height + MountRail_plate_width/2-MountRail_clearance, MountRail_width], [0, 0, 0, post_width]);
-
+    
+    difference(){
+      translate([MountRail_width/2, StandardMountAdapter_length/2, 0])rotate([90, 0, -90])cube([10+MainCase_small_corner_radius,MainCase_small_corner_radius,MountRail_width]);
+      translate([MountRail_width/2+.2, StandardMountAdapter_length/2-10-MainCase_small_corner_radius, 5])rotate([90, 0, -90])cylinder(r=MainCase_small_corner_radius,h=MountRail_width+.5);
+    }
+        
     translate([0, StandardMountAdapter_length/2-post_width, center_height])
     rotate([90, 0, 0])
     rotate([0, 0, 90])
