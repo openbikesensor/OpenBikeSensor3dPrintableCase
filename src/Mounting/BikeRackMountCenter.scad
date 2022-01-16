@@ -5,16 +5,17 @@ use <../../lib/utils.scad>
 
 module BikeRackMountSide() {
   r1 = 1;
-  w = 8;
+  w = 10;
   W = 20;
   r2 = BikeRackMount_rail_diameter/2 + w;
   r3 = 4;
+  l = 0; // parameter to widen the part on the screw side.
 
   difference() {
     rotate([90, 0, -90])
     linear_extrude(BikeRackMountSide_length, center=true, convexity=2)
     polygon(polyRound([
-      [0, 0, r1],
+      [-l, 0, r1+2],
       [W, 0, r1],
 
       [W, -r2/2, r2],
@@ -22,7 +23,7 @@ module BikeRackMountSide() {
       // [w + r3, -r2, 0],
       [w, -r2, r2],
       [w, -BikeRackMountSide_height, r1],
-      [0, -BikeRackMountSide_height, r1],
+      [-l, -BikeRackMountSide_height, r1],
     ], fn=$pfn));
 
     // rail
@@ -50,6 +51,9 @@ module BikeRackMountSide() {
 
     rotate([0, 0, 90])
     RodHoles();
+
+    translate([0, -w/2, 0])
+    ClampSlit(double_holes=false);
   }
 }
 
@@ -64,18 +68,37 @@ module RodHoles() {
 
 vertical_offset = 10;
 
-module BikeRackMountCenter(longitudinal=false) {
+module ClampSlit(double_holes=false) {
+  slit_size = 0.5;
+  slit_z = -BikeRackMountSide_height + BikeRackMount_rod_diameter/2 + BikeRackMount_bottom_spacing - slit_size/2;
 
+  translate([-MountRail_width/2, -BikeRackMount_rod_distance/2, slit_z])
+  cube([MountRail_width, BikeRackMount_rod_distance, slit_size]);
+
+  for(i=double_holes ? [-1, 1] : [0])
+  translate([6*i, 0, 0]) {
+    translate([0, 0, -BikeRackMountSide_height])
+    mirror([0, 0, 1])
+    HeatsetInsertHole();
+
+    // how far down does the screw go? to the bottom, but 1/3 up the insert
+    // depth (grips 2/3 of the insert's threads, that should be enough)
+    d = BikeRackMountSide_height - m3_insert_hole_depth*1/3;
+    translate([0, 0, 0])
+    ScrewHoleM3(head_depth=d-8, depth=d); // head depth is 8mm less than screw depth for M3x8
+  }
+}
+
+
+module BikeRackMountCenter(longitudinal=false) {
+  w = MountRail_plate_width - 2 * MountRail_clearance;
+  r = 5;
   difference() {
     union () {
       translate([MountRail_width/2, 0, -vertical_offset-MountRail_total_height])
       rotate([0, 0, 90])
       mirror([0, 0, 1])
       MountRail(MountRail_clearance);
-
-      w = MountRail_plate_width - 2 * MountRail_clearance;
-      r = 5;
-
       if (longitudinal) {
         difference() {
           hull()
@@ -108,6 +131,9 @@ module BikeRackMountCenter(longitudinal=false) {
     } else {
       RodHoles();
     }
+
+    rotate([0, 0, longitudinal?90:0])
+    ClampSlit(double_holes=true);
   }
 }
 
@@ -129,14 +155,14 @@ module BikeRackMountDebug() {
   cylinder(d=BikeRackMount_rod_diameter, h=200, center=true);
 }
 
-// !BikeRackMountCenter();
+// !BikeRackMountDebug();
 
 if (orient_for_printing) {
   translate([0, 0, MountRail_width/2])
   rotate([0, -90, 0])
   translate([0, 0, BikeRackMountSide_height])
-  BikeRackMountCenter();
+  BikeRackMountCenter(false);
 } else {
   rotate([0, 0, 90])
-  BikeRackMountCenter();
+  BikeRackMountCenter(false);
 }
