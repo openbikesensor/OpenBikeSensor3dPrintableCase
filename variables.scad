@@ -44,6 +44,8 @@ HeatsetInsert_extra_radius = 0.5;
 
 // Holes for M3 screws, including clearance
 ScrewHole_diameter_M3 = 3.2;
+ScrewHead_diameter_M3 = 5.8;
+ScrewHead_height_M3 = 3.4;
 
 SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
@@ -275,7 +277,7 @@ StandardMountAdapter_thickness = 7;
 StandardMountAdapter_side_width = (StandardMountAdapter_length - MountRail_base_width)/2;
 
 BikeRackMount_rail_diameter = 14; // add a bit for padding, e.g. 2*1mm for a cut piece rubber tube
-BikeRackMount_rod_diameter = 10.5; // add a bit of clearance, e.g. 0.5mm
+BikeRackMount_rod_diameter = 10.2; // add a bit of clearance, e.g. 0.2mm
 BikeRackMount_rod_distance = 24;
 
 BikeRackMountSide_channel_width = 6;

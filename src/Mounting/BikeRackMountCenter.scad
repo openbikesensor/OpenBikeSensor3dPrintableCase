@@ -9,12 +9,13 @@ module BikeRackMountSide() {
   W = 20;
   r2 = BikeRackMount_rail_diameter/2 + w;
   r3 = 4;
+  l = 0; // parameter to widen the part on the screw side.
 
   difference() {
     rotate([90, 0, -90])
     linear_extrude(BikeRackMountSide_length, center=true, convexity=2)
     polygon(polyRound([
-      [0, 0, r1],
+      [-l, 0, r1+2],
       [W, 0, r1],
 
       [W, -r2/2, r2],
@@ -22,7 +23,7 @@ module BikeRackMountSide() {
       // [w + r3, -r2, 0],
       [w, -r2, r2],
       [w, -BikeRackMountSide_height, r1],
-      [0, -BikeRackMountSide_height, r1],
+      [-l, -BikeRackMountSide_height, r1],
     ], fn=$pfn));
 
     // rail
@@ -50,6 +51,16 @@ module BikeRackMountSide() {
 
     rotate([0, 0, 90])
     RodHoles();
+    translate([0, 0,  -BikeRackMountSide_height + BikeRackMount_rod_diameter/2+BikeRackMount_bottom_spacing])
+    cube([MountRail_width, MountRail_width,0.5],center=true);
+    translate([0,(-w+l)/2,  -BikeRackMountSide_height]){
+      cylinder(d=HeatsetInsert_diameter,h=HeatsetInsert_full_depth,center=false);
+      translate([0,0,HeatsetInsert_full_depth])
+        cylinder(d=HeatsetInsert_diameter+2*HeatsetInsert_extra_radius,h=HeatsetInsert_height-HeatsetInsert_full_depth,center=false);
+      cylinder(d=ScrewHole_diameter_M3,h=BikeRackMountSide_height);
+      translate([0,0,BikeRackMountSide_height-ScrewHead_height_M3-BikeRackMount_rail_diameter/2])
+        cylinder(d=ScrewHead_diameter_M3,h=ScrewHead_height_M3+BikeRackMount_rail_diameter/2);
+    }
   }
 }
 
@@ -65,17 +76,14 @@ module RodHoles() {
 vertical_offset = 10;
 
 module BikeRackMountCenter(longitudinal=false) {
-
+  w = MountRail_plate_width - 2 * MountRail_clearance;
+  r = 5;
   difference() {
     union () {
       translate([MountRail_width/2, 0, -vertical_offset-MountRail_total_height])
       rotate([0, 0, 90])
       mirror([0, 0, 1])
       MountRail(MountRail_clearance);
-
-      w = MountRail_plate_width - 2 * MountRail_clearance;
-      r = 5;
-
       if (longitudinal) {
         difference() {
           hull()
@@ -108,6 +116,20 @@ module BikeRackMountCenter(longitudinal=false) {
     } else {
       RodHoles();
     }
+    // slit for clamping
+    translate([0, 0,  -BikeRackMountSide_height + BikeRackMount_rod_diameter/2+BikeRackMount_bottom_spacing])
+    rotate([0, 0, longitudinal?90:0])
+    cube([MountRail_width, MountRail_width,0.5],center=true);
+    rotate([0, 0, longitudinal?90:0])
+    for(i=[-1,1])
+    translate([6*i,0,  -BikeRackMountSide_height]){
+      cylinder(d=HeatsetInsert_diameter,h=HeatsetInsert_full_depth,center=false);
+      translate([0,0,HeatsetInsert_full_depth])
+        cylinder(d=HeatsetInsert_diameter+2*HeatsetInsert_extra_radius,h=HeatsetInsert_height-HeatsetInsert_full_depth,center=false);
+      cylinder(d=ScrewHole_diameter_M3,h=BikeRackMountSide_height-vertical_offset);
+      translate([0,0,BikeRackMountSide_height-vertical_offset-ScrewHead_height_M3])
+        cylinder(d=ScrewHead_diameter_M3,h=ScrewHead_height_M3);
+    }
   }
 }
 
@@ -135,8 +157,11 @@ if (orient_for_printing) {
   translate([0, 0, MountRail_width/2])
   rotate([0, -90, 0])
   translate([0, 0, BikeRackMountSide_height])
-  BikeRackMountCenter();
+  BikeRackMountCenter(false);
 } else {
   rotate([0, 0, 90])
-  BikeRackMountCenter();
+  BikeRackMountCenter(false);
 }
+
+
+translate([60,0,0])  BikeRackMountSide();
