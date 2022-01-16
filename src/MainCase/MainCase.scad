@@ -473,7 +473,63 @@ module MountAttachmentHolePattern(with_cable_hole=true) {
   }
 }
 
-MainCase();
+module GenerateWithLogo(mode=logo_mode, part=logo_part) {
+  module _logo_cutout(extra_depth=0) {
+    linear_extrude(height=logo_depth+extra_depth, center=false, convexity = logo_convexity)
+    children();
+  }
+
+  module _logo_cutout_with_mode() {
+    if (mode == "normal") {
+      _logo_cutout()children();
+    } else if (mode == "inverted") {
+      difference() {
+        translate([-1000, -1000, 0])
+        cube([2000, 2000, logo_depth]);
+
+        translate([0, 0, -1])
+        _logo_cutout(2)children();
+      }
+    } else {
+      assert(false, str("unknown mode ", mode));
+    }
+  }
+
+  if (!logo_enabled) {
+    children(0);
+  } else {
+    if (part == "main") {
+      difference() {
+        children(0);
+        _logo_cutout_with_mode()children(1);
+      }
+    } else if (part == "highlight") {
+      intersection() {
+        children(0);
+        _logo_cutout_with_mode()children(1);
+      }
+    } else {
+      assert(false, str("unknown logo part ", part));
+    }
+  }
+}
+
+if (logo_generate_templates) {
+  rotate([0, 0, -90])
+  projection(cut=true)
+  mirror([1, 0, 0])
+  MainCase();
+} else {
+  GenerateWithLogo() {
+    MainCase();
+
+    mirror([0, 1, 0])
+    rotate([0, 0, -90])
+    translate([0, -72-72, 0])
+    import(str("../../logo/", logo_name, "/MainCase.svg"));
+  }
+}
 
 // Draw the PCB for debugging (disable with *, highlight with #)
 *DebugPCB();
+

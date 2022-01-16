@@ -87,6 +87,8 @@ module MainCaseLid() {
     }
   }
 
+  translate([0, 0, MainCaseLid_thickness])
+  rotate([180, 0, 90])
   difference() {
     union() {
       MainCaseBody(reduce=0, depth=MainCaseLid_thickness);
@@ -124,6 +126,18 @@ module MainCaseLid() {
   }
 }
 
-translate([0, 0, MainCaseLid_thickness])
-rotate([180, 0, 0])
-MainCaseLid();
+if (logo_generate_templates) {
+  mirror([1, 0, 0])
+  projection(cut=true)
+  translate([0, 0, -0.001])
+  MainCaseLid();
+} else {
+  GenerateWithLogo() {
+    MainCaseLid();
+
+    mirror([1, 0, 0])
+    translate([-104, -72-72, 0])
+    import(str("../../logo/", logo_name, "/MainCaseLid.svg"));
+  }
+}
+

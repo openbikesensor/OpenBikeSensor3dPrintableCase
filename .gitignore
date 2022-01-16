@@ -1,2 +1,8 @@
 render/*
 !render/thumbnails
+export/logo/*
+!export/logo/OpenBikeSensor
+logo/*
+!logo/OpenBikeSensor
+!logo/template
+!logo/README.md
