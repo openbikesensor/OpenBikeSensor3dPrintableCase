@@ -8,8 +8,8 @@ use <../Mounting/StandardMountAdapter.scad>
 module MainCaseBody(reduce=0, depth=OBS_depth) {
   linear_extrude(depth)
   polygon(polyRound([
-    [reduce, reduce, 5-reduce],
-    [OBS_height-reduce, reduce, 5-reduce],
+    [reduce, reduce, MainCase_small_corner_radius-reduce],
+    [OBS_height-reduce, reduce, MainCase_small_corner_radius-reduce],
     [OBS_height-reduce, OBS_width-reduce, 16-reduce],
     [reduce, OBS_width_small-reduce, 16-reduce],
   ], fn=$pfn));
