@@ -15,7 +15,7 @@ module BikeRackMountSide() {
     rotate([90, 0, -90])
     linear_extrude(BikeRackMountSide_length, center=true, convexity=2)
     polygon(polyRound([
-      [-l, 0, r1+2],
+      [-l, 0, r1+l],
       [W, 0, r1],
 
       [W, -r2/2, r2],
@@ -163,5 +163,3 @@ if (orient_for_printing) {
   BikeRackMountCenter(false);
 }
 
-
-translate([60,0,0])  BikeRackMountSide();
