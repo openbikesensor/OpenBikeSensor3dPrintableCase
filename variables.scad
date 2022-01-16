@@ -16,6 +16,22 @@ $fa = 1;
 $fn = fast ? 32 : 128;
 $pfn = fast ? 20 : $fn; // for polyRound
 
+// Logo options
+// ------------------------
+// Please do not modify these, they are overwritten by the Makefile when you
+// generate parts with logos.
+logo_enabled = true;
+logo_generate_templates = false;
+logo_name = "OpenBikeSensor";
+logo_mode = "normal"; // "normal" or "inverted"
+logo_part = "main"; // "main" or "highlight"
+
+// You may change these if you need to, but 2 layers tends to be a good balance
+// of filament switching hassle and opacity.
+logo_layers = 2;
+logo_depth = logo_layers * layer_height;
+logo_convexity = 10; // increase if you get artifacts
+
 // Variations on MainCase
 // ------------------------
 

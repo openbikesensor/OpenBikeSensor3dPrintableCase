@@ -320,3 +320,10 @@ rider and would like to use a top rider mount. The opposite is not available.
 * `HandlebarRail`
   * `HandlebarRail_tube_radius`: The radius (half diameter) of your handlebar,
     in mm.
+
+### Logo customization
+
+The `Makefile` supports generating the case with different logos. For now, the
+only parts that are customizable with logos are `MainCase/MainCase` and
+`MainCase/MainCaseLid`. Please check the instructions in
+[`logo/README.md`](./logo/README.md) for creating your own logo version.
