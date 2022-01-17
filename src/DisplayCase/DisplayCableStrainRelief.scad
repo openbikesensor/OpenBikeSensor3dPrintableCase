@@ -11,8 +11,8 @@ module DisplayCableStrainRelief() {
 
     difference() {
       union () {
-        scale([1, 12/14, 1])
-        cylinder(r=8.2, h=1.5);
+        scale([8.2/6.7, 12/14, 1])
+        cylinder(r=6.7, h=1.5);
 
         translate([0, 0, 1.5])
         scale([1, 12/14, 1])
@@ -38,10 +38,14 @@ module DisplayCableStrainRelief() {
       translate([0, 0, -1])
       cylinder(r=2.5, h=100);
 
-      // clearance for fitting in
-      rotate([0, -30, 0])
-      translate([0, -50, -20])
-      cube([1, 100, 40]);
+      // // clearance angle for fitting in
+      rotate([90, 0, 0])
+      linear_extrude(100, center=true)
+      polygon([
+        [0, 0],
+        [0, 2.8],
+        [2, 0]
+      ]);
 
       translate([3, 4.4, 10])
       rotate([0, 90, 0])
