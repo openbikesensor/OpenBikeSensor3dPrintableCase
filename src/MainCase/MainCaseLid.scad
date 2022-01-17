@@ -121,7 +121,7 @@ module MainCaseLid() {
     // Holes for M3 screws
     for (hole = MainCaseLid_hole_positions) {
       translate([hole.x, hole.y, -1])
-      cylinder(d=ScrewHole_diameter_M3, h=10, $fn=32);
+      cylinder(d=m3_screw_diameter_loose, h=10, $fn=32);
     }
   }
 }

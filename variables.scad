@@ -53,18 +53,22 @@ MainCase_top_rider_cable = !(MainCase_back_rider && MainCase_back_rider_cable);
 // Dimensions for parts
 // ------------------------
 
-HeatsetInsert_diameter = 4;
-HeatsetInsert_height = 5.75;
-HeatsetInsert_full_depth = 4.5; // how far the normal hole reaches before it expands to the cavity
-HeatsetInsert_extra_radius = 0.5;
+// General thickness of all walls of the main case and where applicable
+wall_thickness = 2;
 
-// Holes for M3 screws, including clearance
-ScrewHole_diameter_M3 = 3.2;
+// Dimensions of M3 hardware
+m3_screw_diameter_tight = 3.0; // screw should grab the plastic well
+m3_screw_diameter_loose = 3.25; // screw should slide in nicely
+m3_screw_head_depth = 3; // minimum depth for sinking the screw head
+m3_screw_head_diameter = 6; // can have a little clearance
+m3_hex_nut_diameter = 6.45; // outer circle, *not* wrench size (S), but `S*2/sqrt(3)`, plus clearance
+m3_insert_hole_diameter = 4;
+m3_insert_hole_depth = 5.75;
+m3_insert_cavity_depth = 5.75 - 4.5;  // size of cavity on the bottom for displaced plastic
+m3_insert_cavity_diameter = m3_insert_hole_diameter + 1;
 
 SensorHole_diameter = 22.3; // 0.3 clearance
 SensorHole_ledge = 1.0;
-
-wall_thickness = 2;
 
 UsbCover_height = 9.7;
 UsbCover_foot_height = 1.5;
@@ -222,9 +226,6 @@ MountAttachment_holes_x_offset = -0.5;
 MountAttachment_holes_dx = 15;
 MountAttachment_holes_dy = 33;
 
-HexNutHole_diameter = 6.5;
-HexNutHole_depth = 4;
-
 HandlebarRailRail_height = 7;
 HandlebarRailRail_length = 32.4;
 
@@ -303,3 +304,11 @@ BikeRackMountSide_height = 28 + BikeRackMount_bottom_spacing;
 
 TopTubeMount_diameter = 72;
 TopTubeMount_height = 20;
+
+LockingPin_diameter = 5.2;
+LockingPin_small_hole_diameter = 2.0;
+LockingPin_height = 15;
+LockingPin_handle_length = 15.2;
+LockingPin_handle_height = 3.5;
+LockingPin_foot_height = 2.0;
+LockingPin_fillet_radius = 2.0;

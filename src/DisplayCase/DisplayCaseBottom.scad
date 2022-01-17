@@ -44,7 +44,7 @@ module DisplayCaseBottom() {
         scale([14/12, 1, 1]) // scale to a side ratio of 14:12
         cylinder(d=12, h=100);
 
-        left = DisplayCase_outer_width-DisplayCase_outer_large_radius-(DisplayCase_outer_radius+2+HeatsetInsert_diameter/2+1);
+        left = DisplayCase_outer_width-DisplayCase_outer_large_radius-(DisplayCase_outer_radius+2+m3_insert_hole_diameter/2+1);
         right =  DisplayCase_outer_width/2+DisplayCaseTop_pcb_width/2-default_clearance-DisplayCaseBottom_standoff_size-(DisplayCase_outer_width-DisplayCase_outer_large_radius);
         translate([-left, 0, 4])
         cube([left+right, 5+21/2, 30]);

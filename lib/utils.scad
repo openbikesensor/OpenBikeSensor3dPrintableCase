@@ -39,16 +39,15 @@ module roundedCube(dimen, radii, center=false) {
 }
 
 module HeatsetInsertHole(bottom=false) {
-  translate([0, 0, bottom ? 0 : -HeatsetInsert_height]) {
-
+  translate([0, 0, bottom ? 0 : -m3_insert_hole_depth]) {
     rotate_extrude()
     polygon([
       [0, 0],
-      [0, HeatsetInsert_height],
-      [HeatsetInsert_diameter/2, HeatsetInsert_height],
-      [HeatsetInsert_diameter/2, HeatsetInsert_height-HeatsetInsert_full_depth],
-      [HeatsetInsert_diameter/2+HeatsetInsert_extra_radius, HeatsetInsert_height-HeatsetInsert_full_depth-HeatsetInsert_extra_radius],
-      [HeatsetInsert_diameter/2+HeatsetInsert_extra_radius, 0],
+      [0, m3_insert_hole_depth],
+      [m3_insert_hole_diameter/2, m3_insert_hole_depth],
+      [m3_insert_hole_diameter/2, m3_insert_cavity_depth+(m3_insert_cavity_diameter-m3_insert_hole_diameter)/2],
+      [m3_insert_cavity_diameter/2, m3_insert_cavity_depth],
+      [m3_insert_cavity_diameter/2, 0],
     ]);
   }
 }
@@ -97,7 +96,7 @@ module MountRail(clearance=MountRail_clearance) {
 
 module ScrewHole(
   depth, // total depth, including head
-  diameter=ScrewHole_diameter_M3,
+  diameter,
   head_depth=0,
   head_diameter=0,
   elongation=0,
@@ -126,9 +125,9 @@ module ScrewHole(
 module ScrewHoleM3(depth, head_depth=0, elongation=0) {
   ScrewHole(
     depth,
-    diameter=ScrewHole_diameter_M3,
+    diameter=m3_screw_diameter_loose,
     head_depth=head_depth,
-    head_diameter=ScrewHole_diameter_M3*2,
+    head_diameter=m3_screw_head_diameter,
     elongation=elongation
   );
 }

@@ -20,7 +20,7 @@ module DebugPCB() {
   translate([wall_thickness, wall_thickness, wall_thickness])
 
   // move up by the height of the screw inserts
-  translate([0, 0, HeatsetInsert_height])
+  translate([0, 0, m3_insert_hole_depth])
 
   // move by the offset
   translate([PCB_offset.x, PCB_offset.y, 0])
@@ -32,12 +32,12 @@ module DebugPCB() {
 
 module HeatsetInsertStandoff(extend=0) {
   HeatsetInsertStandoff_profile_points = [
-    [0, HeatsetInsert_height*0/3],
-    [0, HeatsetInsert_height*3/3],
-    [HeatsetInsert_diameter, HeatsetInsert_height*3/3],
-    [HeatsetInsert_diameter, HeatsetInsert_height*2/3],
-    [HeatsetInsert_diameter + HeatsetInsert_height/3, HeatsetInsert_height*1/3],
-    [HeatsetInsert_diameter + HeatsetInsert_height/3, HeatsetInsert_height*0/3],
+    [0, m3_insert_hole_depth*0/3],
+    [0, m3_insert_hole_depth*3/3],
+    [m3_insert_hole_diameter, m3_insert_hole_depth*3/3],
+    [m3_insert_hole_diameter, m3_insert_hole_depth*2/3],
+    [m3_insert_hole_diameter  + m3_insert_hole_depth/3, m3_insert_hole_depth*1/3],
+    [m3_insert_hole_diameter  + m3_insert_hole_depth/3, m3_insert_hole_depth*0/3],
   ];
 
   render()
@@ -116,7 +116,7 @@ module GpsAntennaLid() {
     }
 
     translate([0, GpsAntennaHousing_top_height / 2 - GpsAntennaHousing_screw_offset,  GpsAntennaHousing_depth - GpsAntennaLid_thickness])
-    cylinder(d=ScrewHole_diameter_M3, h=10, $fn=32);
+    cylinder(d=m3_screw_diameter_loose, h=10, $fn=32);
   }
 }
 
@@ -235,11 +235,11 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           rotate([90,0,0])
           linear_extrude(OBS_width)
           polygon(polyRound([
-            [wall_thickness, wall_thickness+HeatsetInsert_height, 0],
-            [OBS_height-wall_thickness, wall_thickness+HeatsetInsert_height, 0],
-            [OBS_height-wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
+            [wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
+            [OBS_height-wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
+            [OBS_height-wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
             [OBS_height/2, OBS_depth-20+OBS_height/2, 0],
-            [wall_thickness, OBS_depth-2*HeatsetInsert_height, 0],
+            [wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
           ], fn=$pfn));
 
           translate([0, 78, 0])
@@ -273,7 +273,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
             // a little standoff for the PCB
             translate([wall_thickness, PCB_offset.y + wall_thickness, wall_thickness])
-            linear_extrude(HeatsetInsert_height)
+            linear_extrude(m3_insert_hole_depth)
             polygon(polyRound([
               [0, 0, 0],
               [3, 0, 0],
@@ -362,7 +362,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     }
 
     // Hole for USB Charger Port
-    translate([UsbPort_offset, 0, HeatsetInsert_height + wall_thickness - UsbPort_vertical_offset])
+    translate([UsbPort_offset, 0, m3_insert_hole_depth + wall_thickness - UsbPort_vertical_offset])
     hull()for(i=[-1, 1])for(j=[-1, 1]) {
       translate([i/2*6.5, 0, j/2*0.7])
       rotate([-90, 0, 0])
@@ -394,14 +394,14 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
   }
 }
 
-module HexNutHole(depth=0) {
+module HexNutHole(nut_depth=3, screw_depth=0) {
   mirror([0, 0, 1])
   union() {
-    cylinder(d=HexNutHole_diameter, h=HexNutHole_depth, $fn=6);
+    cylinder(d=m3_hex_nut_diameter, h=nut_depth, $fn=6);
 
-    if (depth > HexNutHole_depth) {
-      translate([0, 0, HexNutHole_depth])
-      cylinder(d=ScrewHole_diameter_M3, h=depth - HexNutHole_depth, $fn=32);
+    if (screw_depth > nut_depth) {
+      translate([0, 0, nut_depth])
+      cylinder(d=m3_screw_diameter_loose, h=screw_depth - nut_depth, $fn=32);
     }
   }
 }
@@ -467,7 +467,7 @@ module MountAttachmentHolePattern(with_cable_hole=true) {
           j * MountAttachment_holes_dy / 2,
           0,
         ])
-        HexNutHole(20);
+        HexNutHole(nut_depth=4, screw_depth=20);
       }
     }
   }

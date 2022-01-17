@@ -9,7 +9,7 @@ module LockingPinHole(depth=16) {
   union() {
     // the pin
     translate([0, 0, -depth-4])
-    cylinder(h=depth, d=3.2);
+    cylinder(h=depth, d=m3_screw_diameter_loose);
 
     // the chamber
     translate([-6, -5.5/2, -4])

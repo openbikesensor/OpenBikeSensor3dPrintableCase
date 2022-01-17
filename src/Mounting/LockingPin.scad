@@ -1,14 +1,5 @@
 include <../../variables.scad>
 
-LockingPin_diameter = 5.2;
-LockingPin_hole_diameter = 3.0;
-LockingPin_small_hole_diameter = 2.0;
-LockingPin_height = 15;
-LockingPin_handle_length = 15.2;
-LockingPin_handle_height = 3.5;
-LockingPin_foot_height = 2.0;
-LockingPin_fillet_radius = 2.0;
-
 // $fa = 1;
 // $fs = 0.1;
 $fn = 64;
@@ -69,7 +60,7 @@ module LockingPin() {
 
       // hole in main shaft, for holding screw
       translate([0, 0, -1])
-      cylinder(d=LockingPin_hole_diameter, h=LockingPin_height+2);
+      cylinder(d=m3_screw_diameter_tight, h=LockingPin_height+2);
     }
   }
 }

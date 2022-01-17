@@ -31,7 +31,7 @@ module DisplayCableStrainRelief() {
         for(i=[-1,1])
         translate([0, i*4.4, 10])
         rotate([0, 90, 0])
-        cylinder(r=3.2, h=3);
+        cylinder(d=m3_screw_head_diameter, h=3);
       }
 
       // for the cable
@@ -46,11 +46,11 @@ module DisplayCableStrainRelief() {
       translate([3, 4.4, 10])
       rotate([0, 90, 0])
       rotate([0, 0, 360/6/2])
-      cylinder(r=3.2, h=200, $fn=6);
+      cylinder(d=m3_hex_nut_diameter, h=200, $fn=6);
 
       translate([3, -4.4, 10])
       rotate([0, 90, 0])
-      cylinder(r=3.2, h=200);
+      cylinder(d=m3_screw_head_diameter, h=200);
 
       for(i=[-1,1])
       translate([0, i*4.4, 10])
