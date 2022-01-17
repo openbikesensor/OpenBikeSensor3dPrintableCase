@@ -42,13 +42,13 @@ MainCase_back_rider = true;
 // A "top rider" is a case that has an attachment on its bottom, sitting on top
 // of a compatible mount, such as on the top tube or luggage rack. A single
 // MainCase can be both back rider and top rider.
-MainCase_top_rider = false;
+MainCase_top_rider = true;
 
 // Decide which attachment (of those that exist) has a hole for a cable. Both
 // or none are possible. Each hole should be covered with an adapter or cover
 // to seal the enclosure.
 MainCase_back_rider_cable = true;
-MainCase_top_rider_cable = !(MainCase_back_rider && MainCase_back_rider_cable);
+MainCase_top_rider_cable = true;
 
 // Dimensions for parts
 // ------------------------
