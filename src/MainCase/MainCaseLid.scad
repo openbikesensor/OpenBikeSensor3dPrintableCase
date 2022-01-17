@@ -6,34 +6,34 @@ use <MainCase.scad>
 
 module MainCaseLid() {
   module BatteryHolderChannel() {
-    translate([0, BatteryHolderChannel_width/2, 0])
+    translate([0, MainCaseLid_battery_holder_channel_width/2, 0])
     rotate([90, 0, 0])
-    linear_extrude(BatteryHolderChannel_width)
+    linear_extrude(MainCaseLid_battery_holder_channel_width)
     polygon(polyRound(mirrorPoints([
-      [0, BatteryHolderChannel_depth/2, 0],
-      [BatteryHolder_inner_width/2+3, BatteryHolderChannel_depth/2, BatteryHolderChannel_radius],
-      [BatteryHolder_inner_width/2+3, BatteryHolderChannel_depth/2+BatteryHolderChannel_radius, 0],
-      [BatteryHolder_inner_width/2+3+BatteryHolderChannel_extra_length, BatteryHolderChannel_depth/2+BatteryHolderChannel_radius, 0],
-      [BatteryHolder_inner_width/2+3+BatteryHolderChannel_extra_length, -BatteryHolderChannel_depth/2, 0],
-      [0, -BatteryHolderChannel_depth/2, 0],
+      [0, MainCaseLid_battery_holder_channel_depth/2, 0],
+      [MainCaseLid_battery_holder_inner_width/2+3, MainCaseLid_battery_holder_channel_depth/2, MainCaseLid_battery_holder_channel_radius],
+      [MainCaseLid_battery_holder_inner_width/2+3, MainCaseLid_battery_holder_channel_depth/2+MainCaseLid_battery_holder_channel_radius, 0],
+      [MainCaseLid_battery_holder_inner_width/2+3+MainCaseLid_battery_holder_channel_extra_length, MainCaseLid_battery_holder_channel_depth/2+MainCaseLid_battery_holder_channel_radius, 0],
+      [MainCaseLid_battery_holder_inner_width/2+3+MainCaseLid_battery_holder_channel_extra_length, -MainCaseLid_battery_holder_channel_depth/2, 0],
+      [0, -MainCaseLid_battery_holder_channel_depth/2, 0],
     ], 180), fn=$pfn));
   }
 
   module BatteryHolder() {
-    translate([0, BatteryHolder_length/2, BatteryHolder_lift])
+    translate([0, MainCaseLid_battery_holder_length/2, MainCaseLid_battery_holder_lift])
     rotate([90, 0, 0])
-    linear_extrude(BatteryHolder_length)
+    linear_extrude(MainCaseLid_battery_holder_length)
     polygon(polyRound(mirrorPoints([
       [0, 0, 0],
-      [BatteryHolder_inner_width / 2, 0, BatteryHolder_inner_radius],
-      [BatteryHolder_inner_width / 2, BatteryHolder_height, 0],
-      [BatteryHolder_inner_width / 2 + 1, BatteryHolder_height, 0],
-      [BatteryHolder_inner_width / 2 + 2.55, BatteryHolder_height - 1.8, 0],
-      [BatteryHolder_inner_width / 2 + 2, BatteryHolder_height - 2.35, 0],
-      [BatteryHolder_inner_width / 2 + 2, BatteryHolder_height - 5.85, 0],
-      [BatteryHolder_inner_width / 2 + 3, BatteryHolder_height - 6.85, 0],
-      [BatteryHolder_inner_width / 2 + 3, -BatteryHolder_lift, 0],
-      // [0, -BatteryHolder_lift, 0],
+      [MainCaseLid_battery_holder_inner_width / 2, 0, MainCaseLid_battery_holder_inner_radius],
+      [MainCaseLid_battery_holder_inner_width / 2, MainCaseLid_battery_holder_height, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 1, MainCaseLid_battery_holder_height, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 2.55, MainCaseLid_battery_holder_height - 1.8, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 2, MainCaseLid_battery_holder_height - 2.35, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 2, MainCaseLid_battery_holder_height - 5.85, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 3, MainCaseLid_battery_holder_height - 6.85, 0],
+      [MainCaseLid_battery_holder_inner_width / 2 + 3, -MainCaseLid_battery_holder_lift, 0],
+      // [0, -MainCaseLid_battery_holder_lift, 0],
     ], 180), fn=$pfn));
   }
 
@@ -104,7 +104,7 @@ module MainCaseLid() {
     // Channels underneath battery holder, for zip-ties
     for (i = [-1, 1]) {
       mirror([0, 0, 1])
-      translate([36+i*BatteryHolderChannel_spacing/2, 39, 0])
+      translate([36+i*MainCaseLid_battery_holder_channel_spacing/2, 39, 0])
       rotate([0, 0, 90])
       BatteryHolderChannel();
     }
@@ -112,10 +112,10 @@ module MainCaseLid() {
     // Hole for the sensor
     translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
       translate([0, 0, -15])
-      cylinder(r=SensorHole_diameter/2, h=20);
+      cylinder(r=MainCase_sensor_hole_diameter/2, h=20);
     }
     translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, -20]) {
-      cylinder(r=SensorHole_diameter/2 + SensorHole_ledge, h=20);
+      cylinder(r=MainCase_sensor_hole_diameter/2 + MainCase_sensor_hole_ledge, h=20);
     }
 
     // Holes for M3 screws

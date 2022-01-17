@@ -23,7 +23,7 @@ module DebugPCB() {
   translate([0, 0, m3_insert_hole_depth])
 
   // move by the offset
-  translate([PCB_offset.x, PCB_offset.y, 0])
+  translate([MainCase_pcb_offset.x, MainCase_pcb_offset.y, 0])
 
   // import the file
   rotate([0, 0, 90])
@@ -65,28 +65,28 @@ module GpsAntennaHousingPyramid() {
     cube([100, 100, 100]);
 
     hull() {
-      translate([0, 0, GpsAntennaHousing_depth-1])
+      translate([0, 0, MainCase_gps_antenna_housing_depth-1])
       linear_extrude(1)
-      polygon(roundedRectangle(GpsAntennaHousing_top_width, GpsAntennaHousing_top_height, GpsAntennaHousing_top_radius));
+      polygon(roundedRectangle(MainCase_gps_antenna_housing_top_width, MainCase_gps_antenna_housing_top_height, MainCase_gps_antenna_housing_top_radius));
 
-      translate([0, GpsAntennaHousing_bottom_offset, -1])
+      translate([0, MainCase_gps_antenna_housing_bottom_offset, -1])
       linear_extrude(1)
-      polygon(roundedRectangle(GpsAntennaHousing_bottom_width, GpsAntennaHousing_bottom_height, GpsAntennaHousing_bottom_radius));
+      polygon(roundedRectangle(MainCase_gps_antenna_housing_bottom_width, MainCase_gps_antenna_housing_bottom_height, MainCase_gps_antenna_housing_bottom_radius));
     }
   }
 }
 
 module GpsAntennaLidCutBody(tab_clearance=0) {
   union() {
-    translate([-50, -GpsAntennaHousing_top_height/2+GpsAntennaLid_offset, GpsAntennaHousing_depth - GpsAntennaLid_thickness])
+    translate([-50, -MainCase_gps_antenna_housing_top_height/2+MainCase_gps_antenna_lid_offset, MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
     cube([100, 100, 10]);
 
-    translate([0, -GpsAntennaHousing_top_height/2+GpsAntennaLid_offset, GpsAntennaHousing_depth - GpsAntennaLid_thickness])
-    linear_extrude(GpsAntennaLid_tab_height - tab_clearance)
+    translate([0, -MainCase_gps_antenna_housing_top_height/2+MainCase_gps_antenna_lid_offset, MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
+    linear_extrude(MainCase_gps_antenna_lid_tab_height - tab_clearance)
     polygon(polyRound(mirrorPoints([
       [0, 0, 0],
-      [GpsAntennaLid_tab_width / 2 - tab_clearance, 0, 0],
-      [GpsAntennaLid_tab_width / 2-GpsAntennaLid_tab_depth - tab_clearance, -GpsAntennaLid_tab_depth+tab_clearance, 0],
+      [MainCase_gps_antenna_lid_tab_width / 2 - tab_clearance, 0, 0],
+      [MainCase_gps_antenna_lid_tab_width / 2-MainCase_gps_antenna_lid_tab_depth - tab_clearance, -MainCase_gps_antenna_lid_tab_depth+tab_clearance, 0],
     ], 180), fn=$pfn));
   }
 }
@@ -96,26 +96,26 @@ module GpsAntennaHousing() {
     GpsAntennaHousingPyramid();
 
     // Hole for ceramic antenna
-    cube([GpsAntennaHousing_hole_width, GpsAntennaHousing_hole_height, 100], center=true);
+    cube([MainCase_gps_antenna_housing_hole_width, MainCase_gps_antenna_housing_hole_height, 100], center=true);
 
     // remove the lid
     GpsAntennaLidCutBody();
 
     // heatset insert hole
-    translate([0, GpsAntennaHousing_top_height / 2 - GpsAntennaHousing_screw_offset,  GpsAntennaHousing_depth - GpsAntennaLid_thickness])
+    translate([0, MainCase_gps_antenna_housing_top_height / 2 - MainCase_gps_antenna_housing_screw_offset,  MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
     HeatsetInsertHole();
   }
 }
 
 module GpsAntennaLid() {
-  translate([0, 0, -GpsAntennaHousing_depth + GpsAntennaLid_thickness])
+  translate([0, 0, -MainCase_gps_antenna_housing_depth + MainCase_gps_antenna_lid_thickness])
   difference() {
     intersection() {
       GpsAntennaHousingPyramid();
       GpsAntennaLidCutBody(0.15);
     }
 
-    translate([0, GpsAntennaHousing_top_height / 2 - GpsAntennaHousing_screw_offset,  GpsAntennaHousing_depth - GpsAntennaLid_thickness])
+    translate([0, MainCase_gps_antenna_housing_top_height / 2 - MainCase_gps_antenna_housing_screw_offset,  MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
     cylinder(d=m3_screw_diameter_loose, h=10, $fn=32);
   }
 }
@@ -139,16 +139,16 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
         union() {
           translate([wall_thickness, wall_thickness, wall_thickness]) {
-            translate([PCB_offset[0], PCB_offset[1], 0]) {
-              translate([PCB_holes[0][0], PCB_holes[0][1], 0])
-              HeatsetInsertStandoff(PCB_holes[0][0] + PCB_offset[0]);
+            translate([MainCase_pcb_offset[0], MainCase_pcb_offset[1], 0]) {
+              translate([MainCase_pcb_holes[0].x, MainCase_pcb_holes[0].y, 0])
+              HeatsetInsertStandoff(MainCase_pcb_holes[0].x + MainCase_pcb_offset[0]);
 
-              translate([PCB_holes[1][0], PCB_holes[1][1], 0])
+              translate([MainCase_pcb_holes[1].x, MainCase_pcb_holes[1].y, 0])
               HeatsetInsertStandoff();
 
-              translate([PCB_holes[2][0], PCB_holes[2][1], 0])
+              translate([MainCase_pcb_holes[2].x, MainCase_pcb_holes[2].y, 0])
               rotate([0, 0, 180])
-              HeatsetInsertStandoff(OBS_height - PCB_holes[2][0] - 2 * wall_thickness - PCB_offset[0]);
+              HeatsetInsertStandoff(OBS_height - MainCase_pcb_holes[2].x - 2 * wall_thickness - MainCase_pcb_offset[0]);
             }
           }
         }
@@ -197,7 +197,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             ], fn=$pfn));
 
             // Hole 4
-            *translate([OBS_height-TopHole4_offset_top, OBS_width-sin(frontside_angle)*TopHole4_offset_top, 0])
+            *translate([OBS_height-MainCaseLid_hole4_offset_x, OBS_width-sin(frontside_angle)*TopHole4_offset_top, 0])
             rotate([0, 0, frontside_angle]) {
               translate([0, -wall_thickness, 0])
               linear_extrude(OBS_depth)
@@ -245,13 +245,13 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           translate([0, 78, 0])
           cube([OBS_height-16,30,100]);
 
-          translate([0, PCB_offset.y + wall_thickness-30, 0])
+          translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
           cube([OBS_height-16,30,100]);
         }
       }
 
       // Housing for the GPS antenna
-      translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
+      translate([OBS_height, MainCase_gps_antenna_y_offset, OBS_depth/2])
       rotate([0, 90, 0])
       GpsAntennaHousing();
 
@@ -263,16 +263,16 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           union() {
             // not shift on y by wall_thickness
             translate([wall_thickness, 0, wall_thickness])
-            linear_extrude(UsbCharger_height)
+            linear_extrude(MainCase_usb_port_housing_height)
             polygon(polyRound([
               [0, 0, 0],
-              [UsbCharger_width, 0, 0],
-              [UsbCharger_width, UsbCharger_depth + 0.92, 3],
-              [0, UsbCharger_depth + 0.92, 0],
+              [MainCase_usb_port_housing_width, 0, 0],
+              [MainCase_usb_port_housing_width, MainCase_usb_port_housing_depth + 0.92, 3],
+              [0, MainCase_usb_port_housing_depth + 0.92, 0],
             ], fn=$pfn));
 
             // a little standoff for the PCB
-            translate([wall_thickness, PCB_offset.y + wall_thickness, wall_thickness])
+            translate([wall_thickness, MainCase_pcb_offset.y + wall_thickness, wall_thickness])
             linear_extrude(m3_insert_hole_depth)
             polygon(polyRound([
               [0, 0, 0],
@@ -300,13 +300,13 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // The hole for the sensor
     translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
       translate([0, 0, -2])
-      cylinder(r=SensorHole_diameter/2, h=70+4);
+      cylinder(r=MainCase_sensor_hole_diameter/2, h=70+4);
 
       // In the main case, we have to cut the clearance hole larger than
       // requeste, to account for the width and twice the clearance of the rim
       // in the lid
       translate([0, 0, wall_thickness])
-      cylinder(r=SensorHole_diameter/2+SensorHole_ledge+MainCaseLid_rim_width+MainCaseLid_rim_clearance*2, h=70);
+      cylinder(r=MainCase_sensor_hole_diameter/2+MainCase_sensor_hole_ledge+MainCaseLid_rim_width+MainCaseLid_rim_clearance*2, h=70);
     }
 
     // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
@@ -317,17 +317,17 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
     // Hole for GPS antenna cable from the inside of the antenna housing to the
     // inside of the main case
-    translate([OBS_height, GPS_antenna_offset, OBS_depth/2])
+    translate([OBS_height, MainCase_gps_antenna_y_offset, OBS_depth/2])
     rotate([0, 90, 0]) {
       translate([0, -13.5, 0])
-      cylinder(d=GpsAntennaHousing_cable_hole_diameter, h=GpsAntennaHousing_cable_hole_diameter, center=true);
+      cylinder(d=MainCase_gps_antenna_housing_cable_hole_diameter, h=MainCase_gps_antenna_housing_cable_hole_diameter, center=true);
 
       *translate([0, -13.5+4, 0])
       cube([4, 8, 4], center=true);
     }
 
     // Cutouts and hole for switch
-    translate([Switch_offset_bottom, OBS_width_small+sin(frontside_angle)*Switch_offset_bottom, wall_thickness+4])
+    translate([MainCase_switch_offset_x, OBS_width_small+sin(frontside_angle)*MainCase_switch_offset_x, wall_thickness+4])
     rotate([0, 0, frontside_angle]) {
       // Square cutout on outside
       translate([0, 0, 11])
@@ -350,7 +350,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
 
     // Hole for USB Cover
-    translate([UsbPort_offset, UsbCover_depth, 0])
+    translate([MainCase_usb_port_x_offset, UsbCover_depth, 0])
     rotate([0, 0, 180]) {
       UsbCoverMainBody(clearance=0.15);
 
@@ -362,7 +362,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     }
 
     // Hole for USB Charger Port
-    translate([UsbPort_offset, 0, m3_insert_hole_depth + wall_thickness - UsbPort_vertical_offset])
+    translate([MainCase_usb_port_x_offset, 0, m3_insert_hole_depth + wall_thickness - MainCase_usb_port_vertical_offset])
     hull()for(i=[-1, 1])for(j=[-1, 1]) {
       translate([i/2*6.5, 0, j/2*0.7])
       rotate([-90, 0, 0])
