@@ -17,8 +17,6 @@ ifdef DEBUG
 OPENSCAD_OPTIONS += -D fast=true
 endif
 
-$(info $(OPENSCAD_OPTIONS))
-
 all: export-all thumbnails
 
 clean:
