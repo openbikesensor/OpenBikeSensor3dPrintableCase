@@ -352,7 +352,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // Hole for USB Cover
     translate([MainCase_usb_port_x_offset, UsbCover_depth, 0])
     rotate([0, 0, 180]) {
-      UsbCoverMainBody(clearance=0.15);
+      UsbCoverMainBody(clearance=MainCase_usb_port_cover_clearance);
 
       // Magnet holes in USB Charger Port
       for (i = [-1, 1]) {

@@ -108,6 +108,7 @@ MainCase_usb_port_vertical_offset = 3.13; // center below the board bottom
 MainCase_usb_port_housing_height = 14;
 MainCase_usb_port_housing_width = 32;
 MainCase_usb_port_housing_depth = MainCase_pcb_offset.y;
+MainCase_usb_port_cover_clearance = default_clearance;
 
 OBS_height = 72;
 OBS_width = 109;
