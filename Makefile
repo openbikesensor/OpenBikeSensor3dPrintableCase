@@ -8,7 +8,7 @@ STLS=$(patsubst src/%.scad,export/%.stl,$(SRCS))
 PNGS=$(patsubst src/%.scad,render/%.png,$(SRCS))
 THUMBNAILS=$(patsubst src/%.scad,render/thumbnails/%.png,$(SRCS))
 
-LOGOS=$(shell find logo/ -mindepth 1 -maxdepth 1 -type d -not -name template | xargs basename)
+LOGOS=$(shell find logo/ -mindepth 1 -maxdepth 1 -type d -not -name template | xargs -L1 basename)
 FILES_WITH_LOGO := MainCase/MainCase MainCase/MainCaseLid
 LOGO_PARTS := main highlight
 LOGO_MODES := normal inverted
@@ -17,7 +17,7 @@ ifdef DEBUG
 OPENSCAD_OPTIONS += -D fast=true
 endif
 
-all: export-all thumbnails
+all: export-all thumbnails logo-OpenBikeSensor
 
 clean:
 	@rm -r export/ || true
