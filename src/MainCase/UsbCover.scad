@@ -2,7 +2,7 @@ include <../../variables.scad>
 include <../../lib/utils.scad>
 
 $fn = 64;
-inf = 0.01; // infinitesimal thicknes for slabs in hull - can be increased to see if offsets were done right.
+epsilon = 0.01; // infinitesimal thickness for slabs in hull - can be increased to see if offsets were done right.
 depth = UsbCover_depth+UsbCover_foot_length;
 
 
@@ -53,22 +53,22 @@ module UsbCoverMainBody(chamfer=0.5, clearance=0) {
             //rail with chamfer top and bottom
             hull() {
                 linear_extrude(0.01){2DRail(inset=chamfer);}
-                translate([0,0,chamfer])linear_extrude(inf){2DRail(inset=0);}
-                translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DRail(inset=0);}
-                translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DRail(inset=chamfer);}
+                translate([0,0,chamfer])linear_extrude(epsilon){2DRail(inset=0);}
+                translate([0,0,UsbCover_height-chamfer-epsilon])linear_extrude(epsilon){2DRail(inset=0);}
+                translate([0,0,UsbCover_height-epsilon])linear_extrude(epsilon){2DRail(inset=chamfer);}
             }
             // bottom with chamfer up to grip
             hull()
             {
                 linear_extrude(0.01){2DBase(inset=chamfer);}
-                translate([0,0,chamfer])linear_extrude(inf){2DBase(inset=0);}
-                translate([0,0,UsbCover_foot_height-inf])linear_extrude(inf){2DBase(inset=0);}
+                translate([0,0,chamfer])linear_extrude(epsilon){2DBase(inset=0);}
+                translate([0,0,UsbCover_foot_height-epsilon])linear_extrude(epsilon){2DBase(inset=0);}
             }
             // top with chamfer
             hull(){
-                translate([0,0,UsbCover_foot_height])linear_extrude(inf){2DTop(inset=0);}
-                translate([0,0,UsbCover_height-chamfer-inf])linear_extrude(inf){2DTop(inset=0);}
-                translate([0,0,UsbCover_height-inf])linear_extrude(inf){2DTop(inset=chamfer);}
+                translate([0,0,UsbCover_foot_height])linear_extrude(epsilon){2DTop(inset=0);}
+                translate([0,0,UsbCover_height-chamfer-epsilon])linear_extrude(epsilon){2DTop(inset=0);}
+                translate([0,0,UsbCover_height-epsilon])linear_extrude(epsilon){2DTop(inset=chamfer);}
             }
             //top chamfers are moved down by slice thickness
         }
@@ -80,8 +80,8 @@ module MagnetHole() {
     {
           translate([-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance])
              cube(UsbCover_magnet_size+UsbCover_magnet_clearance,center=false);
-          translate([0,0,inf])
-             cube([UsbCover_magnet_size,UsbCover_magnet_size,UsbCover_magnet_depth+inf]);
+          translate([0,0,epsilon])
+             cube([UsbCover_magnet_size,UsbCover_magnet_size,UsbCover_magnet_depth+epsilon]);
       }
   }
 
