@@ -78,7 +78,7 @@ module StandardMountAdapter(channels=true) {
 
     translate([0, 0, StandardMountAdapter_thickness])
     StandardMountAdapterScrewHoles()
-    ScrewHoleM3(depth=100, head_depth=6);
+    ScrewHoleM3(depth=100, head_depth= StandardMountAdapter_thickness - (8 - m3_hex_nut_thickness)/2 );
 
     if(channels) {
       rotate([0, 0, -90])

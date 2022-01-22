@@ -467,7 +467,8 @@ module MountAttachmentHolePattern(with_cable_hole=true) {
           j * MountAttachment_holes_dy / 2,
           0,
         ])
-        HexNutHole(nut_depth=4, screw_depth=20);
+        HexNutHole(nut_depth = MountAttachment_depth + wall_thickness - (8 - m3_hex_nut_thickness)/2,
+                  screw_depth = MountAttachment_depth + wall_thickness - (8 - m3_hex_nut_thickness)/2 + 8 - m3_hex_nut_thickness); // 8mm shaft lenght - nut depth
       }
     }
   }
