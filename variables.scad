@@ -61,6 +61,7 @@ m3_screw_diameter_loose = 3.25; // screw should slide in nicely
 m3_screw_head_depth = 3; // minimum depth for sinking the screw head
 m3_screw_head_diameter = 6; // can have a little clearance
 m3_hex_nut_diameter = 6.45; // outer circle, *not* wrench size (S), but `S*2/sqrt(3)`, plus clearance
+m3_hex_nut_thickness = 2.5; // found different nut specifications, 2.5 is the maximum thickness I found named
 m3_insert_hole_diameter = 4;
 m3_insert_hole_depth = 5.75;
 m3_insert_cavity_depth = 5.75 - 4.5;  // size of cavity on the bottom for displaced plastic
