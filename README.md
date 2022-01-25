@@ -327,3 +327,21 @@ The `Makefile` supports generating the case with different logos. For now, the
 only parts that are customizable with logos are `MainCase/MainCase` and
 `MainCase/MainCaseLid`. Please check the instructions in
 [`logo/README.md`](./logo/README.md) for creating your own logo version.
+
+## Legacy parts
+
+The files of legacy versions are available in the ``.stl`` format for 3D
+printing. But these are discretized versions of more universal 3D Geometry that
+can be read and edited by CAD software.
+
+This is a grown project and in the past contributions have been made with
+different CAD Programs. Some parts were designed/modified in Autodesk inventor
+(filenames `*.ipt`), some were designed in Fusion360 (filenames `*.f3d`), but
+for most parts a step file (`*.stp, *.step`) is available which can be opened
+by most CAD Programs. For your contributions in CAD software of your choice it
+would be great if you could also follow the practice of submitting your changes
+in both `.stl` for 3D-Printing and `.step` for later editing - and maybe the
+native format of your CAD software on top.
+
+OpenSCAD is a special case of course: Here submitting `.stl` (for now) and the
+`.scad` file is sufficient. 
