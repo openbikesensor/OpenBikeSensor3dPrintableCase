@@ -15,7 +15,7 @@
 <body>
 <form method="post" action="/model">
     <div class="title">logo (svg):</div><input type="file" class="" title="logo" name="file"/><br/>
-    {% for entry, value in fields %}
+    {% for entry, value in fields.items() %}
     <div class="title">{{ entry }}:</div><input class="entry" type="text" name="{{entry}}"/><br/>
     {% endfor %}
     <input type="submit" label="ok"/>

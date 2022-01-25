@@ -27,10 +27,8 @@ setuptools.setup(
         "fastapi",
         "python-multipart",
         "jinja2",
-        "pkgutil",
         "pyyaml",
         "pydantic",
         "sse_starlette",
-        "asyncioinotify"
     ]
 )

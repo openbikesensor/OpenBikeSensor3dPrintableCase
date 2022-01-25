@@ -10,7 +10,6 @@ import uuid
 from pathlib import Path
 
 import pkg_resources
-from asyncinotify import Inotify, Mask
 from fastapi import FastAPI, Form, File, UploadFile, Request, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -168,7 +167,7 @@ async def create_file(
 @app.get("/")
 def form_get(request: Request):
     variables = CustomVariables()
-    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': variables.dict().keys()})
+    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': variables.dict()})
 
 
 @app.get("/job/{uid}",response_class=HTMLResponse)
