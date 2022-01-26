@@ -68,7 +68,7 @@ async def convert_scad_file(scad_file: str, target_basedir: Path):
 
     scad_defines = scad_arguments_from_json(variables_json_file)
 
-    p = await asyncio.create_subprocess_exec("openscad", str(modelfile), *scad_defines, "-o", str(targetfile))
+    p = await asyncio.create_subprocess_exec("openscad", "-q", str(modelfile), *scad_defines, "-o", str(targetfile))
 
     try:
         await asyncio.wait_for(p.wait(), 200)
@@ -151,22 +151,26 @@ def as_form(cls: typing.Type[BaseModel]):
 
 @as_form
 class CustomVariables(BaseModel):
-    threshold: float = 0.
     use_custom_logo: bool = False
-    MainCase_back_rider: bool = False
-    MainCase_top_rider: bool = False
-    MainCase_back_rider_cable: bool = False
-    MainCase_top_rider_cable: bool = False
-    ScrewHole_diameter_M3: float = 0
-    HexNutHole_diameter: float = 0
-    SeatPostMount_angle: float = 0
-    SeatPostMount_diameter: float = 0
-    SeatPostMount_length: float = 0
-    HandlebarRail_tube_radius: float = 0
-    extrude_width: float = 0
-    enable_easy_print: bool = False
-    layer_height: float = 0
-    default_clearance: float = 0
+    MainCase_back_rider: bool = True
+    MainCase_top_rider: bool = True
+    MainCase_back_rider_cable: bool = True
+    MainCase_top_rider_cable: bool = True
+    m3_screw_diameter_tight: float = 3
+    m3_screw_diameter_loose: float = 3.25
+    m3_hex_nut_diameter: float = 6
+    SeatPostMount_angle: float = 20
+    SeatPostMount_diameter: float = 28
+    SeatPostMount_length: float = 20
+    HandlebarRail_tube_radius: float = 18
+    DisplayCaseTop_pcb_width: float = 26.5
+    DisplayCaseTop_pcb_height: float = 27.2
+    DisplayCaseTop_pcb_standoff: float = 1.7
+    extrude_width: float = 0.46
+    enable_easy_print: bool = True
+    layer_height: float = 0.2
+    default_clearance: float = 0.2
+    orient_for_printing: bool = True
 
 
 @app.get("/")
