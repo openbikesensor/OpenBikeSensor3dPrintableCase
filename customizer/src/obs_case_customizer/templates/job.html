@@ -3,18 +3,27 @@
     <title>Build Status</title>
 </head>
 <body>
-    <h1>Build status ID: {{ uuid }}</h1>
+<h1>Build status ID: {{ uuid }}</h1>
 
-    <pre id="status"></pre>
-    <script>
-      let ws = new WebSocket('ws://localhost:8000/jobstate/{{uuid}}')
-      ws.onmessage = (event) => {
-        if (event.data === 'ping') {
-          ws.send('pong')
-          return
-        }
-        document.getElementById('status').innerHTML = event.data
-      }
-    </script>
+<pre id="status"></pre>
+<script>
+
+var loc = window.location, ws_location;
+if (loc.protocol === "https:") {
+    ws_location = "wss:";
+} else {
+    ws_location = "ws:";
+}
+ws_location += "//" + loc.host;
+ws_location += "/jobstate/{{uuid}}";
+let ws = new WebSocket(ws_location)
+ws.onmessage = (event) => {
+if (event.data === 'ping') {
+  ws.send('pong')
+  return
+}
+document.getElementById('status').innerHTML = event.data
+}
+</script>
 </body>
 </html>

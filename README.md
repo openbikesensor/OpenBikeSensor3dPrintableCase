@@ -345,3 +345,19 @@ native format of your CAD software on top.
 
 OpenSCAD is a special case of course: Here submitting `.stl` (for now) and the
 `.scad` file is sufficient. 
+
+
+### Customizer webservice
+
+To run the customizer webservice you run it from the dockerfile:
+
+```
+docker build . -t customizer
+docker run --rm -p 8001:80 customizer 
+```
+
+Whereafter you should be able to access your customizer on your host on port 8001.
+
+Alternatively you can launch the python module directly using uvicorn,
+but that is only recommended for dev setups an d will be described
+in the module readme.

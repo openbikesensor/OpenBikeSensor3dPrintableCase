@@ -11,7 +11,7 @@ import zipfile
 from pathlib import Path
 
 import pkg_resources
-from fastapi import FastAPI, Form, File, Request, Depends
+from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -69,13 +69,14 @@ async def run_make_with_params(target_basedir: Path, logfile):
 
 
 def copy_sources_to(dir: Path):
-    logging.error(dir)
-    logging.error(MODEL_ROOT)
-    shutil.copytree(ROOT / "src", dir / "src", copy_function=os.symlink)
-    shutil.copytree(ROOT / "lib", dir / "lib", copy_function=os.symlink)
-    shutil.copytree(ROOT / "logo", dir / "logo", copy_function=os.symlink)
-    os.symlink(ROOT / "Makefile", dir / "Makefile")
-    os.symlink(ROOT / "variables.scad", dir / "variables.scad")
+    try:
+        shutil.copytree(ROOT / "src", dir / "src", copy_function=os.symlink)
+        shutil.copytree(ROOT / "lib", dir / "lib", copy_function=os.symlink)
+        shutil.copytree(ROOT / "logo", dir / "logo", copy_function=os.symlink)
+        os.symlink(ROOT / "Makefile", dir / "Makefile")
+        os.symlink(ROOT / "variables.scad", dir / "variables.scad")
+    except:
+        logging.exception(f"messed up copying {dir}")
 
 
 def package_to_zip(source: Path, target: Path):
@@ -109,29 +110,6 @@ async def run_job(uid):
 
         logfile.open("a").write(f"conversion completed {'with some errors' if not project_success else ''}\n")
         logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download here</a>')
-
-
-async def worker():
-    logging.info("worker running")
-    while True:
-        uid = await queue.get()
-        await run_job(uid)
-        queue.task_done()
-
-
-@app.on_event("startup")
-async def start_worker():
-    app.convert_workers = []
-    for i in range(3):
-        logging.info(f"starting worker {i}")
-        app.convert_workers.append(asyncio.create_task(worker()))
-        logging.info(f"started worker {i}")
-
-
-@app.on_event("shutdown")
-async def stop_worker():
-    for task in app.convert_workers:
-        task.cancel()
 
 
 # from https://github.com/tiangolo/fastapi/issues/2387#issuecomment-731662551
@@ -211,7 +189,8 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 
 
 @app.post("/model")
-async def form_post(file: bytes = File(...), variables: CustomVariables = Depends(CustomVariables.as_form)):
+async def form_post(background_tasks: BackgroundTasks, file: bytes = File(...),
+                    variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
     logging.info(work_dir)
@@ -221,5 +200,5 @@ async def form_post(file: bytes = File(...), variables: CustomVariables = Depend
         logo.open("wb").write(file)
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
-    await queue.put(uid)
+    background_tasks.add_task(run_job, uid)
     return RedirectResponse(f"/job/{uid}", status_code=303)
