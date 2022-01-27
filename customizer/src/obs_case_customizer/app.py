@@ -7,11 +7,12 @@ import shutil
 import tempfile
 import typing
 import uuid
+import zipfile
 from pathlib import Path
 
 import pkg_resources
 from fastapi import FastAPI, Form, File, Request, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
@@ -29,7 +30,8 @@ def models(root):
             yield (Path(root) / f).resolve()
 
 
-MODEL_ROOT = Path(os.path.dirname(__file__) + "/../../../src").resolve()
+ROOT = Path(os.path.dirname(__file__) + "/../../../")
+MODEL_ROOT = (ROOT / "src").resolve()
 
 
 def scad_arguments_from_json(json_file: Path):
@@ -47,41 +49,50 @@ def scad_arguments_from_json(json_file: Path):
     return scad_defines
 
 
-async def convert_scad_file(scad_file: str, target_basedir: Path):
-    """
-    Convert a .scad file to .stl mirroring the scad directory structure
-    :param scad_file:
-    :param target_basedir:
-    :return:
-    """
-    logging.error(f"converting {scad_file}")
-    logging.info(f"converting {scad_file} in {target_basedir}")
+async def run_make_with_params(target_basedir: Path, logfile):
     variables_json_file = target_basedir / "variables.json"
+    openscad_options = ["-q"]
+    openscad_options.extend(scad_arguments_from_json(variables_json_file))
 
-    modelfile = MODEL_ROOT / scad_file
-    targetfile = target_basedir / str(scad_file).replace("scad", "stl")
-    targetfile.parent.mkdir(parents=True, exist_ok=True)
-
-    assert targetfile.parent.is_dir()
-    assert variables_json_file.is_file()
-    assert modelfile.is_file()
-
-    scad_defines = scad_arguments_from_json(variables_json_file)
-
-    p = await asyncio.create_subprocess_exec("openscad", "-q", str(modelfile), *scad_defines, "-o", str(targetfile))
-
+    logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\""]))
     try:
-        await asyncio.wait_for(p.wait(), 200)
-        if p.returncode is not None and p.returncode == 0:
-            return True
-        return False
+        p = await asyncio.create_subprocess_exec("make", "-j", "2", f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
+                                                 stdout=logfile.open("ab"),
+                                                 stderr=logfile.open("ab"),
+                                                 cwd=target_basedir)
 
-    except asyncio.TimeoutError:
-        logging.error(f"timeout for {scad_file}")
-        return False
+        out, err = await p.communicate()
+        logfile.open("ab").write(out + err)
+
+    except:
+        logging.exception("dang")
 
 
-async def run_job(dir_to_work):
+def copy_sources_to(dir: Path):
+    logging.error(dir)
+    logging.error(MODEL_ROOT)
+    shutil.copytree(ROOT / "src", dir / "src", copy_function=os.symlink)
+    shutil.copytree(ROOT / "lib", dir / "lib", copy_function=os.symlink)
+    shutil.copytree(ROOT / "logo", dir / "logo", copy_function=os.symlink)
+    os.symlink(ROOT / "Makefile", dir / "Makefile")
+    os.symlink(ROOT / "variables.scad", dir / "variables.scad")
+
+
+def package_to_zip(source: Path, target: Path):
+    os.chdir(os.path.dirname(source))
+    with zipfile.ZipFile(target,
+                         "w",
+                         zipfile.ZIP_DEFLATED,
+                         allowZip64=True) as zf:
+        for root, _, filenames in os.walk(os.path.basename(source), followlinks=True):
+            for name in filenames:
+                name = os.path.join(root, name)
+                name = os.path.normpath(name)
+                zf.write(name, name)
+
+
+async def run_job(uid):
+    dir_to_work = Path(tempfile.gettempdir()) / uid
     logfile = dir_to_work / "log.txt"
     variables_file = dir_to_work / "variables.json"
     json.load(variables_file.open("r"))
@@ -90,22 +101,21 @@ async def run_job(dir_to_work):
         temp = Path(temp)
         logging.error(f" run_job got {dir_to_work} go")
         shutil.copy(dir_to_work / "variables.json", temp / "variables.json")
+        copy_sources_to(temp)
         logging.error(f" run_job got {dir_to_work}")
-        project_success = True
-        for scad_file in list(models(MODEL_ROOT)):
-            logfile.open("a").write(f"converting {scad_file}")
-            success = await convert_scad_file(scad_file.relative_to(MODEL_ROOT), temp)
-            logfile.open("a").write(f" {'successful' if success else 'failed'}\n")
-            project_success = project_success and success
+        project_success = await run_make_with_params(temp, logfile)
+
+        package_to_zip(temp / "export", dir_to_work / "OpenBikeSensor_customized.zip")
 
         logfile.open("a").write(f"conversion completed {'with some errors' if not project_success else ''}\n")
+        logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download here</a>')
 
 
 async def worker():
     logging.info("worker running")
     while True:
-        dir_to_work = await queue.get()
-        await run_job(dir_to_work)
+        uid = await queue.get()
+        await run_job(uid)
         queue.task_done()
 
 
@@ -184,6 +194,12 @@ async def job(request: Request, uid: uuid.UUID):
     return templates.TemplateResponse('job.html', context={'request': request, 'uuid': uid})
 
 
+@app.get("/download/{uid}.zip", response_class=FileResponse)
+async def job(request: Request, uid: uuid.UUID):
+    filename = Path(tempfile.gettempdir()) / str(uid) / "OpenBikeSensor_customized.zip"
+    return FileResponse(filename)
+
+
 @app.websocket("/jobstate/{uid}")
 async def jobstate(websocket: WebSocket, uid: uuid.UUID):
     await websocket.accept()
@@ -205,5 +221,5 @@ async def form_post(file: bytes = File(...), variables: CustomVariables = Depend
         logo.open("wb").write(file)
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
-    await queue.put(work_dir)
+    await queue.put(uid)
     return RedirectResponse(f"/job/{uid}", status_code=303)
