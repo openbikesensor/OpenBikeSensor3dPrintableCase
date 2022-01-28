@@ -13,12 +13,13 @@ from pathlib import Path
 import pkg_resources
 from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
 from pydantic import BaseModel
 
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 2))
+TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 600))
 
 queue = asyncio.Queue(maxsize=20)
 app = FastAPI()
@@ -68,15 +69,18 @@ async def run_make_with_params(target_basedir: Path, logfile):
     openscad_options = ["-q"]
     openscad_options.extend(scad_arguments_from_json(variables_json_file))
 
-    logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\""]))
+    logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\"\n"]))
     try:
-        p = await asyncio.create_subprocess_exec("make", "-j", THREADS,
+        p = await asyncio.create_subprocess_exec("make", "-j", str(THREADS),
                                                  f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
                                                  stdout=logfile.open("ab"),
                                                  stderr=logfile.open("ab"),
                                                  cwd=target_basedir)
 
-        out, err = await p.communicate()
+        out, err = await asyncio.wait_for(p.communicate(), TIMEOUT)
+        if p.returncode is None:
+            p.kill()
+            logfile.open("ab").write("The conversion took overly long and had to be killed.")
         logfile.open("ab").write(out + err)
 
     except:
@@ -176,6 +180,10 @@ class CustomVariables(BaseModel):
     orient_for_printing: bool = True
 
 
+class RunningJob(CustomVariables):
+    uid: uuid.UUID
+
+
 @app.get("/")
 def form_get(request: Request):
     variables = CustomVariables()
@@ -204,8 +212,9 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
         await asyncio.sleep(5)
 
 
-@app.post("/model")
-async def form_post(background_tasks: BackgroundTasks, file: bytes = File(...),
+@app.post("/job")
+async def form_post(request: Request,
+                    background_tasks: BackgroundTasks, file: bytes = File(...),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
@@ -217,4 +226,8 @@ async def form_post(background_tasks: BackgroundTasks, file: bytes = File(...),
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
     background_tasks.add_task(run_job, uid)
+
+    if "Accept" in request.headers and request.headers["Accept"] == "application/json":
+        return JSONResponse(RunningJob(uid=uid, **variables.dict()))
+
     return RedirectResponse(f"/job/{uid}", status_code=303)
