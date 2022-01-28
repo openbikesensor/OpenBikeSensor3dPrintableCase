@@ -2,23 +2,52 @@
 <head>
 <title>Case Settings</title><style>
 .title {
-  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  text-align: right;
-  width: 200pt;
-  padding: 2pt;
-  display: inline-block;
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    text-align: right;
+    width: 200pt;
+    padding: 2pt;
+    display: inline-block;
 }
-.entry {
+fieldset {
+    display: flex;
+    border: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    align-items: center;
+} 
+fieldset label {
+    width: 20em;
+    text-align: right;
+    font-weight: bold;
+    margin-right: 0.5em;
+    font-family: "Fira Mono", monospace;
+}
+input[type="text"] {
+    padding: 0.5rem 0.25rem;
 }
 </style>
 </head>
 <body>
 <form method="post" action="/model">
-    <div class="title">logo (svg):</div><input type="file" class="" title="logo" name="file"/><br/>
-    {% for entry, value in fields.items() %}
-    <div class="title">{{ entry }}:</div><input class="entry" type="text" name="{{entry}}"/><br/>
+    {% for entry, value in fields %}
+        <fieldset>
+            <label for="{{entry}}">{{entry}}</label>
+            {% set ft = entry|field_type(value) %}
+
+            {% if ft == "bool" %}
+                <input type="checkbox"{{' checked="checked"' if value else ''}}  name="{{entry}}" id="{{entry}}" />
+            {% elif ft == "file" %}
+                <input type="file" title="{{entry}}" name="{{entry}}" id="{{entry}}" />
+            {% else%}
+                <input type="text" name="{{entry}}" name="{{entry}}" id="{{entry}}" />
+            {% endif %}
+        </fieldset>
     {% endfor %}
-    <input type="submit" label="ok"/>
+
+    <fieldset>
+        <label></label>
+        <input type="submit" label="ok"/>
+    </fieldset>
 </form>
 </body>
 </html>

@@ -25,11 +25,22 @@ app = FastAPI()
 TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
 templates = Jinja2Templates(directory=TEMPLATEDIR)
 
+def field_type(entry, default_value):
+    if entry == "file":
+        return "file"
+    elif isinstance(default_value, bool):
+        return "bool"
+    else:
+        return "string"
+
+templates.env.filters['field_type'] = field_type
+
 
 def models(root):
     for root, dirs, files in os.walk(root):
         for f in files:
             yield (Path(root) / f).resolve()
+
 
 
 ROOT = Path(os.path.dirname(__file__) + "/../../../")
@@ -166,7 +177,8 @@ class CustomVariables(BaseModel):
 @app.get("/")
 def form_get(request: Request):
     variables = CustomVariables()
-    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': variables.dict()})
+    fields = [("file", ""), *variables.dict().items()]
+    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields })
 
 
 @app.get("/job/{uid}", response_class=HTMLResponse)
