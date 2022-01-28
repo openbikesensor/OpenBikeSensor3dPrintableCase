@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, UploadFile, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -54,7 +54,7 @@ templates = Jinja2Templates(directory=TEMPLATEDIR)
 
 
 def field_type(entry, default_value):
-    if entry in ["main_case_logo", "main_case_lid_logo"]:
+    if entry in ["main_case_logo_svg", "main_case_lid_logo_svg"]:
         return "file"
     elif isinstance(default_value, bool):
         return "bool"
@@ -256,7 +256,7 @@ class RunningJob(CustomVariables):
 @app.get("/")
 def form_get(request: Request):
     variables = CustomVariables()
-    fields = [("file", ""), *variables.dict().items()]
+    fields = [("main_case_logo_svg", ""), ("main_case_lid_logo_svg", ""), *variables.dict().items()]
     return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields})
 
 
@@ -287,8 +287,8 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
             completed = info['parts']
         else:
             completed = [
-                re.sub(r'\.stl$', '', c)
-                for c in glob.glob("**/*.stl", root_dir=temp / "temp" / "export", recursive=True)
+                re.sub(r'\.stl$', '', str(Path(c).relative_to(temp / "temp" / "export")))
+                for c in glob.glob("**/*.stl", recursive=True)
             ]
 
         progress = (len(completed) / (len(info['parts']) or 1))
@@ -305,8 +305,8 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 @app.post("/job")
 async def form_post(request: Request,
                     background_tasks: BackgroundTasks,
-                    main_case_logo_svg: Optional[UploadFile] = File(None),
-                    main_case_lid_logo_svg: Optional[UploadFile] = File(None),
+                    main_case_logo_svg: Optional[UploadFile] = None,
+                    main_case_lid_logo_svg: Optional[UploadFile] = None,
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
