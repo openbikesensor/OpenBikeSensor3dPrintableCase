@@ -24,7 +24,7 @@ input[type="text"] {
 </style>
 </head>
 <body>
-<form method="post" action="/job">
+<form method="post" action="/job" enctype="multipart/form-data">
     {% for entry, value in fields %}
         <fieldset>
             <label for="{{entry}}">{{entry}}</label>
@@ -33,7 +33,7 @@ input[type="text"] {
             {% if ft == "bool" %}
                 <input type="checkbox"{{' checked="checked"' if value else ''}}  name="{{entry}}" id="{{entry}}" />
             {% elif ft == "file" %}
-                <input type="file" title="{{entry}}" name="{{entry}}" id="{{entry}}" />
+                <input type="file" name="{{entry}}" id="{{entry}}" accept="image/svg+xml"/>
             {% else%}
                 <input type="text" title="{{entry}}" name="{{entry}}" id="{{entry}}" />
             {% endif %}

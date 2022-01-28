@@ -334,9 +334,11 @@ async def form_post(request: Request,
     if variables.use_custom_logo is True:
         if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
+            assert(len(main_case_logo_svg) > 100)
             logo.open("wb").write(main_case_logo_svg)
         if main_case_lid_logo_svg is not None:
             logo = work_dir / "MainCaseLid.svg"
+            assert(len(main_case_lid_logo_svg) > 100)
             logo.open("wb").write(main_case_lid_logo_svg)
         if main_case_lid_logo_svg is None and main_case_logo_svg is None:
             variables.use_custom_logo = False
