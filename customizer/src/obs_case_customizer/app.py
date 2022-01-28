@@ -279,21 +279,23 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 
 @app.post("/job")
 async def form_post(request: Request,
-                    background_tasks: BackgroundTasks, file: bytes = File(...),
+                    background_tasks: BackgroundTasks,
+                    main_case_logo_svg: Optional[bytes] = File(None),
+                    main_case_lid_logo_svg: Optional[bytes] = File(None),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
     logging.info(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
     if variables.use_custom_logo:
-        if logo_case is not None:
+        if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
-            logo.open("wb").write(logo_case)
-        elif logo_lid is not None:
+            logo.open("wb").write(main_case_logo_svg)
+        if main_case_lid_logo_svg is not None:
             logo = work_dir / "MainCaseLid.svg"
-            logo.open("wb").write(logo_case)
-    else:
-        variables.use_custom_logo = False
+            logo.open("wb").write(main_case_lid_logo_svg)
+        if main_case_lid_logo_svg is None and main_case_logo_svg is None:
+            variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
     background_tasks.add_task(run_job, uid)
