@@ -174,7 +174,7 @@ async def run_job(uid, parts=ALL_PARTS):
         except Exception as e:
             logfile.open("a").write(f"conversion failed with error: {e}")
             logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download zip anyway</a>')
-            log.exception("Failed to process job %s.", uid)
+            logging.exception(f"Failed to process job {uid}")
 
             info['status'] = 'error'
             write_info()
