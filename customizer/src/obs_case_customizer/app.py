@@ -18,6 +18,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
 from pydantic import BaseModel
 
+THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 2))
+
 queue = asyncio.Queue(maxsize=20)
 app = FastAPI()
 TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
@@ -56,7 +58,7 @@ async def run_make_with_params(target_basedir: Path, logfile):
 
     logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\""]))
     try:
-        p = await asyncio.create_subprocess_exec("make", "-j", "2", f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
+        p = await asyncio.create_subprocess_exec("make", "-j", THREADS, f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
                                                  stdout=logfile.open("ab"),
                                                  stderr=logfile.open("ab"),
                                                  cwd=target_basedir)
