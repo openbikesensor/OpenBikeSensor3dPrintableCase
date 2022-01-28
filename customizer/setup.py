@@ -30,5 +30,7 @@ setuptools.setup(
         "pyyaml",
         "pydantic",
         "sse_starlette",
+        "websocets",
+        "uvicorn"
     ]
 )

@@ -14,12 +14,13 @@ from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, UploadFile, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
 from pydantic import BaseModel
+from websockets.exceptions import ConnectionClosed
 
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 2))
 TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 600))
@@ -293,20 +294,24 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 
         progress = (len(completed) / (len(info['parts']) or 1))
 
-        await websocket.send_json({
-            **info,
-            "log": log,
-            "completed": completed,
-            "progress": progress,
-        })
+        try:
+            await websocket.send_json({
+                **info,
+                "log": log,
+                "completed": completed,
+                "progress": progress,
+            })
+        except ConnectionClosed:
+           break
+
         await asyncio.sleep(1)
 
 
 @app.post("/job")
 async def form_post(request: Request,
                     background_tasks: BackgroundTasks,
-                    main_case_logo_svg: Optional[UploadFile] = None,
-                    main_case_lid_logo_svg: Optional[UploadFile] = None,
+                    main_case_logo_svg: Optional[bytes] = File(None),
+                    main_case_lid_logo_svg: Optional[bytes] = File(None),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
@@ -315,10 +320,10 @@ async def form_post(request: Request,
     if variables.use_custom_logo:
         if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
-            logo.open("wb").write(await main_case_logo_svg.file.read())
+            logo.open("wb").write(main_case_logo_svg)
         if main_case_lid_logo_svg is not None:
             logo = work_dir / "MainCaseLid.svg"
-            logo.open("wb").write(await main_case_lid_logo_svg.file.read())
+            logo.open("wb").write(main_case_lid_logo_svg)
         if main_case_lid_logo_svg is None and main_case_logo_svg is None:
             variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
