@@ -11,6 +11,7 @@ import uuid
 import glob
 import zipfile
 from pathlib import Path
+from typing import Optional
 
 import pkg_resources
 from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, BackgroundTasks
@@ -98,6 +99,13 @@ def copy_sources_to(dir: Path):
         logging.exception(f"messed up copying {dir}")
 
 
+def copy_custom_logo(from_path: Path, to_path: Path):
+    target = to_path / "logo" / "CustomLogo"
+    os.makedirs(target)
+    os.symlink(from_path / "custom_logo.svg", target / "MainCase.svg")
+    os.symlink(from_path / "custom_logo.svg", target / "MainCaseLid.svg")
+
+
 def package_to_zip(source: Path, target: Path):
     os.chdir(os.path.dirname(source))
     with zipfile.ZipFile(target,
@@ -139,7 +147,7 @@ async def run_job(uid, parts=ALL_PARTS):
     dir_to_work = Path(tempfile.gettempdir()) / uid
     logfile = dir_to_work / "log.txt"
     variables_file = dir_to_work / "variables.json"
-    json.load(variables_file.open("r"))
+    job_config = RunningJob(**json.load(variables_file.open("r")))
     logfile.open("w").write("starting conversion\n")
     info_file = dir_to_work / "info.json"
 
@@ -155,6 +163,8 @@ async def run_job(uid, parts=ALL_PARTS):
         os.symlink(temp, dir_to_work / "temp")
         logging.error(f" run_job got {dir_to_work} go")
         shutil.copy(dir_to_work / "variables.json", temp / "variables.json")
+        if job_config.use_custom_logo:
+            copy_custom_logo(dir_to_work, temp)
         copy_sources_to(temp)
         logging.error(f" run_job got {dir_to_work}")
 
@@ -232,7 +242,7 @@ class CustomVariables(BaseModel):
 
 
 class RunningJob(CustomVariables):
-    uid: uuid.UUID
+    uid: str
 
 
 @app.get("/")
@@ -262,45 +272,33 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
     info_file = temp / "info.json"
 
     while True:
-        log = logfile.open("r").read()
-        info = json.load(info_file.open("rt"))
-        
-        if info['status'] == 'complete':
-            completed = info['parts']
-        else:
-            completed = [
-                re.sub(r'\.stl$', '', c)
-                for c in glob.glob("**/*.stl", root_dir=temp / "temp" / "export", recursive=True)
-            ]
-
-        progress = (len(completed) / (len(info['parts']) or 1))
-
-        await websocket.send_json({
-            **info,
-            "log": log,
-            "completed": completed,
-            "progress": progress,
-        })
-        await asyncio.sleep(1)
+        l = logfile.open("r").read().replace("\n", "<br/>")
+        await websocket.send_json(l)
+        await asyncio.sleep(5)
 
 
 @app.post("/job")
 async def form_post(request: Request,
-                    background_tasks: BackgroundTasks, 
-                    file: typing.Optional[UploadFile] = File(None),
+                    background_tasks: BackgroundTasks, file: bytes = File(...),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
     logging.info(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
     if variables.use_custom_logo:
-        logo = work_dir / "logo.svg"
-        logo.open("wb").write(file)
+        if logo_case is not None:
+            logo = work_dir / "MainCase.svg"
+            logo.open("wb").write(logo_case)
+        elif logo_lid is not None:
+            logo = work_dir / "MainCaseLid.svg"
+            logo.open("wb").write(logo_case)
+    else:
+        variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
     background_tasks.add_task(run_job, uid)
 
     if "Accept" in request.headers and request.headers["Accept"] == "application/json":
-        return JSONResponse(RunningJob(uid=uid, **variables.dict()))
+        return JSONResponse(RunningJob(uid=uid, **variables.dict()).dict())
 
     return RedirectResponse(f"/job/{uid}", status_code=303)
