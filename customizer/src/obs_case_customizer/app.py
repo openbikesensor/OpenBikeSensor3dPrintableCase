@@ -1,20 +1,19 @@
 import asyncio
 import inspect
 import json
-import re
 import logging
 import os
+import re
 import shutil
 import tempfile
 import typing
 import uuid
-import glob
 import zipfile
 from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -101,9 +100,14 @@ def copy_sources_to(dir: Path):
 
 def copy_custom_logo(from_path: Path, to_path: Path):
     target = to_path / "logo" / "CustomLogo"
-    os.makedirs(target)
-    os.symlink(from_path / "custom_logo.svg", target / "MainCase.svg")
-    os.symlink(from_path / "custom_logo.svg", target / "MainCaseLid.svg")
+    # in case only one logo was uploaded it's replaced by default logo
+    shutil.copytree(ROOT / "logo" / "OpenBikeSensor", target)
+    if os.path.isfile(from_path / "MainCase.svg"):
+        os.unlink(target / "MainCase.svg")
+        os.symlink(from_path / "MainCase.svg", target / "MainCase.svg")
+    if os.path.isfile(from_path / "MainCaseLid.svg"):
+        os.unlink(target / "MainCaseLid.svg")
+        os.symlink(from_path / "MainCaseLid.svg", target / "MainCaseLid.svg")
 
 
 def package_to_zip(source: Path, target: Path):
@@ -119,6 +123,7 @@ def package_to_zip(source: Path, target: Path):
                 zipped_name = re.sub(r'^export/', 'OpenBikeSensor_customized/', name)
                 print("NAME", name, zipped_name)
                 zf.write(name, zipped_name)
+
 
 # TODO: make this configurable
 ALL_PARTS = [
@@ -140,7 +145,7 @@ ALL_PARTS = [
     "MainCase/MainCaseLid",
     "MainCase/UsbCover",
 ]
-ALL_PARTS = ALL_PARTS[:3] # for debugging
+ALL_PARTS = ALL_PARTS[:3]  # for debugging
 
 
 async def run_job(uid, parts=ALL_PARTS):
