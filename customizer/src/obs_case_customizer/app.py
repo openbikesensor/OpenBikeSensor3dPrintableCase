@@ -1,17 +1,19 @@
 import asyncio
 import inspect
 import json
+import re
 import logging
 import os
 import shutil
 import tempfile
 import typing
 import uuid
+import glob
 import zipfile
 from pathlib import Path
 
 import pkg_resources
-from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -64,27 +66,25 @@ def scad_arguments_from_json(json_file: Path):
     return scad_defines
 
 
-async def run_make_with_params(target_basedir: Path, logfile):
+async def run_make_with_params(target_basedir: Path, logfile, parts):
     variables_json_file = target_basedir / "variables.json"
     openscad_options = ["-q"]
     openscad_options.extend(scad_arguments_from_json(variables_json_file))
 
-    logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\"\n"]))
-    try:
-        p = await asyncio.create_subprocess_exec("make", "-j", str(THREADS),
-                                                 f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
-                                                 stdout=logfile.open("ab"),
-                                                 stderr=logfile.open("ab"),
-                                                 cwd=target_basedir)
+    targets = [f'export/{name}.stl' for name in parts]
+    command = ["make", "-j", str(THREADS), f"OPENSCAD_OPTIONS={' '.join(openscad_options)}", *targets]
 
-        out, err = await asyncio.wait_for(p.communicate(), TIMEOUT)
-        if p.returncode is None:
-            p.kill()
-            logfile.open("ab").write("The conversion took overly long and had to be killed.")
-        logfile.open("ab").write(out + err)
+    logfile.open("a").write(" ".join(command))
 
-    except:
-        logging.exception("dang")
+    p = await asyncio.create_subprocess_exec(*command,
+                                             stdout=logfile.open("ab"),
+                                             stderr=logfile.open("ab"),
+                                             cwd=target_basedir)
+
+    await asyncio.wait_for(p.communicate(), TIMEOUT)
+    if p.returncode is None:
+        p.kill()
+        logfile.open("ab").write("The conversion took overly long and had to be killed.")
 
 
 def copy_sources_to(dir: Path):
@@ -108,27 +108,78 @@ def package_to_zip(source: Path, target: Path):
             for name in filenames:
                 name = os.path.join(root, name)
                 name = os.path.normpath(name)
-                zf.write(name, name)
+                zipped_name = re.sub(r'^export/', 'OpenBikeSensor_customized/', name)
+                print("NAME", name, zipped_name)
+                zf.write(name, zipped_name)
+
+# TODO: make this configurable
+ALL_PARTS = [
+    "Mounting/SeatPostMount",
+    "Mounting/BackRiderTopRiderAdapter",
+    "Mounting/HandlebarRail",
+    "Mounting/BikeRackMountCenterLongitudinal",
+    "Mounting/StandardMountAdapter",
+    "Mounting/TopTubeMount",
+    "Mounting/BikeRackMountSide",
+    "Mounting/AttachmentCover",
+    "Mounting/BikeRackMountCenter",
+    "Mounting/LockingPin",
+    "DisplayCase/DisplayCableStrainRelief",
+    "DisplayCase/DisplayCaseBottom",
+    "DisplayCase/DisplayCaseTop",
+    "MainCase/GpsAntennaLid",
+    "MainCase/MainCase",
+    "MainCase/MainCaseLid",
+    "MainCase/UsbCover",
+]
+ALL_PARTS = ALL_PARTS[:3] # for debugging
 
 
-async def run_job(uid):
+async def run_job(uid, parts=ALL_PARTS):
     dir_to_work = Path(tempfile.gettempdir()) / uid
     logfile = dir_to_work / "log.txt"
     variables_file = dir_to_work / "variables.json"
     json.load(variables_file.open("r"))
     logfile.open("w").write("starting conversion\n")
+    info_file = dir_to_work / "info.json"
+
+    info = {
+        "parts": parts,
+        "status": "working",
+    }
+    write_info = lambda: json.dump(info, info_file.open("wt"))
+
     with tempfile.TemporaryDirectory() as temp:
         temp = Path(temp)
+        write_info()
+        os.symlink(temp, dir_to_work / "temp")
         logging.error(f" run_job got {dir_to_work} go")
         shutil.copy(dir_to_work / "variables.json", temp / "variables.json")
         copy_sources_to(temp)
         logging.error(f" run_job got {dir_to_work}")
-        project_success = await run_make_with_params(temp, logfile)
 
-        package_to_zip(temp / "export", dir_to_work / "OpenBikeSensor_customized.zip")
+        project_success = False
+        try:
+            await run_make_with_params(temp, logfile, parts)
+            project_success = True
 
-        logfile.open("a").write(f"conversion completed {'with some errors' if not project_success else ''}\n")
-        logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download here</a>')
+            package_to_zip(temp / "export", dir_to_work / "OpenBikeSensor_customized.zip")
+
+            logfile.open("a").write(f"conversion completed {'with some errors' if not project_success else ''}\n")
+            logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download here</a>')
+
+            info['status'] = 'complete'
+            write_info()
+
+        except Exception as e:
+            logfile.open("a").write(f"conversion failed with error: {e}")
+            logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download zip anyway</a>')
+            log.exception("Failed to process job %s.", uid)
+
+            info['status'] = 'error'
+            write_info()
+
+            raise
 
 
 # from https://github.com/tiangolo/fastapi/issues/2387#issuecomment-731662551
@@ -205,16 +256,38 @@ async def job(request: Request, uid: uuid.UUID):
 @app.websocket("/jobstate/{uid}")
 async def jobstate(websocket: WebSocket, uid: uuid.UUID):
     await websocket.accept()
-    logfile = Path(tempfile.gettempdir()) / str(uid) / "log.txt"
+
+    temp = Path(tempfile.gettempdir()) / str(uid)
+    logfile = temp / "log.txt"
+    info_file = temp / "info.json"
+
     while True:
-        l = logfile.open("r").read().replace("\n", "<br/>")
-        await websocket.send_json(l)
-        await asyncio.sleep(5)
+        log = logfile.open("r").read()
+        info = json.load(info_file.open("rt"))
+        
+        if info['status'] == 'complete':
+            completed = info['parts']
+        else:
+            completed = [
+                re.sub(r'\.stl$', '', c)
+                for c in glob.glob("**/*.stl", root_dir=temp / "temp" / "export", recursive=True)
+            ]
+
+        progress = (len(completed) / (len(info['parts']) or 1))
+
+        await websocket.send_json({
+            **info,
+            "log": log,
+            "completed": completed,
+            "progress": progress,
+        })
+        await asyncio.sleep(1)
 
 
 @app.post("/job")
 async def form_post(request: Request,
-                    background_tasks: BackgroundTasks, file: bytes = File(...),
+                    background_tasks: BackgroundTasks, 
+                    file: typing.Optional[UploadFile] = File(None),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
