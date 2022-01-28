@@ -87,19 +87,20 @@ def scad_arguments_from_json(json_file: Path):
     scad_defines = []
     for name, value in data.items():
         if cv.dict()[name] != value:
+            if name == "preview_mode":
+                name = "$preview"
             scad_defines.extend(["-D", f"{name}={str(value)}"])
     return scad_defines
 
 
-async def run_make_with_params(target_basedir: Path, logfile, parts):
+async def run_make_with_params(target_basedir: Path, logfile, targets):
     variables_json_file = target_basedir / "variables.json"
     openscad_options = ["-q"]
     openscad_options.extend(scad_arguments_from_json(variables_json_file))
 
-    targets = [f'export/{name}.stl' for name in parts]
     command = ["make", "-j", str(THREADS), f"OPENSCAD_OPTIONS={' '.join(openscad_options)}", *targets]
 
-    logfile.open("a").write(" ".join(command))
+    logfile.open("a").write(" ".join(command) + "\n")
 
     p = await asyncio.create_subprocess_exec(*command,
                                              stdout=logfile.open("ab"),
@@ -109,18 +110,12 @@ async def run_make_with_params(target_basedir: Path, logfile, parts):
     await asyncio.wait_for(p.communicate(), TIMEOUT)
     if p.returncode is None:
         p.kill()
-        logfile.open("ab").write("The conversion took overly long and had to be killed.")
-
-
-def copy_sources_to(dir: Path):
-    try:
-        shutil.copytree(ROOT / "src", dir / "src", copy_function=os.symlink)
-        shutil.copytree(ROOT / "lib", dir / "lib", copy_function=os.symlink)
-        shutil.copytree(ROOT / "logo", dir / "logo", copy_function=os.symlink)
-        os.symlink(ROOT / "Makefile", dir / "Makefile")
-        os.symlink(ROOT / "variables.scad", dir / "variables.scad")
-    except:
-        logging.exception(f"messed up copying {dir}")
+        logfile.open("a").write("The conversion took overly long and had to be killed.")
+        return False
+    if p.returncode:
+        logfile.open("a").write("make reported an error.")
+        return False
+    return True
 
 
 def copy_custom_logo(from_path: Path, to_path: Path):
@@ -164,23 +159,25 @@ async def run_job(uid, parts=None):
         "parts": parts,
         "status": "working",
     }
-    write_info = lambda: json.dump(info, info_file.open("wt"))
+    write_info_json = lambda: json.dump(info, info_file.open("wt"))
 
     with tempfile.TemporaryDirectory() as temp:
         temp = Path(temp)
-        write_info()
-        os.symlink(temp, dir_to_work / "temp")
-        logging.error(f" run_job got {dir_to_work} go")
-        shutil.copy(dir_to_work / "variables.json", temp / "variables.json")
-        if job_config.use_custom_logo:
-            copy_custom_logo(dir_to_work, temp)
-        copy_sources_to(temp)
+
+        write_info_json()
+
+        await copy_build_files_to_build_dir(dir_to_work, temp, job_config.use_custom_logo)
+
         logging.error(f" run_job got {dir_to_work}")
 
-        project_success = False
         try:
-            await run_make_with_params(temp, logfile, parts)
-            project_success = True
+
+            make_targets = [f'export/{name}.stl' for name in parts]
+            if job_config.use_custom_logo:
+                make_targets.extend(["logo-CustomLogo"])
+            make_targets.extend(["logo-OpenBikeSensor"])
+
+            project_success = await run_make_with_params(temp, logfile, make_targets)
 
             package_to_zip(temp / "export", dir_to_work / "OpenBikeSensor_customized.zip")
 
@@ -188,7 +185,7 @@ async def run_job(uid, parts=None):
             logfile.open("a").write(f'<BR><A HREF=../download/{uid}.zip>Download here</a>')
 
             info['status'] = 'complete'
-            write_info()
+            write_info_json()
 
         except Exception as e:
             logfile.open("a").write(f"conversion failed with error: {e}")
@@ -196,9 +193,25 @@ async def run_job(uid, parts=None):
             logging.exception(f"Failed to process job {uid}")
 
             info['status'] = 'error'
-            write_info()
+            write_info_json()
 
             raise
+
+
+async def copy_build_files_to_build_dir(dir_to_work: Path, build_dir: Path, use_custom_logo: bool):
+    os.symlink(build_dir, dir_to_work / "temp")
+    logging.info(f" run_job got {dir_to_work} go")
+    shutil.copy(dir_to_work / "variables.json", build_dir / "variables.json")
+    try:
+        shutil.copytree(ROOT / "src", build_dir / "src", copy_function=os.symlink)
+        shutil.copytree(ROOT / "lib", build_dir / "lib", copy_function=os.symlink)
+        shutil.copytree(ROOT / "logo", build_dir / "logo", copy_function=os.symlink)
+        os.symlink(ROOT / "Makefile", build_dir / "Makefile")
+        os.symlink(ROOT / "variables.scad", build_dir / "variables.scad")
+    except:
+        logging.exception(f"messed up copying {build_dir}")
+    if use_custom_logo:
+        copy_custom_logo(dir_to_work, build_dir)
 
 
 # from https://github.com/tiangolo/fastapi/issues/2387#issuecomment-731662551
@@ -228,7 +241,8 @@ def as_form(cls: typing.Type[BaseModel]):
 
 @as_form
 class CustomVariables(BaseModel):
-    use_custom_logo: bool = False
+    preview_mode: bool = False
+    use_custom_logo: bool = True
     MainCase_back_rider: bool = True
     MainCase_top_rider: bool = True
     MainCase_back_rider_cable: bool = True
@@ -302,7 +316,7 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
                 "progress": progress,
             })
         except ConnectionClosed:
-           break
+            break
 
         await asyncio.sleep(1)
 
@@ -317,7 +331,7 @@ async def form_post(request: Request,
     work_dir = Path(tempfile.gettempdir()) / uid
     logging.info(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
-    if variables.use_custom_logo:
+    if variables.use_custom_logo is True:
         if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
             logo.open("wb").write(main_case_logo_svg)
