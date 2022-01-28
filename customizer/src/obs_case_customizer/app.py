@@ -1,4 +1,5 @@
 import asyncio
+import glob
 import inspect
 import json
 import logging
@@ -13,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -23,14 +24,37 @@ from pydantic import BaseModel
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 2))
 TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 600))
 
+# TODO: make this configurable
+ALL_PARTS = [
+    "Mounting/SeatPostMount",
+    "Mounting/BackRiderTopRiderAdapter",
+    "Mounting/HandlebarRail",
+    "Mounting/BikeRackMountCenterLongitudinal",
+    "Mounting/StandardMountAdapter",
+    "Mounting/TopTubeMount",
+    "Mounting/BikeRackMountSide",
+    "Mounting/AttachmentCover",
+    "Mounting/BikeRackMountCenter",
+    "Mounting/LockingPin",
+    "DisplayCase/DisplayCableStrainRelief",
+    "DisplayCase/DisplayCaseBottom",
+    "DisplayCase/DisplayCaseTop",
+    "MainCase/GpsAntennaLid",
+    "MainCase/MainCase",
+    "MainCase/MainCaseLid",
+    "MainCase/UsbCover",
+]
+ALL_PARTS = ALL_PARTS[:3]  # for debugging
+
 queue = asyncio.Queue(maxsize=20)
 app = FastAPI()
 TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
+
 templates = Jinja2Templates(directory=TEMPLATEDIR)
 
 
 def field_type(entry, default_value):
-    if entry == "file":
+    if entry in ["main_case_logo", "main_case_lid_logo"]:
         return "file"
     elif isinstance(default_value, bool):
         return "bool"
@@ -125,34 +149,13 @@ def package_to_zip(source: Path, target: Path):
                 zf.write(name, zipped_name)
 
 
-# TODO: make this configurable
-ALL_PARTS = [
-    "Mounting/SeatPostMount",
-    "Mounting/BackRiderTopRiderAdapter",
-    "Mounting/HandlebarRail",
-    "Mounting/BikeRackMountCenterLongitudinal",
-    "Mounting/StandardMountAdapter",
-    "Mounting/TopTubeMount",
-    "Mounting/BikeRackMountSide",
-    "Mounting/AttachmentCover",
-    "Mounting/BikeRackMountCenter",
-    "Mounting/LockingPin",
-    "DisplayCase/DisplayCableStrainRelief",
-    "DisplayCase/DisplayCaseBottom",
-    "DisplayCase/DisplayCaseTop",
-    "MainCase/GpsAntennaLid",
-    "MainCase/MainCase",
-    "MainCase/MainCaseLid",
-    "MainCase/UsbCover",
-]
-ALL_PARTS = ALL_PARTS[:3]  # for debugging
-
-
-async def run_job(uid, parts=ALL_PARTS):
+async def run_job(uid, parts=None):
+    if parts == None:
+        parts = ALL_PARTS
     dir_to_work = Path(tempfile.gettempdir()) / uid
     logfile = dir_to_work / "log.txt"
     variables_file = dir_to_work / "variables.json"
-    job_config = RunningJob(**json.load(variables_file.open("r")))
+    job_config = CustomVariables(**json.load(variables_file.open("r")))
     logfile.open("w").write("starting conversion\n")
     info_file = dir_to_work / "info.json"
 
@@ -277,16 +280,33 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
     info_file = temp / "info.json"
 
     while True:
-        l = logfile.open("r").read().replace("\n", "<br/>")
-        await websocket.send_json(l)
-        await asyncio.sleep(5)
+        log = logfile.open("r").read()
+        info = json.load(info_file.open("rt"))
+
+        if info['status'] == 'complete':
+            completed = info['parts']
+        else:
+            completed = [
+                re.sub(r'\.stl$', '', c)
+                for c in glob.glob("**/*.stl", root_dir=temp / "temp" / "export", recursive=True)
+            ]
+
+        progress = (len(completed) / (len(info['parts']) or 1))
+
+        await websocket.send_json({
+            **info,
+            "log": log,
+            "completed": completed,
+            "progress": progress,
+        })
+        await asyncio.sleep(1)
 
 
 @app.post("/job")
 async def form_post(request: Request,
                     background_tasks: BackgroundTasks,
-                    main_case_logo_svg: Optional[bytes] = File(None),
-                    main_case_lid_logo_svg: Optional[bytes] = File(None),
+                    main_case_logo_svg: Optional[UploadFile] = File(None),
+                    main_case_lid_logo_svg: Optional[UploadFile] = File(None),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
@@ -295,10 +315,10 @@ async def form_post(request: Request,
     if variables.use_custom_logo:
         if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
-            logo.open("wb").write(main_case_logo_svg)
+            logo.open("wb").write(await main_case_logo_svg.file.read())
         if main_case_lid_logo_svg is not None:
             logo = work_dir / "MainCaseLid.svg"
-            logo.open("wb").write(main_case_lid_logo_svg)
+            logo.open("wb").write(await main_case_lid_logo_svg.file.read())
         if main_case_lid_logo_svg is None and main_case_logo_svg is None:
             variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
