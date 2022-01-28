@@ -25,6 +25,7 @@ app = FastAPI()
 TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
 templates = Jinja2Templates(directory=TEMPLATEDIR)
 
+
 def field_type(entry, default_value):
     if entry == "file":
         return "file"
@@ -33,6 +34,7 @@ def field_type(entry, default_value):
     else:
         return "string"
 
+
 templates.env.filters['field_type'] = field_type
 
 
@@ -40,7 +42,6 @@ def models(root):
     for root, dirs, files in os.walk(root):
         for f in files:
             yield (Path(root) / f).resolve()
-
 
 
 ROOT = Path(os.path.dirname(__file__) + "/../../../")
@@ -69,7 +70,8 @@ async def run_make_with_params(target_basedir: Path, logfile):
 
     logfile.open("a").write(" ".join(["make", "-j2", f"\"OPENSCAD_OPTIONS={' '.join(openscad_options)}\""]))
     try:
-        p = await asyncio.create_subprocess_exec("make", "-j", THREADS, f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
+        p = await asyncio.create_subprocess_exec("make", "-j", THREADS,
+                                                 f"OPENSCAD_OPTIONS={' '.join(openscad_options)}",
                                                  stdout=logfile.open("ab"),
                                                  stderr=logfile.open("ab"),
                                                  cwd=target_basedir)
@@ -178,7 +180,7 @@ class CustomVariables(BaseModel):
 def form_get(request: Request):
     variables = CustomVariables()
     fields = [("file", ""), *variables.dict().items()]
-    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields })
+    return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields})
 
 
 @app.get("/job/{uid}", response_class=HTMLResponse)
