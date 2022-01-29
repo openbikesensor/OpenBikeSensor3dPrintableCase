@@ -22,8 +22,8 @@ from fastapi.websockets import WebSocket
 from pydantic import BaseModel
 from websockets.exceptions import ConnectionClosed
 
-THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 2))
-TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 600))
+THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 10))
+TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 1200))
 
 # TODO: make this configurable
 ALL_PARTS = [
@@ -262,7 +262,7 @@ class CustomVariables(BaseModel):
     MainCase_top_rider_cable: bool = True
     m3_screw_diameter_tight: float = 3
     m3_screw_diameter_loose: float = 3.25
-    m3_insert_hole_diameter: float = 4.5
+    m3_insert_hole_diameter: float = 4
     m3_hex_nut_diameter: float = 6
     SeatPostMount_angle: float = 20
     SeatPostMount_diameter: float = 28
