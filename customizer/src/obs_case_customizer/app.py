@@ -51,7 +51,7 @@ ALL_PARTS.extend(
      for inv in ["inverted", "normal"]
      for mn in ["main", "highlight"]])
 
-ALL_PARTS = ALL_PARTS[:3]  # for debugging
+#ALL_PARTS = ALL_PARTS[:3]  # for debugging
 
 queue = asyncio.Queue(maxsize=20)
 app = FastAPI()
@@ -262,6 +262,7 @@ class CustomVariables(BaseModel):
     MainCase_top_rider_cable: bool = True
     m3_screw_diameter_tight: float = 3
     m3_screw_diameter_loose: float = 3.25
+    m3_insert_hole_diameter: float = 4.5
     m3_hex_nut_diameter: float = 6
     SeatPostMount_angle: float = 20
     SeatPostMount_diameter: float = 28
