@@ -347,8 +347,11 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     translate([MainCase_switch_offset_x, OBS_width_small+sin(frontside_angle)*MainCase_switch_offset_x, wall_thickness+4])
     rotate([0, 0, frontside_angle]) {
       // Square cutout on outside
-      translate([0, 0, 11])
-      cube([22, 24, 22], center=true);
+      translate([0, 0, 11]){
+        cube([22, 24, 21.6], center=true);
+        translate([0,-(24-6)/2+3,0.4])cube([22,6, 22], center=true);
+        translate([0,-(24-6)/2+3,0.8])cube([6,6, 22], center=true);
+      }
 
       // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
@@ -369,13 +372,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // Hole for USB Cover
     translate([MainCase_usb_port_x_offset, UsbCover_depth, 0])
     rotate([0, 0, 180]) {
-      UsbCoverMainBody(clearance=MainCase_usb_port_cover_clearance);
-
-      // Magnet holes in USB Charger Port
-      for (i = [-1, 1]) {
-        translate([UsbCover_magnet_spacing * i / 2, UsbCover_depth / 2, UsbCover_height + UsbCover_magnet_depth / 2])
-        cube([UsbCover_magnet_size, UsbCover_magnet_size, UsbCover_magnet_depth], center=true);
-      }
+      UsbCoverMainBody(clearance=MainCase_usb_port_cover_clearance, counter_magnets=true);
     }
 
     // Hole for USB Charger Port
