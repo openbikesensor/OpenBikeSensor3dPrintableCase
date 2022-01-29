@@ -45,6 +45,12 @@ ALL_PARTS = [
     "MainCase/MainCaseLid",
     "MainCase/UsbCover",
 ]
+ALL_PARTS.extend(
+    [f"logo/OpenBikeSensor/MainCase{l}-{inv}-{mn}"
+     for l in ["", "Lid"]
+     for inv in ["inverted", "normal"]
+     for mn in ["main", "highlight"]])
+
 ALL_PARTS = ALL_PARTS[:3]  # for debugging
 
 queue = asyncio.Queue(maxsize=20)
@@ -175,11 +181,15 @@ async def run_job(uid, parts=None):
         logging.error(f" run_job got {dir_to_work}")
 
         try:
+            if job_config.use_custom_logo:
+                parts.extend([f"logo/CustomLogo/MainCase{l}-{inv}-{mn}"
+                              for l in ["", "Lid"]
+                              for inv in ["inverted", "normal"]
+                              for mn in ["main", "highlight"]])
+                info["parts"] = parts
+                write_info_json()
 
             make_targets = [f'export/{name}.stl' for name in parts]
-            if job_config.use_custom_logo:
-                make_targets.extend(["logo-CustomLogo"])
-            make_targets.extend(["logo-OpenBikeSensor"])
 
             project_success = await run_make_with_params(temp, logfile, make_targets)
 
@@ -305,7 +315,7 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
             completed = info['parts']
         else:
             completed = [
-                re.sub(r'.*/([^/]+/[^/]+\.stl)$', '\1', c)
+                re.sub(r'.*/([^/]+/[^/]+\.stl)$', "\g<1>", c)
                 for c in glob.glob(f"{temp / 'temp' / 'export'}/**/*.stl", recursive=True)
             ]
 
