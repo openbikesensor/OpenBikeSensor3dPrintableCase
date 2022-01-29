@@ -13,6 +13,7 @@ pre {
     background: #333;
     color: white;
     padding: 1rem;
+    overflow-y: scroll;
 }
 pre a {
     color: #FFF176;
@@ -37,9 +38,8 @@ pre a {
     <p>This page will show the progress of your build <code>{{ uuid }}</code>. Please
     wait until the build is finished to download the result.</p>
 
-    <span id="progress">0 %</span>
+    <span id="progress">0 %</span> <a id="download" href="/download/{{uuid}}.zip">Download</a>
     <pre id="log">Connecting...</pre>
-    <a id="download" href="/download/{{uuid}}.zip">Download</a>
 <script>
 
 var loc = window.location, ws_location;
