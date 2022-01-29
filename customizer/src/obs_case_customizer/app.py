@@ -76,6 +76,12 @@ ROOT = Path(os.path.dirname(__file__) + "/../../../")
 MODEL_ROOT = (ROOT / "src").resolve()
 
 
+def scadify(value):
+    if isinstance(value, bool):
+        return str(value).lower()
+    return str(value)
+
+
 def scad_arguments_from_json(json_file: Path):
     """
     makes a list of "-D <variable> <value>" for openscad as customizer json does not work with includes
@@ -87,9 +93,7 @@ def scad_arguments_from_json(json_file: Path):
     scad_defines = []
     for name, value in data.items():
         if cv.dict()[name] != value:
-            if name == "preview_mode":
-                name = "$preview"
-            scad_defines.extend(["-D", f"{name}={str(value)}"])
+            scad_defines.extend(["-D", f"{name}={str(scadify(value))}"])
     return scad_defines
 
 
@@ -241,7 +245,6 @@ def as_form(cls: typing.Type[BaseModel]):
 
 @as_form
 class CustomVariables(BaseModel):
-    preview_mode: bool = False
     use_custom_logo: bool = True
     MainCase_back_rider: bool = True
     MainCase_top_rider: bool = True
@@ -302,11 +305,11 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
             completed = info['parts']
         else:
             completed = [
-                re.sub(r'\.stl$', '', str(Path(c).relative_to(temp / "temp" / "export")))
-                for c in glob.glob("**/*.stl", recursive=True)
+                re.sub(r'.*/([^/]+/[^/]+\.stl)$', '\1', c)
+                for c in glob.glob(f"{temp / 'temp' / 'export'}/**/*.stl", recursive=True)
             ]
 
-        progress = (len(completed) / (len(info['parts']) or 1))
+        progress = (len(completed) / (len(info['parts']) + 1))
 
         try:
             await websocket.send_json({
@@ -334,11 +337,11 @@ async def form_post(request: Request,
     if variables.use_custom_logo is True:
         if main_case_logo_svg is not None:
             logo = work_dir / "MainCase.svg"
-            assert(len(main_case_logo_svg) > 100)
+            assert (len(main_case_logo_svg) > 100)
             logo.open("wb").write(main_case_logo_svg)
         if main_case_lid_logo_svg is not None:
             logo = work_dir / "MainCaseLid.svg"
-            assert(len(main_case_lid_logo_svg) > 100)
+            assert (len(main_case_lid_logo_svg) > 100)
             logo.open("wb").write(main_case_lid_logo_svg)
         if main_case_lid_logo_svg is None and main_case_logo_svg is None:
             variables.use_custom_logo = False
