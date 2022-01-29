@@ -62,7 +62,7 @@ m3_screw_head_depth = 3; // minimum depth for sinking the screw head
 m3_screw_head_diameter = 6; // can have a little clearance
 m3_hex_nut_diameter = 6.45; // outer circle, *not* wrench size (S), but `S*2/sqrt(3)`, plus clearance
 m3_hex_nut_thickness = 2.5; // found different nut specifications, 2.5 is the maximum thickness I found named
-m3_insert_hole_diameter = 4;
+m3_insert_hole_diameter = 4.5;
 m3_insert_hole_depth = 5.75;
 m3_insert_cavity_depth = 5.75 - 4.5;  // size of cavity on the bottom for displaced plastic
 m3_insert_cavity_diameter = m3_insert_hole_diameter + 1;
@@ -100,7 +100,7 @@ MainCase_sensor_hole_diameter = 22.3; // 0.3 clearance
 MainCase_sensor_hole_ledge = 1.0;
 
 MainCase_pcb_offset = [1, UsbCover_depth + 0.5];
-MainCase_pcb_holes = [[3.29, 23.75], [8.89, 49.3], [60.8, 41.63]];
+MainCase_pcb_holes = [[3.29, 23.75], [8.89, 49.3], [60.8, 41.63], [3.85, 61.65]];
 // MainCase_pcb_dimensions = [64.64, 68.17, 2];
 
 // found through experimentation

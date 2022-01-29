@@ -149,6 +149,10 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
               translate([MainCase_pcb_holes[2].x, MainCase_pcb_holes[2].y, 0])
               rotate([0, 0, 180])
               HeatsetInsertStandoff(OBS_height - MainCase_pcb_holes[2].x - 2 * wall_thickness - MainCase_pcb_offset[0]);
+
+              translate([MainCase_pcb_holes[3].x, MainCase_pcb_holes[3].y, 0])
+              rotate([0, 0, -90])
+              HeatsetInsertStandoff(OBS_height - MainCase_pcb_holes[3].x - 2 * wall_thickness - MainCase_pcb_offset[0]);
             }
           }
         }
@@ -212,18 +216,22 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             }
 
             // Hole 5
-            translate([wall_thickness, 75, 0])
-            linear_extrude(OBS_depth)
-            polygon(polyRound([
-              [0, -4, 0],
-              [8, -4, 3],
-              [8, sin(frontside_angle)*8, 1],
-              [36, sin(frontside_angle)*36, 3],
-              [36, sin(frontside_angle)*36+5, 3],
-              [43, sin(frontside_angle)*43+5, 3],
-              [43, 100, 0],
-              [0, 100, 0],
-            ], fn=$pfn));
+            difference(){
+              translate([wall_thickness, 75, 0])
+              linear_extrude(OBS_depth)
+              polygon(polyRound([
+                [0, -4, 0],
+                [8, -4, 3],
+                [8, sin(frontside_angle)*8, 1],
+                [36, sin(frontside_angle)*36, 3],
+                [36, sin(frontside_angle)*36+5, 3],
+                [43, sin(frontside_angle)*43+5, 3],
+                [43, 100, 0],
+                [0, 100, 0],
+              ], fn=$pfn));
+              translate([0, 64, 0])
+              cube([16,10,12]);
+            }
           }
         }
 
@@ -272,13 +280,22 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             ], fn=$pfn));
 
             // a little standoff for the PCB
-            translate([wall_thickness, MainCase_pcb_offset.y + wall_thickness, wall_thickness])
+            #translate([wall_thickness, MainCase_pcb_offset.y + wall_thickness, wall_thickness])
             linear_extrude(m3_insert_hole_depth)
             polygon(polyRound([
               [0, 0, 0],
               [3, 0, 0],
-              [3, 1, 1],
-              [0, 1, 0],
+              [3, 3, 1],
+              [0, 3, 0],
+            ], fn=$pfn));
+
+            translate([wall_thickness+68-8, MainCase_pcb_offset.y + wall_thickness-4, wall_thickness])
+            linear_extrude(m3_insert_hole_depth)
+            polygon(polyRound([
+              [0, 0, 0],
+              [8, 0, 0],
+              [8, 6, 0],
+              [0, 6, 3],
             ], fn=$pfn));
           }
         }
@@ -533,4 +550,7 @@ if (logo_generate_templates) {
 
 // Draw the PCB for debugging (disable with *, highlight with #)
 *DebugPCB();
+
+// Draw the previous MainCase for debugging. (disable with *, highlight with #)
+*translate([-1.5,72+36.5,0])rotate([0,0,270])import("../../legacy/MainCase/VerticalCase_JSN-AJ/OBS-MainCase-B-001a_MainCase_with_0.4mm_OBS-logo.stl");
 
