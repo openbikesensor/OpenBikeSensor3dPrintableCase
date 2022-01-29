@@ -34,8 +34,8 @@ input[type="text"] {
                 <input type="checkbox"{{' checked="checked"' if value else ''}}  name="{{entry}}" id="{{entry}}" />
             {% elif ft == "file" %}
                 <input type="file" name="{{entry}}" id="{{entry}}" accept="image/svg+xml"/>
-            {% else%}
-                <input type="text" title="{{entry}}" name="{{entry}}" id="{{entry}}" />
+            {% else %}
+                <input type="text" title="{{entry}}" name="{{entry}}" id="{{entry}}"  value="{{value}}"/>
             {% endif %}
         </fieldset>
     {% endfor %}
