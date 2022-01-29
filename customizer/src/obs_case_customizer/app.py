@@ -335,15 +335,14 @@ async def form_post(request: Request,
     logging.info(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
     if variables.use_custom_logo is True:
-        if main_case_logo_svg is not None:
+        if len(main_case_logo_svg) > 0:
             logo = work_dir / "MainCase.svg"
-            assert (len(main_case_logo_svg) > 100)
             logo.open("wb").write(main_case_logo_svg)
-        if main_case_lid_logo_svg is not None:
+        if len(main_case_lid_logo_svg) > 0:
             logo = work_dir / "MainCaseLid.svg"
             assert (len(main_case_lid_logo_svg) > 100)
             logo.open("wb").write(main_case_lid_logo_svg)
-        if main_case_lid_logo_svg is None and main_case_logo_svg is None:
+        if len(main_case_logo_svg) == 0 and len(main_case_lid_logo_svg) == 0:
             variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
     variables_json_file.open("w").write(variables.json())
