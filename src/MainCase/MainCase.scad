@@ -247,8 +247,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
               polygon(polyRound([
               [0, -4, 0],
               [8, -4, 1],
-              [8, 3, 1],
-              [0,3, 0],
+              [8, 2.9, 1],
+              [0,8, 0],
               ], fn=$pfn));
               translate([0, 64, 0])
               cube([16,10,12]);
@@ -263,7 +263,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
         difference() {
           translate([0, 88, 0])
           rotate([90,0,0])
-          linear_extrude(OBS_width)
+          linear_extrude(OBS_width+0.05)
           polygon(polyRound([
             [wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
             [OBS_height-wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
@@ -272,8 +272,10 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             [wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
           ], fn=$pfn));
 
-          translate([0, 78, 0])
-          cube([OBS_height-16,30,100]);
+          translate([10, 78, 0])
+          #cube([OBS_height-16,30,100]);
+          translate([0, OBS_width_small-6, 0])
+          #cube([OBS_height-16,30,100]);
 
           translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
           cube([OBS_height-16,30,100]);
