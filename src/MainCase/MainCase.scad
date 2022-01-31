@@ -273,9 +273,9 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           ], fn=$pfn));
 
           translate([10, 78, 0])
-          #cube([OBS_height-16,30,100]);
+          cube([OBS_height-16,30,100]);
           translate([0, OBS_width_small-6, 0])
-          #cube([OBS_height-16,30,100]);
+          cube([OBS_height-16,30,100]);
 
           translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
           cube([OBS_height-16,30,100]);
@@ -385,6 +385,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
       cylinder(d=6, h=20);
+
+      translate([10,-1,-0.49])linear_extrude(0.6)rotate([0,0,180])text("I / O",font="open sans:style=Bold", size=8);
 
       // Rounded cutout on the inside, the main switch body sits in this place.
       translate([0, -wall_thickness, 24])
