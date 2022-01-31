@@ -41,7 +41,7 @@ module MainCaseLid() {
     rim_offset = wall_thickness + MainCaseLid_rim_clearance;
     hole_x = 75;
 
-    dx = function (x) x * sin(frontside_angle);
+    dx = function (x) x * tan(frontside_angle);
     polygon(polyRound([
       [rim_offset+MainCaseLid_rim_radius, rim_offset, 0],
       [rim_offset+MainCaseLid_rim_radius, rim_offset+MainCaseLid_rim_radius, MainCaseLid_rim_radius],
@@ -110,7 +110,7 @@ module MainCaseLid() {
     }
 
     // Hole for the sensor
-    translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
+    translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, 0]) {
       translate([0, 0, -15])
       cylinder(r=MainCase_sensor_hole_diameter/2, h=20);
     }

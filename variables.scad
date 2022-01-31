@@ -141,8 +141,7 @@ MainCase_micro_usb_offset = 30 + MainCase_pcb_offset.y + wall_thickness;
 MainCase_micro_usb_width = 16;
 MainCase_micro_usb_height = 14;
 
-// TODO: this is only almost correct
-frontside_angle = asin((OBS_width - OBS_width_small) / OBS_height);
+frontside_angle = atan((OBS_width - OBS_width_small) / OBS_height);
 
 MainCaseLid_rim_clearance = 0.3;
 MainCaseLid_rim_thickness = 3.0;
@@ -157,7 +156,7 @@ MainCaseLid_hole_positions = [
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, MainCaseLid_hole_offset+wall_thickness],
   [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
-  [OBS_height-MainCaseLid_hole4_offset_x+4.5, OBS_width-sin(frontside_angle)*MainCaseLid_hole4_offset_x-3],
+  [OBS_height-MainCaseLid_hole4_offset_x+4.5*cos(frontside_angle), OBS_width-tan(frontside_angle)*MainCaseLid_hole4_offset_x-3.5],
 ];
 
 MainCaseLid_battery_holder_lift = 1.5;
