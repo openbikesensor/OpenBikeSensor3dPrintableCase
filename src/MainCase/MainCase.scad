@@ -273,7 +273,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           ], fn=$pfn));
 
           translate([10, 78, 0])
-          cube([OBS_height-16,30,100]);
+          cube([OBS_height-26,30,100]);
           translate([0, OBS_width_small-6, 0])
           cube([OBS_height-16,30,100]);
 
