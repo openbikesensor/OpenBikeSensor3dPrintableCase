@@ -120,22 +120,23 @@ MainCase_gps_antenna_y_offset = 32;
 MainCase_gps_antenna_housing_hole_width = 26;
 MainCase_gps_antenna_housing_hole_height = 26;
 
-MainCase_gps_antenna_housing_depth = 10;
-MainCase_gps_antenna_housing_top_width = 25;
-MainCase_gps_antenna_housing_top_height = 38;
-MainCase_gps_antenna_housing_top_radius = 2;
-MainCase_gps_antenna_housing_bottom_offset = 2;
-MainCase_gps_antenna_housing_bottom_width = MainCase_gps_antenna_housing_top_width + 2 * MainCase_gps_antenna_housing_depth;
-MainCase_gps_antenna_housing_bottom_height = MainCase_gps_antenna_housing_top_height + 2 * MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_housing_bottom_offset;
-MainCase_gps_antenna_housing_bottom_radius = MainCase_gps_antenna_housing_top_radius + MainCase_gps_antenna_housing_depth;
-MainCase_gps_antenna_housing_screw_offset = 3;
-MainCase_gps_antenna_housing_cable_hole_diameter = 6;
-
-MainCase_gps_antenna_lid_thickness = 1.5;
+MainCase_gps_antenna_lid_thickness = 2;
 MainCase_gps_antenna_lid_offset = 3;
 MainCase_gps_antenna_lid_tab_width = 10;
 MainCase_gps_antenna_lid_tab_depth = 2;
 MainCase_gps_antenna_lid_tab_height = 1;
+
+MainCase_gps_antenna_height = 9;
+MainCase_gps_antenna_housing_depth = MainCase_gps_antenna_height+MainCase_gps_antenna_lid_thickness;
+MainCase_gps_antenna_housing_top_width = 25;
+MainCase_gps_antenna_housing_top_height = 38;
+MainCase_gps_antenna_housing_top_radius = 2;
+MainCase_gps_antenna_housing_bottom_offset = 2;
+MainCase_gps_antenna_housing_bottom_width = MainCase_gps_antenna_housing_top_width + 2 * MainCase_gps_antenna_height;
+MainCase_gps_antenna_housing_bottom_height = MainCase_gps_antenna_housing_top_height + 2 * MainCase_gps_antenna_height - MainCase_gps_antenna_housing_bottom_offset;
+MainCase_gps_antenna_housing_bottom_radius = MainCase_gps_antenna_housing_top_radius + MainCase_gps_antenna_housing_depth;
+MainCase_gps_antenna_housing_screw_offset = 3;
+MainCase_gps_antenna_housing_cable_hole_diameter = 6;
 
 MainCase_micro_usb_offset = 30 + MainCase_pcb_offset.y + wall_thickness;
 MainCase_micro_usb_width = 16;
