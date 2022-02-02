@@ -85,7 +85,7 @@ module MagnetHole(inverse=false) {
           updown = inverse ? UsbCover_magnet_clearance : -UsbCover_magnet_clearance;
           translate([-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance/2,updown])
              cube(UsbCover_magnet_size+UsbCover_magnet_clearance,center=false);
-          translate([0,0,epsilon])
+          translate([0,0,inverse?-epsilon:epsilon])
              cube([UsbCover_magnet_size,UsbCover_magnet_size,UsbCover_magnet_depth+epsilon]);
       }
   }
