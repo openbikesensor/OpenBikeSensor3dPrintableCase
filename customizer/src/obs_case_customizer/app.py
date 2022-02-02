@@ -14,12 +14,12 @@ from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks
+from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from websockets.exceptions import ConnectionClosed
 
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 10))
@@ -244,7 +244,10 @@ def as_form(cls: typing.Type[BaseModel]):
     ]
 
     async def _as_form(**data):
-        return cls(**data)
+        try:
+            return cls(**data)
+        except ValidationError as err:
+            raise HTTPException(400, str(err))
 
     sig = inspect.signature(_as_form)
     sig = sig.replace(parameters=new_params)
