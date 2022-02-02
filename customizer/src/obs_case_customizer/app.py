@@ -263,22 +263,22 @@ class CustomVariables(BaseModel):
     MainCase_top_rider: bool = True
     MainCase_back_rider_cable: bool = True
     MainCase_top_rider_cable: bool = True
-    m3_screw_diameter_tight: float = 3
-    m3_screw_diameter_loose: float = 3.25
-    m3_insert_hole_diameter: float = 4
-    m3_hex_nut_diameter: float = Field(6, title='The height in cm', ge=5, le=6)
-    SeatPostMount_angle: float = 20
-    SeatPostMount_diameter: float = 28
-    SeatPostMount_length: float = 20
-    HandlebarRail_tube_radius: float = 18
-    DisplayCaseTop_pcb_width: float = 26.5
-    DisplayCaseTop_pcb_height: float = 27.2
-    DisplayCaseTop_pcb_standoff: float = 1.7
-    extrude_width: float = 0.46
+    m3_screw_diameter_tight: float = Field(3, title='diameter in mm', ge=2.6, le=3.6)
+    m3_screw_diameter_loose: float = Field(3.25, title='in mm', ge=2.9, le=3.7)
+    m3_insert_hole_diameter: float = Field(4, title='in mm', ge=3.5, le=5.6)
+    m3_hex_nut_diameter: float = Field(6, title='in mm', ge=5, le=6)
+    SeatPostMount_angle: float = Field(20, title='in mm', ge=0, le=60)
+    SeatPostMount_diameter: float = Field(28, title='in mm', ge=15, le=35)
+    SeatPostMount_length: float = Field(20, title='in mm', ge=15, le=120)
+    HandlebarRail_tube_radius: float = Field(18, title='in mm', ge=10, le=30)
+    DisplayCaseTop_pcb_width: float = Field(26.5, title='in mm', ge=25, le=29)
+    DisplayCaseTop_pcb_height: float = Field(27.2, title='in mm', ge=25, le=29)
+    DisplayCaseTop_pcb_standoff: float = Field(1.7, title='in mm', ge=0.5, le=2)
+    extrude_width: float = Field(0.46, title='in mm', ge=0.15, le=1)
     enable_easy_print: bool = True
     enable_text: bool = True
-    layer_height: float = 0.2
-    default_clearance: float = 0.2
+    layer_height: float = Field(0.2, title='in mm', ge=0.04, le=0.5)
+    default_clearance: float = Field(0.2, title='in mm', ge=-0.01, le=0.5)
     orient_for_printing: bool = True
 
 
