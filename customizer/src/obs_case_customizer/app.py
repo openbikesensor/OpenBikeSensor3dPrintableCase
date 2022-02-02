@@ -19,7 +19,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.websockets import WebSocket
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from websockets.exceptions import ConnectionClosed
 
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 10))
@@ -263,7 +263,7 @@ class CustomVariables(BaseModel):
     m3_screw_diameter_tight: float = 3
     m3_screw_diameter_loose: float = 3.25
     m3_insert_hole_diameter: float = 4
-    m3_hex_nut_diameter: float = 6
+    m3_hex_nut_diameter: float = Field(6, title='The height in cm', ge=5, le=6)
     SeatPostMount_angle: float = 20
     SeatPostMount_diameter: float = 28
     SeatPostMount_length: float = 20
@@ -321,7 +321,7 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
                 for c in glob.glob(f"{temp / 'temp' / 'export'}/**/*.stl", recursive=True)
             ]
 
-        progress = (len(completed) / (len(info['parts']) + 1))
+        progress = (len(completed) / (len(info['parts'])))
 
         try:
             await websocket.send_json({
