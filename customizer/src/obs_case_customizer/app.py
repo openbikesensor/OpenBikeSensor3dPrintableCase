@@ -273,6 +273,7 @@ class CustomVariables(BaseModel):
     DisplayCaseTop_pcb_standoff: float = 1.7
     extrude_width: float = 0.46
     enable_easy_print: bool = True
+    enable_text: bool = True
     layer_height: float = 0.2
     default_clearance: float = 0.2
     orient_for_printing: bool = True
