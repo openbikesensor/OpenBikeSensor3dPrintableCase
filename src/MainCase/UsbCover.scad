@@ -98,13 +98,15 @@ module MagnetHoles() {
 }
 
 module CounterMagnetHoles(clearance=0) {
-    // these are used to punch the magnet holes into the MainCase, together with a bridging helper ridge
-    // translation into world coordinates
-    rotate([0,0,90])translate([depth/2,0,0]){
-      for (i=[-1,1])
-        translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_magnet_size/2-i*UsbCover_magnet_spacing/2,UsbCover_height+clearance]) MagnetHole(inverse=true);
-    translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_width/2-clearance,UsbCover_height+clearance])
-    cube([UsbCover_magnet_size,UsbCover_width+2*clearance,.25]);
+  // these are used to punch the magnet holes into the MainCase, together with a bridging helper ridge
+  // translation into world coordinates
+  rotate([0,0,90])translate([depth/2,0,0]){
+    for (i=[-1,1])
+      translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_magnet_size/2-i*UsbCover_magnet_spacing/2,UsbCover_height+clearance]) MagnetHole(inverse=true);
+    if (enable_easy_print) {
+      translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_width/2-clearance,UsbCover_height+clearance])
+        cube([UsbCover_magnet_size,UsbCover_width+2*clearance,.25]);
+    }
   }
 }
 

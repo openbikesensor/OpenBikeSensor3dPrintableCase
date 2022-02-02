@@ -119,7 +119,9 @@ module GpsAntennaLid() {
     cylinder(d=m3_screw_diameter_loose, h=10, $fn=32);
   }
 
-  translate([5,-13 ,0])rotate([0,0,90])linear_extrude(MainCase_gps_antenna_lid_thickness+.4)text("GPS",font="open sans", size=10);
+  if (enable_text) {
+    translate([5,-13 ,0])rotate([0,0,90])linear_extrude(MainCase_gps_antenna_lid_thickness+.4)text("GPS",font="open sans", size=10);
+  }
 }
 
 module SwitchboxPolygon(padding=0,height=1, depth=12, width=15) {
@@ -376,10 +378,12 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       if (enable_easy_print) {
         intersection(){
           SwitchboxPolygon(padding=0, height=29.2);
-          translate([0, 0, 21.6/2]){
-            union(){
-              translate([0,-(24-6)/2+3,0.3])cube([60,6, 21.6], center=true);
-              translate([0,-(24-6)/2+3,0.6])cube([6,6, 21.6], center=true);
+          if (enable_easy_print) {
+            translate([0, 0, 21.6/2]){
+              union(){
+                translate([0,-(24-6)/2+3,0.3])cube([60,6, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.6])cube([6,6, 21.6], center=true);
+              }
             }
           }
         }
@@ -388,7 +392,9 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       translate([0, -4-wall_thickness, 8])
       cylinder(d=6, h=20);
 
-      translate([10,-1,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
+      if(enable_text) {
+        #translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
+      }
 
       // Rounded cutout on the inside, the main switch body sits in this place.
       translate([0, -wall_thickness, 24])
