@@ -288,6 +288,7 @@ class RunningJob(CustomVariables):
 
 @app.get("/")
 def form_get(request: Request):
+    # TODO: Switch to CustomVariables.schema for the generation of the <form>
     variables = CustomVariables()
     fields = [("main_case_logo_svg", ""), ("main_case_lid_logo_svg", ""), *variables.dict().items()]
     return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields})
