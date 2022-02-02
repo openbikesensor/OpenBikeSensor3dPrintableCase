@@ -290,6 +290,7 @@ logo_convexity = 10; // Increase if you get artifacts in the logo
 // Please do not modify these, they are overwritten by the Makefile when you
 // generate parts with logos.
 logo_enabled = false; // set to true to generate logos into parts that support it
+logo_use_prebuild = false; // used by makefile to speed up logo file export
 logo_generate_templates = false; // set to true to generate 2D template SVGs
 logo_name = "OpenBikeSensor"; // name of a folder inside `logo/`
 logo_mode = "normal"; // "normal" or "inverted"

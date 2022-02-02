@@ -133,8 +133,11 @@ if (logo_generate_templates) {
   MainCaseLid();
 } else {
   GenerateWithLogo() {
-    MainCaseLid();
-
+    if (logo_use_prebuild) {
+      import("../../export/MainCase/MainCaseLid.stl");
+    } else {
+      MainCaseLid();
+    }
     mirror([1, 0, 0])
     translate([-104, -72-72, 0])
     import(str("../../logo/", logo_name, "/MainCaseLid.svg"));

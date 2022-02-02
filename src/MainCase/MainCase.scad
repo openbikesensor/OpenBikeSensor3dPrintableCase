@@ -575,7 +575,11 @@ if (logo_generate_templates) {
   MainCase();
 } else {
   GenerateWithLogo() {
-    MainCase();
+    if (logo_use_prebuild) {
+      import("../../export/MainCase/MainCase.stl");
+    } else {
+      MainCase();
+    }
 
     mirror([0, 1, 0])
     rotate([0, 0, -90])

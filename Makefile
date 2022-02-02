@@ -50,9 +50,9 @@ render/assembly.gif: assembly.scad $(SRCS)
 # $3: logo part (main|highlight)
 # $4: logo mode (normal|inverted)
 define logo-part-rule
-export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl: src/$(2).scad logo/$(1)/$(shell basename $(2)).svg
+export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl: src/$(2).scad logo/$(1)/$(shell basename $(2)).svg export/$(2).stl
 	@mkdir -p $$(shell dirname $$@)
-	$$(OPENSCAD) $$(OPENSCAD_OPTIONS) -D orient_for_printing=true -D logo_enabled=true -D 'logo_mode="$(4)"' -D 'logo_part="$(3)"' -D 'logo_name="$(1)"' -o $$@ $$<
+	$$(OPENSCAD) $$(OPENSCAD_OPTIONS) -D orient_for_printing=true -D logo_enabled=true -D logo_use_prebuild=true -D 'logo_mode="$(4)"' -D 'logo_part="$(3)"' -D 'logo_name="$(1)"' -o $$@ $$<
 
 logo-$1-$4: export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl
 logo-$1: export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl
