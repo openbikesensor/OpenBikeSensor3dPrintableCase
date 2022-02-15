@@ -48,18 +48,24 @@ module MainCaseLid() {
       [rim_offset, rim_offset+MainCaseLid_rim_radius, 0],
 
       [rim_offset, hole_x-MainCaseLid_rim_radius, 0],
-      [rim_offset+MainCaseLid_rim_radius, hole_x-MainCaseLid_rim_radius, MainCaseLid_rim_radius],
-      [rim_offset+MainCaseLid_rim_radius, hole_x, 0],
-      [rim_offset+MainCaseLid_rim_radius, OBS_width_small-rim_offset+dx(rim_offset+MainCaseLid_rim_radius), 0],
+      [rim_offset+0.7*MainCaseLid_rim_radius, hole_x-0.5*MainCaseLid_rim_radius, 0.7*MainCaseLid_rim_radius],
+      [rim_offset+0.7*MainCaseLid_rim_radius, hole_x, 0],
+      [rim_offset+0.7*MainCaseLid_rim_radius, OBS_width_small-rim_offset+dx(rim_offset+0.7*MainCaseLid_rim_radius), 0],
 
-      [OBS_height/2, OBS_width_small+dx(OBS_height/2)-rim_offset, 0],
-      [OBS_height/2, hole_x - rim_offset * 2, MainCaseLid_rim_radius *2],
+      [OBS_height/2, OBS_width_small+dx(OBS_height/2)-rim_offset,0],
+      [OBS_height/2, OBS_width_small+dx(OBS_height/2)-rim_offset-10,0],
+      [OBS_height/2+8, OBS_width_small+dx(OBS_height/2+9)-rim_offset-10,0],
+
+      [OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, 0],
+      [OBS_height-rim_offset-10, hole_x, 0],
+      [OBS_height-rim_offset-10, hole_x - rim_offset * 2, 0],
       [OBS_height-rim_offset, hole_x - rim_offset * 2, 0],
 
       [OBS_height-rim_offset, rim_offset+MainCaseLid_rim_radius, 0],
       [OBS_height-rim_offset-MainCaseLid_rim_radius, rim_offset+MainCaseLid_rim_radius, MainCaseLid_rim_radius],
       [OBS_height-rim_offset-MainCaseLid_rim_radius, rim_offset, 0],
     ], fn=$pfn));
+    translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16])circle(r=MainCase_sensor_hole_diameter/2 + MainCase_sensor_hole_ledge+rim_offset/2);
   }
 
   module Rim(chamfer_size) {
@@ -114,7 +120,7 @@ module MainCaseLid() {
       translate([0, 0, -15])
       cylinder(r=MainCase_sensor_hole_diameter/2, h=20);
     }
-    translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, -20]) {
+    translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, -20]) {
       cylinder(r=MainCase_sensor_hole_diameter/2 + MainCase_sensor_hole_ledge, h=20);
     }
 
@@ -143,4 +149,5 @@ if (logo_generate_templates) {
     import(str("../../logo/", logo_name, "/MainCaseLid.svg"));
   }
 }
+// translate([0,0,-40])rotate([0,0,-90])mirror([1,0,0])MainCase();
 

@@ -401,8 +401,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       linear_extrude(200)
       polygon(polyRound([
         [-15.1, -20, 0],
-        [-15.1, 0, 4],
-        [15.1, 0, 4],
+        [-15.1, 0, 2],
+        [15.1, 0, 2],
         [15.1, -20, 0],
       ], fn=$pfn));
     }
