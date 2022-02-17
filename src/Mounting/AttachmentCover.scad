@@ -36,8 +36,8 @@ module AttachmentCover(height = MainCase_gps_antenna_lid_thickness, cover_number
     }
   }
   if (cover_number!=false) {
-    #translate([MountAttachment_width/2+4.5,-8,MainCase_gps_antenna_lid_thickness])rotate([0,0,90])linear_extrude(2*layer_height)text(cover_number,font="open sans", size=10,center=true);
+    #translate([MountAttachment_width/2+4.5,-3.4*len(cover_number),MainCase_gps_antenna_lid_thickness])rotate([0,0,90])linear_extrude(2*layer_height)text(cover_number,font="open sans", size=10,center=false);
   }
 }
-
-translate([-MountAttachment_width/4-6,0,0])AttachmentCover(cover_number=COVER_NUMBER);
+attachment_cover_number_text="1";
+translate([-MountAttachment_width/4-6,0,0])AttachmentCover(cover_number=attachment_cover_number_text);

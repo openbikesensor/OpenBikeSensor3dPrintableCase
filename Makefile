@@ -3,6 +3,8 @@ OPENSCAD_OPTIONS=-q
 IMAGE_OPTIONS=--imgsize=1024,768 --colorscheme "Tomorrow Night" --render true -D orient_for_printing=false
 THUMBNAIL_OPTIONS=--imgsize=400,300 --colorscheme "Tomorrow Night" --render true -D fast=true -D orient_for_printing=false
 
+SHELL=bash
+
 SRCS=$(wildcard src/*/*.scad)
 STLS=$(patsubst src/%.scad,export/%.stl,$(SRCS))
 PNGS=$(patsubst src/%.scad,render/%.png,$(SRCS))
@@ -78,3 +80,13 @@ endef
 
 $(foreach file,$(FILES_WITH_LOGO), \
 	$(eval $(call logo-template-rule,$(file))))
+
+
+define numbered-cover-rule
+export/Mounting/AttachmentCover_$(1).stl: src/Mounting/AttachmentCover.scad
+	@mkdir -p $$(shell dirname $$@)
+	$(OPENSCAD) $(OPENSCAD_OPTIONS) -D orient_for_printing=true -D attachment_cover_number_text=$(1) -o $$@ $$<
+endef
+
+$(foreach number,$(shell seq 0 1 100), \
+	$(eval $(call numbered-cover-rule,$(number))))
