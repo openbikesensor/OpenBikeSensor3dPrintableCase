@@ -2,7 +2,7 @@ include <../../variables.scad>
 use <../../lib/Round-Anything/polyround.scad>
 use <../../lib/utils.scad>
 
-module AttachmentCover(height=2) {
+module AttachmentCover(height = MainCase_gps_antenna_lid_thickness, cover_number=false) {
   difference(){
     hull(){
       translate([0,0,0]) linear_extrude(epsilon) polygon(polyRound([
@@ -35,6 +35,9 @@ module AttachmentCover(height=2) {
       }
     }
   }
+  if (cover_number!=false) {
+    #translate([MountAttachment_width/2+4.5,-8,MainCase_gps_antenna_lid_thickness])rotate([0,0,90])linear_extrude(2*layer_height)text(cover_number,font="open sans", size=10,center=true);
+  }
 }
 
-translate([-MountAttachment_width/4-6,0,0])AttachmentCover();
+translate([-MountAttachment_width/4-6,0,0])AttachmentCover(cover_number=COVER_NUMBER);
