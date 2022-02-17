@@ -35,6 +35,7 @@ $fs = 0.2;
 $fa = 1;
 $fn = fast ? 24 : 120;
 $pfn = $fn; // for polyRound
+epsilon = 0.01; // infinitesimal thickness for slabs in hull - can be increased to see if offsets were done right.
 
 
 // ==========================================================

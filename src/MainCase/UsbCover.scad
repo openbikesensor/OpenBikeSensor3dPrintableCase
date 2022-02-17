@@ -2,7 +2,6 @@ include <../../variables.scad>
 include <../../lib/utils.scad>
 
 $fn = 64;
-epsilon = 0.01; // infinitesimal thickness for slabs in hull - can be increased to see if offsets were done right.
 depth = UsbCover_depth+UsbCover_foot_length;
 
 
