@@ -143,6 +143,7 @@ MainCase_gps_antenna_housing_cable_hole_diameter = 6;
 MainCase_micro_usb_offset = 30 + MainCase_pcb_offset.y + wall_thickness;
 MainCase_micro_usb_width = 16;
 MainCase_micro_usb_height = 14;
+MainCase_micro_usb_chamfer = 4;
 
 frontside_angle = atan((OBS_width - OBS_width_small) / OBS_height);
 

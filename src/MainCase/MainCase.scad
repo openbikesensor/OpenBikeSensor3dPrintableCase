@@ -356,10 +356,12 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
     // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
     // antenna
-    translate([OBS_height, MainCase_micro_usb_offset, OBS_depth/2])
-    rotate([0, 90, 0])
-    cube([MainCase_micro_usb_height, MainCase_micro_usb_width, 8], center=true);
-
+    translate([OBS_height, MainCase_micro_usb_offset-MainCase_micro_usb_chamfer/sqrt(2), OBS_depth/2])
+      rotate([0, 90, 0])
+      minkowski() {
+        rotate([0,0,45])cube([MainCase_micro_usb_chamfer, MainCase_micro_usb_chamfer ,epsilon]);
+        cube([MainCase_micro_usb_height-2*MainCase_micro_usb_chamfer/sqrt(2), MainCase_micro_usb_width-2*MainCase_micro_usb_chamfer/sqrt(2), 8], center=true);
+    }
     // Hole for GPS antenna cable from the inside of the antenna housing to the
     // inside of the main case
     translate([OBS_height, MainCase_gps_antenna_y_offset, OBS_depth/2])
@@ -589,7 +591,7 @@ if (logo_generate_templates) {
 }
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-*DebugPCB();
+//DebugPCB();
 
 // Draw the previous MainCase for debugging. (disable with *, highlight with #)
 *translate([-1.5,72+36.5,0])rotate([0,0,270])import("../../legacy/MainCase/VerticalCase_JSN-AJ/OBS-MainCase-B-001a_MainCase_with_0.4mm_OBS-logo.stl");
