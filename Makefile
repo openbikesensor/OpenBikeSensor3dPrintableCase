@@ -57,7 +57,7 @@ define logo-part-rule
 export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl: src/$(2).scad logo/$(1)/$(shell basename $(2)).svg export/$(2).stl
 	@mkdir -p $$(shell dirname $$@)
 	$$(OPENSCAD) $$(OPENSCAD_OPTIONS) -D orient_for_printing=true -D logo_enabled=true -D logo_use_prebuild=true -D 'logo_mode="$(4)"' -D 'logo_part="$(3)"' -D 'logo_name="$(1)"' -o $$@ $$<
-  $$(STL_SORTER) $$@
+	$$(STL_SORTER) $$@
 logo-$1-$4: export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl
 logo-$1: export/logo/$(1)/$(shell basename $(2))-$(4)-$(3).stl
 logos: logo-$1
