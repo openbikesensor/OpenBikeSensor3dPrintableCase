@@ -169,7 +169,6 @@ def package_to_zip(source: Path, target: Path):
                 name = os.path.join(root, name)
                 name = os.path.normpath(name)
                 zipped_name = re.sub(r'^export/', 'OpenBikeSensor_customized/', name)
-                print("NAME", name, zipped_name)
                 zf.write(name, zipped_name)
 
 
@@ -198,8 +197,6 @@ async def run_job(uid, parts=None):
         write_info_json()
 
         await copy_build_files_to_build_dir(dir_to_work, temp, job_config.use_custom_logo)
-
-        logging.error(f" run_job got {dir_to_work}")
 
         try:
             if job_config.use_custom_logo:
