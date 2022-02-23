@@ -31,7 +31,7 @@ input[type="text"] {
             {% set ft = entry|field_type(value) %}
 
             {% if ft == "bool" %}
-                <input type="checkbox"{{' checked="checked"' if value else ''}}  name="{{entry}}" id="{{entry}}" />
+                <input type="checkbox" {{'checked="checked"' if value else ''}} name="{{entry}}" id="{{entry}}" />
             {% elif ft == "file" %}
                 <input type="file" name="{{entry}}" id="{{entry}}" accept="image/svg+xml"/>
             {% else %}
