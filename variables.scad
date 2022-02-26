@@ -114,7 +114,7 @@ MainCase_usb_port_housing_depth = MainCase_pcb_offset.y;
 MainCase_usb_port_cover_clearance = default_clearance;
 
 OBS_height = 72;
-OBS_width = 109;
+OBS_width = 111;
 OBS_width_small = 88;
 OBS_depth = 48;
 

@@ -242,7 +242,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             }
             translate([MainCase_switch_offset_x, OBS_width_small+tan(frontside_angle)*MainCase_switch_offset_x, 0])
                rotate([0, 0, frontside_angle])
-               SwitchboxPolygon(padding=wall_thickness, height=100);
+               SwitchboxPolygon(padding=wall_thickness, height=24+3*wall_thickness);
 
             // hole 5
             difference(){

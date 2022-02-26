@@ -149,5 +149,6 @@ if (logo_generate_templates) {
     import(str("../../logo/", logo_name, "/MainCaseLid.svg"));
   }
 }
-// translate([0,0,-40])rotate([0,0,-90])mirror([1,0,0])MainCase();
+// When changing MainCase outer dimensions, check that the rim does still fit by removing the asterisk
+*#translate([0,0,-40])rotate([0,0,-90])mirror([1,0,0])MainCase();
 
