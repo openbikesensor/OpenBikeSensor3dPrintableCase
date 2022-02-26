@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Case Settings</title><style>
+body {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+fieldset {
+    display: flex;
+    border: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    align-items: center;
+} 
+fieldset label {
+    width: 20em;
+    text-align: right;
+    font-weight: bold;
+    margin-right: 0.5em;
+    font-family: "Fira Mono", monospace;
+}
+input[type="text"] {
+    padding: 0.5rem 0.25rem;
+}
+</style>
+</head>
+<body>
+<form method="post" action="/job" enctype="multipart/form-data">
+    {% for entry, value in fields %}
+        <fieldset>
+            <label for="{{entry}}">{{entry}}</label>
+            {% set ft = entry|field_type(value) %}
+
+            {% if ft == "bool" %}
+                <input type="checkbox"{{' checked="checked"' if value else ''}}  name="{{entry}}" id="{{entry}}" />
+            {% elif ft == "file" %}
+                <input type="file" name="{{entry}}" id="{{entry}}" accept="image/svg+xml"/>
+            {% else %}
+                <input type="text" title="{{entry}}" name="{{entry}}" id="{{entry}}"  value="{{value}}"/>
+            {% endif %}
+        </fieldset>
+    {% endfor %}
+
+    <fieldset>
+        <label></label>
+        <input type="submit" label="ok"/>
+    </fieldset>
+</form>
+</body>
+</html>

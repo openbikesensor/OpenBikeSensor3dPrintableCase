@@ -10,7 +10,7 @@ module MainCaseBody(reduce=0, depth=OBS_depth) {
   polygon(polyRound([
     [reduce, reduce, MainCase_small_corner_radius-reduce],
     [OBS_height-reduce, reduce, MainCase_small_corner_radius-reduce],
-    [OBS_height-reduce, OBS_width-reduce, 16-reduce],
+    [OBS_height-reduce, OBS_width-reduce/tan((90-frontside_angle)/2), 16-reduce],
     [reduce, OBS_width_small-reduce, 16-reduce],
   ], fn=$pfn));
 }
@@ -118,7 +118,25 @@ module GpsAntennaLid() {
     translate([0, MainCase_gps_antenna_housing_top_height / 2 - MainCase_gps_antenna_housing_screw_offset,  MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
     cylinder(d=m3_screw_diameter_loose, h=10, $fn=32);
   }
+
+  if (enable_text) {
+    translate([5,-13 ,0])rotate([0,0,90])linear_extrude(MainCase_gps_antenna_lid_thickness+.4)text("GPS",font="open sans", size=10);
+  }
 }
+
+module SwitchboxPolygon(padding=0,height=1, depth=12, width=15) {
+  linear_extrude(height)polygon(
+    polyRound([
+    [-width-1-padding,.05,0],
+    [-width-padding,0.1,1.5],
+    [-width+4-padding,-depth-padding,3],
+    [width-4+padding,-depth-padding,3],
+    [width+padding,0.05,1.5],
+    [width+1+padding,0.05,0]
+    ]),$fn=$pfn
+  );
+}
+
 
 module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=MainCase_back_rider) {
   difference() {
@@ -149,6 +167,10 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
               translate([MainCase_pcb_holes[2].x, MainCase_pcb_holes[2].y, 0])
               rotate([0, 0, 180])
               HeatsetInsertStandoff(OBS_height - MainCase_pcb_holes[2].x - 2 * wall_thickness - MainCase_pcb_offset[0]);
+
+              translate([MainCase_pcb_holes[3].x, MainCase_pcb_holes[3].y, 0])
+              rotate([0, 0, 0])
+              HeatsetInsertStandoff(OBS_height - MainCase_pcb_holes[3].x - 2 * wall_thickness - MainCase_pcb_offset[0]);
             }
           }
         }
@@ -196,34 +218,46 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
               [0, 8, 0],
             ], fn=$pfn));
 
-            // Hole 4
-            *translate([OBS_height-MainCaseLid_hole4_offset_x, OBS_width-sin(frontside_angle)*TopHole4_offset_top, 0])
-            rotate([0, 0, frontside_angle]) {
-              translate([0, -wall_thickness, 0])
+
+            // The switch box
+            slope_length = (OBS_height)/cos(frontside_angle);
+            difference(){
+              translate([0, OBS_width_small, 0])
+              linear_extrude(OBS_depth)
+              rotate([0,0,-90+frontside_angle])
+              polygon(polyRound([
+                [0,(MainCase_switch_offset_x)/OBS_height*slope_length-11, 0],
+
+                [13,(MainCase_switch_offset_x)/OBS_height*slope_length-11,03],
+                [13,(MainCase_switch_offset_x)/OBS_height*slope_length+11,03],
+                [8,(MainCase_switch_offset_x)/OBS_height*slope_length+11,03],
+                //[12,(MainCase_switch_offset_x)/OBS_height*slope_length+25, 5],
+
+                [8,MainCaseLid_hole_positions[4][0]/OBS_height*slope_length+4,5],
+                [0,(MainCase_switch_offset_x)/OBS_height*slope_length+27, 0]
+
+              ], fn=$pfn));
+              translate([0, 64, 0])
+              cube([16,10,12]);
+            }
+            translate([MainCase_switch_offset_x, OBS_width_small+tan(frontside_angle)*MainCase_switch_offset_x, 0])
+               rotate([0, 0, frontside_angle])
+               SwitchboxPolygon(padding=wall_thickness, height=100);
+
+            // hole 5
+            difference(){
+              translate([wall_thickness, 75, 0])
               linear_extrude(OBS_depth)
               polygon(polyRound([
-                [10, 0, 0],
-                [4.5, 0, 3],
-                [4.5, -9-sin(frontside_angle)*9, 3],
-                [-4.5, -9, 3],
-                [-4.5, 0, 3],
-                [-10, 0, 0],
+              [0, -4, 0],
+              [8, -4, 1],
+              [8, 2.9, 1],
+              [0,8, 0],
               ], fn=$pfn));
+              translate([0, 64, 0])
+              cube([16,10,12]);
             }
 
-            // Hole 5
-            translate([wall_thickness, 75, 0])
-            linear_extrude(OBS_depth)
-            polygon(polyRound([
-              [0, -4, 0],
-              [8, -4, 3],
-              [8, sin(frontside_angle)*8, 1],
-              [36, sin(frontside_angle)*36, 3],
-              [36, sin(frontside_angle)*36+5, 3],
-              [43, sin(frontside_angle)*43+5, 3],
-              [43, 100, 0],
-              [0, 100, 0],
-            ], fn=$pfn));
           }
         }
 
@@ -233,7 +267,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
         difference() {
           translate([0, 88, 0])
           rotate([90,0,0])
-          linear_extrude(OBS_width)
+          linear_extrude(OBS_width+0.05)
           polygon(polyRound([
             [wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
             [OBS_height-wall_thickness, wall_thickness+m3_insert_hole_depth, 0],
@@ -242,7 +276,9 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             [wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
           ], fn=$pfn));
 
-          translate([0, 78, 0])
+          translate([10, 78, 0])
+          cube([OBS_height-26,30,100]);
+          translate([0, OBS_width_small-6, 0])
           cube([OBS_height-16,30,100]);
 
           translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
@@ -277,8 +313,17 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             polygon(polyRound([
               [0, 0, 0],
               [3, 0, 0],
-              [3, 1, 1],
-              [0, 1, 0],
+              [3, 3, 1],
+              [0, 3, 0],
+            ], fn=$pfn));
+
+            translate([wall_thickness+68-8, MainCase_pcb_offset.y + wall_thickness-4, wall_thickness])
+            linear_extrude(m3_insert_hole_depth)
+            polygon(polyRound([
+              [0, 0, 0],
+              [8, 0, 0],
+              [8, 6, 0],
+              [0, 6, 3],
             ], fn=$pfn));
           }
         }
@@ -298,7 +343,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     }
 
     // The hole for the sensor
-    translate([OBS_height-16, OBS_width-16-sin(frontside_angle)*16, 0]) {
+    translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, 0]) {
       translate([0, 0, -2])
       cylinder(r=MainCase_sensor_hole_diameter/2, h=70+4);
 
@@ -311,10 +356,12 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
     // Hole for accessing Micro-USB of the ESP32 from underneath the GPS
     // antenna
-    translate([OBS_height, MainCase_micro_usb_offset, OBS_depth/2])
-    rotate([0, 90, 0])
-    cube([MainCase_micro_usb_height, MainCase_micro_usb_width, 8], center=true);
-
+    translate([OBS_height, MainCase_micro_usb_offset-MainCase_micro_usb_chamfer/sqrt(2), OBS_depth/2])
+      rotate([0, 90, 0])
+      minkowski() {
+        rotate([0,0,45])cube([MainCase_micro_usb_chamfer, MainCase_micro_usb_chamfer ,epsilon]);
+        cube([MainCase_micro_usb_height-2*MainCase_micro_usb_chamfer/sqrt(2), MainCase_micro_usb_width-2*MainCase_micro_usb_chamfer/sqrt(2), 8], center=true);
+    }
     // Hole for GPS antenna cable from the inside of the antenna housing to the
     // inside of the main case
     translate([OBS_height, MainCase_gps_antenna_y_offset, OBS_depth/2])
@@ -327,24 +374,38 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     }
 
     // Cutouts and hole for switch
-    translate([MainCase_switch_offset_x, OBS_width_small+sin(frontside_angle)*MainCase_switch_offset_x, wall_thickness+4])
+    translate([MainCase_switch_offset_x, OBS_width_small+tan(frontside_angle)*MainCase_switch_offset_x, wall_thickness+4])
     rotate([0, 0, frontside_angle]) {
-      // Square cutout on outside
-      translate([0, 0, 11])
-      cube([22, 24, 22], center=true);
-
+      SwitchboxPolygon(padding=0, height=21.6);
+      if (enable_easy_print) {
+        intersection(){
+          SwitchboxPolygon(padding=0, height=29.2);
+          if (enable_easy_print) {
+            translate([0, 0, 21.6/2]){
+              union(){
+                translate([0,-(24-6)/2+3,0.3])cube([60,6, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.6])cube([6,6, 21.6], center=true);
+              }
+            }
+          }
+        }
+      }
       // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
       cylinder(d=6, h=20);
+
+      if(enable_text) {
+        #translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
+      }
 
       // Rounded cutout on the inside, the main switch body sits in this place.
       translate([0, -wall_thickness, 24])
       linear_extrude(200)
       polygon(polyRound([
-        [-16, -20, 0],
-        [-16, 0, 4],
-        [16, 0, 4],
-        [16, -20, 0],
+        [-15.1, -20, 0],
+        [-15.1, 0, 2],
+        [15.1, 0, 2],
+        [15.1, -20, 0],
       ], fn=$pfn));
     }
 
@@ -352,13 +413,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // Hole for USB Cover
     translate([MainCase_usb_port_x_offset, UsbCover_depth, 0])
     rotate([0, 0, 180]) {
-      UsbCoverMainBody(clearance=MainCase_usb_port_cover_clearance);
-
-      // Magnet holes in USB Charger Port
-      for (i = [-1, 1]) {
-        translate([UsbCover_magnet_spacing * i / 2, UsbCover_depth / 2, UsbCover_height + UsbCover_magnet_depth / 2])
-        cube([UsbCover_magnet_size, UsbCover_magnet_size, UsbCover_magnet_depth], center=true);
-      }
+      UsbCoverMainBody(clearance=MainCase_usb_port_cover_clearance, counter_magnets=true);
     }
 
     // Hole for USB Charger Port
@@ -522,7 +577,11 @@ if (logo_generate_templates) {
   MainCase();
 } else {
   GenerateWithLogo() {
-    MainCase();
+    if (logo_use_prebuild) {
+      import("../../export/MainCase/MainCase.stl");
+    } else {
+      MainCase();
+    }
 
     mirror([0, 1, 0])
     rotate([0, 0, -90])
@@ -532,5 +591,8 @@ if (logo_generate_templates) {
 }
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-*DebugPCB();
+//DebugPCB();
+
+// Draw the previous MainCase for debugging. (disable with *, highlight with #)
+*translate([-1.5,72+36.5,0])rotate([0,0,270])import("../../legacy/MainCase/VerticalCase_JSN-AJ/OBS-MainCase-B-001a_MainCase_with_0.4mm_OBS-logo.stl");
 

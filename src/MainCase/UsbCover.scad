@@ -2,7 +2,6 @@ include <../../variables.scad>
 include <../../lib/utils.scad>
 
 $fn = 64;
-epsilon = 0.01; // infinitesimal thickness for slabs in hull - can be increased to see if offsets were done right.
 depth = UsbCover_depth+UsbCover_foot_length;
 
 
@@ -39,7 +38,7 @@ module 2DTop(inset=0) {
 }
 
 
-module UsbCoverMainBody(chamfer=0.5, clearance=0) {
+module UsbCoverMainBody(chamfer=0.5, clearance=0, counter_magnets=false) {
     // translation into world coordinates
 
     if (clearance > 0) {
@@ -48,6 +47,10 @@ module UsbCoverMainBody(chamfer=0.5, clearance=0) {
             UsbCoverMainBody(chamfer=0,clearance=0);
             cylinder(r=clearance,h=clearance);
         }
+        if (counter_magnets) {
+            CounterMagnetHoles(clearance=clearance);
+        }
+
     } else {
         rotate([0,0,90])translate([depth/2,0,0]) {
             //rail with chamfer top and bottom
@@ -75,12 +78,13 @@ module UsbCoverMainBody(chamfer=0.5, clearance=0) {
     }
 }
 
-module MagnetHole() {
+module MagnetHole(inverse=false) {
     // a cube with clearance and a smaller section on top that grips the magnet.
-    {
-          translate([-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance])
+    union() {
+          updown = inverse ? UsbCover_magnet_clearance : -UsbCover_magnet_clearance;
+          translate([-UsbCover_magnet_clearance/2,-UsbCover_magnet_clearance/2,updown])
              cube(UsbCover_magnet_size+UsbCover_magnet_clearance,center=false);
-          translate([0,0,epsilon])
+          translate([0,0,inverse?-epsilon:epsilon])
              cube([UsbCover_magnet_size,UsbCover_magnet_size,UsbCover_magnet_depth+epsilon]);
       }
   }
@@ -92,6 +96,18 @@ module MagnetHoles() {
         translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_magnet_size/2-i*UsbCover_magnet_spacing/2,UsbCover_height-UsbCover_magnet_depth]) MagnetHole();
 }
 
+module CounterMagnetHoles(clearance=0) {
+  // these are used to punch the magnet holes into the MainCase, together with a bridging helper ridge
+  // translation into world coordinates
+  rotate([0,0,90])translate([depth/2,0,0]){
+    for (i=[-1,1])
+      translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_magnet_size/2-i*UsbCover_magnet_spacing/2,UsbCover_height+clearance]) MagnetHole(inverse=true);
+    if (enable_easy_print) {
+      translate([-UsbCover_magnet_size/2-depth/2+UsbCover_depth/2,-UsbCover_width/2-clearance,UsbCover_height+clearance])
+        cube([UsbCover_magnet_size,UsbCover_width+2*clearance,.25]);
+    }
+  }
+}
 
 module 3DGripMould(){
     // translation into world coordinates

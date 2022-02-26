@@ -13,6 +13,7 @@ extrude_width = 0.46;
 
 // Simplifies printing by adding smart bridges to remove need for supports.
 enable_easy_print = true;
+enable_text = true;
 
 // Used e.g. by easy print algorithms.
 layer_height = 0.2;
@@ -34,6 +35,7 @@ $fs = 0.2;
 $fa = 1;
 $fn = fast ? 24 : 120;
 $pfn = $fn; // for polyRound
+epsilon = 0.01; // infinitesimal thickness for slabs in hull - can be increased to see if offsets were done right.
 
 
 // ==========================================================
@@ -100,7 +102,7 @@ MainCase_sensor_hole_diameter = 22.3; // 0.3 clearance
 MainCase_sensor_hole_ledge = 1.0;
 
 MainCase_pcb_offset = [1, UsbCover_depth + 0.5];
-MainCase_pcb_holes = [[3.29, 23.75], [8.89, 49.3], [60.8, 41.63]];
+MainCase_pcb_holes = [[3.29, 23.75], [8.89, 49.3], [60.8, 41.63], [3.85, 61.65]];
 // MainCase_pcb_dimensions = [64.64, 68.17, 2];
 
 // found through experimentation
@@ -120,29 +122,30 @@ MainCase_gps_antenna_y_offset = 32;
 MainCase_gps_antenna_housing_hole_width = 26;
 MainCase_gps_antenna_housing_hole_height = 26;
 
-MainCase_gps_antenna_housing_depth = 10;
-MainCase_gps_antenna_housing_top_width = 25;
-MainCase_gps_antenna_housing_top_height = 38;
-MainCase_gps_antenna_housing_top_radius = 2;
-MainCase_gps_antenna_housing_bottom_offset = 2;
-MainCase_gps_antenna_housing_bottom_width = MainCase_gps_antenna_housing_top_width + 2 * MainCase_gps_antenna_housing_depth;
-MainCase_gps_antenna_housing_bottom_height = MainCase_gps_antenna_housing_top_height + 2 * MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_housing_bottom_offset;
-MainCase_gps_antenna_housing_bottom_radius = MainCase_gps_antenna_housing_top_radius + MainCase_gps_antenna_housing_depth;
-MainCase_gps_antenna_housing_screw_offset = 3;
-MainCase_gps_antenna_housing_cable_hole_diameter = 6;
-
-MainCase_gps_antenna_lid_thickness = 1.5;
+MainCase_gps_antenna_lid_thickness = 2;
 MainCase_gps_antenna_lid_offset = 3;
 MainCase_gps_antenna_lid_tab_width = 10;
 MainCase_gps_antenna_lid_tab_depth = 2;
 MainCase_gps_antenna_lid_tab_height = 1;
 
+MainCase_gps_antenna_height = 9;
+MainCase_gps_antenna_housing_depth = MainCase_gps_antenna_height+MainCase_gps_antenna_lid_thickness;
+MainCase_gps_antenna_housing_top_width = 25;
+MainCase_gps_antenna_housing_top_height = 38;
+MainCase_gps_antenna_housing_top_radius = 2;
+MainCase_gps_antenna_housing_bottom_offset = 2;
+MainCase_gps_antenna_housing_bottom_width = MainCase_gps_antenna_housing_top_width + 2 * MainCase_gps_antenna_height;
+MainCase_gps_antenna_housing_bottom_height = MainCase_gps_antenna_housing_top_height + 2 * MainCase_gps_antenna_height - MainCase_gps_antenna_housing_bottom_offset;
+MainCase_gps_antenna_housing_bottom_radius = MainCase_gps_antenna_housing_top_radius + MainCase_gps_antenna_housing_depth;
+MainCase_gps_antenna_housing_screw_offset = 3;
+MainCase_gps_antenna_housing_cable_hole_diameter = 6;
+
 MainCase_micro_usb_offset = 30 + MainCase_pcb_offset.y + wall_thickness;
 MainCase_micro_usb_width = 16;
 MainCase_micro_usb_height = 14;
+MainCase_micro_usb_chamfer = 4;
 
-// TODO: this is only almost correct
-frontside_angle = asin((OBS_width - OBS_width_small) / OBS_height);
+frontside_angle = atan((OBS_width - OBS_width_small) / OBS_height);
 
 MainCaseLid_rim_clearance = 0.3;
 MainCaseLid_rim_thickness = 3.0;
@@ -157,7 +160,7 @@ MainCaseLid_hole_positions = [
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, MainCaseLid_hole_offset+wall_thickness],
   [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
-  [OBS_height-MainCaseLid_hole4_offset_x+4.5, OBS_width-sin(frontside_angle)*MainCaseLid_hole4_offset_x-3],
+  [OBS_height-MainCaseLid_hole4_offset_x+4.5*cos(frontside_angle), OBS_width-tan(frontside_angle)*MainCaseLid_hole4_offset_x-3.5],
 ];
 
 MainCaseLid_battery_holder_lift = 1.5;
@@ -289,6 +292,7 @@ logo_convexity = 10; // Increase if you get artifacts in the logo
 // Please do not modify these, they are overwritten by the Makefile when you
 // generate parts with logos.
 logo_enabled = false; // set to true to generate logos into parts that support it
+logo_use_prebuild = false; // used by makefile to speed up logo file export
 logo_generate_templates = false; // set to true to generate 2D template SVGs
 logo_name = "OpenBikeSensor"; // name of a folder inside `logo/`
 logo_mode = "normal"; // "normal" or "inverted"

@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Build Status</title>
+<style>
+body {
+    margin: 6rem auto;
+    max-width: 40rem;
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+pre {
+    white-space: pre-wrap;
+    overflow: auto;
+    background: #333;
+    color: white;
+    padding: 1rem;
+    overflow-y: scroll;
+}
+pre a {
+    color: #FFF176;
+    font-weight: bold;
+}
+#progress {
+    font-size: 3rem;
+}
+#download {
+    display: none;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+</style>
+</head>
+<body>
+
+    <h1>Build status</h1>
+
+    <p>This page will show the progress of your build <code>{{ uuid }}</code>. Please
+    wait until the build is finished to download the result.</p>
+
+    <span id="progress">0 %</span> <a id="download" href="/download/{{uuid}}.zip">Download</a>
+    <pre id="log">Connecting...</pre>
+<script>
+
+var loc = window.location, ws_location;
+if (loc.protocol === "https:") {
+    ws_location = "wss:";
+} else {
+    ws_location = "ws:";
+}
+ws_location += "//" + loc.host;
+ws_location += "/jobstate/{{uuid}}";
+let ws = new WebSocket(ws_location)
+ws.onmessage = (event) => {
+    if (event.data === 'ping') {
+        ws.send('pong')
+        return
+    }
+
+    let data = JSON.parse(event.data)
+    
+    document.getElementById('log').innerHTML = data.log
+    document.getElementById('progress').innerHTML = `${(data.progress * 100).toFixed(0)} %`
+
+    if (data.status === 'complete') {
+        document.getElementById('download').style.display = 'block';
+    }
+}
+</script>
+</body>
+</html>

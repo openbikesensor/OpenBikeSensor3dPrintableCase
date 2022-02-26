@@ -6,3 +6,6 @@ logo/*
 !logo/OpenBikeSensor
 !logo/template
 !logo/README.md
+customizer/dist/*
+*.egg-info/
+venv/*
