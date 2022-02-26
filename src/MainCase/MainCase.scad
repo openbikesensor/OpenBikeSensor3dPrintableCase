@@ -312,8 +312,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             linear_extrude(m3_insert_hole_depth)
             polygon(polyRound([
               [0, 0, 0],
-              [3, 0, 0],
-              [3, 3, 1],
+              [4, 0, 0],
+              [4, 3, 1],
               [0, 3, 0],
             ], fn=$pfn));
 
@@ -395,7 +395,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       cylinder(d=6, h=20);
 
       if(enable_text) {
-        #translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
+        translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
       }
 
       // Rounded cutout on the inside, the main switch body sits in this place.
@@ -591,8 +591,8 @@ if (logo_generate_templates) {
 }
 
 // Draw the PCB for debugging (disable with *, highlight with #)
-//DebugPCB();
+*#translate([1.5,0,0])#DebugPCB();
 
 // Draw the previous MainCase for debugging. (disable with *, highlight with #)
-*translate([-1.5,72+36.5,0])rotate([0,0,270])import("../../legacy/MainCase/VerticalCase_JSN-AJ/OBS-MainCase-B-001a_MainCase_with_0.4mm_OBS-logo.stl");
+*#translate([0,72+36.5,0])rotate([0,0,270])import("../../legacy/MainCase/VerticalCase_JSN-AJ/OBS-MainCase-B-001a_MainCase_with_0.4mm_OBS-logo.stl");
 
