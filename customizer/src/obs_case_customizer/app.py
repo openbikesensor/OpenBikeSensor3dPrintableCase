@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import glob
 import inspect
 import json
@@ -14,7 +15,7 @@ from pathlib import Path
 from typing import Optional
 
 import pkg_resources
-from fastapi import FastAPI, Form, File, Request, Depends, BackgroundTasks, HTTPException
+from fastapi import FastAPI, Form, File, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
@@ -22,8 +23,10 @@ from fastapi.websockets import WebSocket
 from pydantic import BaseModel, Field, ValidationError
 from websockets.exceptions import ConnectionClosed
 
-THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 10))
+THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 1))
 TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 1200))
+QUEUESIZE = int(os.environ.get('CUSTOMIZER_QUEUE_LENGTH', 20))
+TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
 
 # TODO: make this configurable
 ALL_PARTS = [
@@ -45,19 +48,21 @@ ALL_PARTS = [
     "MainCase/MainCaseLid",
     "MainCase/UsbCover",
 ]
+
 ALL_PARTS.extend(
     [f"logo/OpenBikeSensor/MainCase{l}-{inv}-{mn}"
      for l in ["", "Lid"]
      for inv in ["inverted", "normal"]
      for mn in ["main", "highlight"]])
 
-#ALL_PARTS = ALL_PARTS[:3]  # for debugging
+# ALL_PARTS = ALL_PARTS[:3]  # for debugging
 
 queue = asyncio.Queue(maxsize=20)
 app = FastAPI()
-TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
 
 templates = Jinja2Templates(directory=TEMPLATEDIR)
+
+job_durations = [200, 200, 200]
 
 
 def field_type(entry, default_value):
@@ -80,6 +85,19 @@ def models(root):
 
 ROOT = Path(os.path.dirname(__file__) + "/../../../")
 MODEL_ROOT = (ROOT / "src").resolve()
+
+
+async def queue_runner():
+    while True:
+        fun, arg = await queue.get()
+        logging.info(f"running {arg}")
+        await fun(arg)
+
+
+@app.on_event('startup')
+async def app_startup():
+    asyncio.create_task(queue_runner())
+    asyncio.create_task(queue_runner())
 
 
 def scadify(value):
@@ -151,11 +169,13 @@ def package_to_zip(source: Path, target: Path):
                 name = os.path.join(root, name)
                 name = os.path.normpath(name)
                 zipped_name = re.sub(r'^export/', 'OpenBikeSensor_customized/', name)
-                print("NAME", name, zipped_name)
                 zf.write(name, zipped_name)
 
 
 async def run_job(uid, parts=None):
+    global job_durations
+    starttime = datetime.datetime.now()
+
     if parts == None:
         parts = ALL_PARTS
     dir_to_work = Path(tempfile.gettempdir()) / uid
@@ -177,8 +197,6 @@ async def run_job(uid, parts=None):
         write_info_json()
 
         await copy_build_files_to_build_dir(dir_to_work, temp, job_config.use_custom_logo)
-
-        logging.error(f" run_job got {dir_to_work}")
 
         try:
             if job_config.use_custom_logo:
@@ -210,6 +228,8 @@ async def run_job(uid, parts=None):
             write_info_json()
 
             raise
+    job_durations = job_durations[-2:]
+    job_durations.append((datetime.datetime.now() - starttime).total_seconds())
 
 
 async def copy_build_files_to_build_dir(dir_to_work: Path, build_dir: Path, use_custom_logo: bool):
@@ -342,7 +362,6 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 
 @app.post("/job")
 async def form_post(request: Request,
-                    background_tasks: BackgroundTasks,
                     main_case_logo_svg: Optional[bytes] = File(None),
                     main_case_lid_logo_svg: Optional[bytes] = File(None),
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
@@ -361,8 +380,17 @@ async def form_post(request: Request,
         if len(main_case_logo_svg) == 0 and len(main_case_lid_logo_svg) == 0:
             variables.use_custom_logo = False
     variables_json_file = work_dir / "variables.json"
+
+    open(work_dir / "log.txt", "w").write(
+        f"job queued, approx wait time to start {(sum(job_durations) / len(job_durations)) * max(1, queue.qsize() - 2)} seconds\n")
+    open(work_dir / "info.json", "w").write(json.dumps({"parts": ["none"], "status": "queued", }))
+
     variables_json_file.open("w").write(variables.json())
-    background_tasks.add_task(run_job, uid)
+
+    try:
+        queue.put_nowait((run_job, uid))
+    except asyncio.QueueFull:
+        return HTTPException(status_code=503, detail="Queue is full, please try again later")
 
     if "Accept" in request.headers and request.headers["Accept"] == "application/json":
         return JSONResponse(RunningJob(uid=uid, **variables.dict()).dict())
