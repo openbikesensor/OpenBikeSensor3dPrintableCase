@@ -106,7 +106,7 @@ MainCase_pcb_holes = [[3.29+1.5, 23.75], [8.89+1.5, 49.3], [60.8+1.5, 41.63], [3
 // MainCase_pcb_dimensions = [64.64, 68.17, 2];
 
 // found through experimentation
-MainCase_usb_port_x_offset = 21.7;
+MainCase_usb_port_x_offset = 19.7+wall_thickness;
 MainCase_usb_port_vertical_offset = 3.13; // center below the board bottom
 MainCase_usb_port_housing_height = 14;
 MainCase_usb_port_housing_width = 32;
