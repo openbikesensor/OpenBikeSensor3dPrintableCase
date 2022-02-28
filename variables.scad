@@ -97,7 +97,7 @@ UsbCover_wing_width = 2.6;
 UsbCover_wing_length = 2.0;
 
 MainCase_small_corner_radius = 5;
-MainCase_switch_offset_x = 22;
+MainCase_switch_offset_x = 25;
 MainCase_sensor_hole_diameter = 22.3; // 0.3 clearance
 MainCase_sensor_hole_ledge = 1.0;
 

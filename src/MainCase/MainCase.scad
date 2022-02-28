@@ -226,12 +226,10 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
               linear_extrude(OBS_depth)
               rotate([0,0,-90+frontside_angle])
               polygon(polyRound([
-                [0,(MainCase_switch_offset_x)/OBS_height*slope_length-11, 0],
+                [0,(MainCase_switch_offset_x)/OBS_height*slope_length+11,03],
 
-                [13,(MainCase_switch_offset_x)/OBS_height*slope_length-11,03],
-                [13,(MainCase_switch_offset_x)/OBS_height*slope_length+11,03],
                 [8,(MainCase_switch_offset_x)/OBS_height*slope_length+11,03],
-                //[12,(MainCase_switch_offset_x)/OBS_height*slope_length+25, 5],
+                [12,(MainCase_switch_offset_x)/OBS_height*slope_length+25, 5],
 
                 [8,MainCaseLid_hole_positions[4][0]/OBS_height*slope_length+4,5],
                 [0,(MainCase_switch_offset_x)/OBS_height*slope_length+27, 0]
@@ -397,16 +395,6 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       if(enable_text) {
         translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
       }
-
-      // Rounded cutout on the inside, the main switch body sits in this place.
-      translate([0, -wall_thickness, 24])
-      linear_extrude(200)
-      polygon(polyRound([
-        [-15.1, -20, 0],
-        [-15.1, 0, 2],
-        [15.1, 0, 2],
-        [15.1, -20, 0],
-      ], fn=$pfn));
     }
 
 
