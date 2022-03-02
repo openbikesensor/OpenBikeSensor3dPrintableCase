@@ -119,6 +119,9 @@ module MainCaseLid() {
     translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, 0]) {
       translate([0, 0, -15])
       cylinder(r=MainCase_sensor_hole_diameter/2, h=20);
+      // the sensor has about 1.5 mm space for the silicone edge.
+      translate([0, 0, 0])
+        cylinder(r = MainCase_sensor_hole_diameter / 2+1.2, h = wall_thickness-1.5 );
     }
     translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, -20]) {
       cylinder(r=MainCase_sensor_hole_diameter/2 + MainCase_sensor_hole_ledge, h=20);

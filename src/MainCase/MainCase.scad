@@ -342,8 +342,11 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
     // The hole for the sensor
     translate([OBS_height-16, OBS_width-1/tan((90-frontside_angle)/2)*16, 0]) {
-      translate([0, 0, -2])
-      cylinder(r=MainCase_sensor_hole_diameter/2, h=70+4);
+      // the sensor has about 1.5 mm space for the silicone edge.
+      translate([0, 0, 0])
+          cylinder(r = MainCase_sensor_hole_diameter / 2, h = 2);
+      translate([0, 0, 1.6])
+        cylinder(r = MainCase_sensor_hole_diameter / 2+1.2, h = 1.5 );
 
       // In the main case, we have to cut the clearance hole larger than
       // requeste, to account for the width and twice the clearance of the rim
