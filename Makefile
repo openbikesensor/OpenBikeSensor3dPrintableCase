@@ -88,7 +88,7 @@ define numbered-cover-rule
 export/Mounting/AttachmentCover_$(1).stl: src/Mounting/AttachmentCover.scad
 	@mkdir -p $$(shell dirname $$@)
 	$(OPENSCAD) $(OPENSCAD_OPTIONS) -D orient_for_printing=true -D attachment_cover_number_text=$(1) -o $$@ $$<
-	$(STL_SORTER) $@
+	$(STL_SORTER) $$@
 endef
 
 $(foreach number,$(shell seq 0 1 100), \
