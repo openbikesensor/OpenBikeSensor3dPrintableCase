@@ -322,7 +322,11 @@ async def job(request: Request, uid: uuid.UUID):
 @app.get("/download/{uid}.zip", response_class=FileResponse)
 async def job(request: Request, uid: uuid.UUID):
     filename = Path(tempfile.gettempdir()) / str(uid) / "OpenBikeSensor_customized.zip"
-    return FileResponse(filename)
+    if filename.is_file():
+        return FileResponse(filename)
+    else:
+        raise HTTPException(status_code=202, detail="<html><body>Your Request is still processing,"
+                                                    f'<A href="../jobstate/{uid}">View job status</A></body></html>')
 
 
 @app.websocket("/jobstate/{uid}")

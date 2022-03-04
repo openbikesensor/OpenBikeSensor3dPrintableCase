@@ -4,6 +4,12 @@ import re
 from pathlib import Path
 
 
+def permutations(c):
+    # only permutations that preserve cycle direction
+    for i in range(len(c)):
+        yield [c[(i + n) % len(c)] for n in range(len(c))]
+
+
 class Element():
     def __init__(self, line):
         self.startline = line
@@ -40,7 +46,7 @@ class Loop(Element):
         self.children.append(line)
 
     def __str__(self):
-        return self.startline + "".join(self.children) + self.endline
+        return self.startline + "".join(min(list(permutations(self.children)))) + self.endline
 
 
 class Facet(Element):

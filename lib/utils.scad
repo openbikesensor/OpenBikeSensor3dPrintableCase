@@ -90,7 +90,9 @@ module MountRail(clearance=MountRail_clearance) {
 
     translate([MountRail_base_width/2, 0, MountRail_width/2])
     rotate([0, -90, 0])
-    cylinder(d=m3_screw_diameter_loose, h=MountRail_pin_length);
+    // slightly less to not have mising triangles at the holes of the bike rack mount.
+    // safe because the PinLength is currently the full length of the screw (including the part in the clamp)
+    cylinder(d=m3_screw_diameter_loose, h=MountRail_pin_length-0.4);
   }
 }
 
