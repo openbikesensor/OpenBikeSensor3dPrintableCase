@@ -57,7 +57,8 @@ ALL_PARTS.extend(
 
 # ALL_PARTS = ALL_PARTS[:3]  # for debugging
 
-queue = asyncio.Queue(maxsize=20)
+queue = None
+
 app = FastAPI()
 
 templates = Jinja2Templates(directory=TEMPLATEDIR)
@@ -96,6 +97,8 @@ async def queue_runner():
 
 @app.on_event('startup')
 async def app_startup():
+    global queue
+    queue = asyncio.Queue(maxsize=20)
     asyncio.create_task(queue_runner())
     asyncio.create_task(queue_runner())
 
