@@ -3,4 +3,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y openscad
 ADD . /case
 RUN pip3 install -e /case/customizer/
 ENV LOG_LEVEL=info
+ENV CUSTOMIZER_THREADS=6
 ENV MODULE_NAME=obs_case_customizer.app

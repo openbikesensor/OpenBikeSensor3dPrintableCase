@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, ValidationError
 from websockets.exceptions import ConnectionClosed
 
 THREADS = int(os.environ.get('CUSTOMIZER_THREADS', 1))
-TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 1200))
+TIMEOUT = int(os.environ.get('CUSTOMIZER_JOB_TIMEOUT', 2400))
 QUEUESIZE = int(os.environ.get('CUSTOMIZER_QUEUE_LENGTH', 20))
 TEMPLATEDIR = pkg_resources.resource_filename(__name__, 'templates')
 
@@ -71,8 +71,17 @@ def field_type(entry, default_value):
         return "file"
     elif isinstance(default_value, bool):
         return "bool"
+    if entry == "parts_list":
+        return "parts_list"
     else:
         return "string"
+
+
+def all_parts():
+    return [*ALL_PARTS, *[f"logo/CustomLogo/MainCase{l}-{inv}-{mn}"
+                          for l in ["", "Lid"]
+                          for inv in ["inverted", "normal"]
+                          for mn in ["main", "highlight"]]]
 
 
 templates.env.filters['field_type'] = field_type
@@ -90,9 +99,9 @@ MODEL_ROOT = (ROOT / "src").resolve()
 
 async def queue_runner():
     while True:
-        fun, arg = await queue.get()
-        logging.info(f"running {arg}")
-        await fun(arg)
+        fun, kwargs = await queue.get()
+        logging.info(f"running {kwargs}")
+        await fun(**kwargs)
 
 
 @app.on_event('startup')
@@ -175,12 +184,10 @@ def package_to_zip(source: Path, target: Path):
                 zf.write(name, zipped_name)
 
 
-async def run_job(uid, parts=None):
+async def run_job(uid=None, parts=None):
     global job_durations
     starttime = datetime.datetime.now()
 
-    if parts == None:
-        parts = ALL_PARTS
     dir_to_work = Path(tempfile.gettempdir()) / uid
     logfile = dir_to_work / "log.txt"
     variables_file = dir_to_work / "variables.json"
@@ -192,6 +199,16 @@ async def run_job(uid, parts=None):
         "parts": parts,
         "status": "working",
     }
+
+    if parts == None:
+        parts = ALL_PARTS
+        if job_config.use_custom_logo:
+            parts.extend([f"logo/CustomLogo/MainCase{l}-{inv}-{mn}"
+                          for l in ["", "Lid"]
+                          for inv in ["inverted", "normal"]
+                          for mn in ["main", "highlight"]])
+            info["parts"] = parts
+
     write_info_json = lambda: json.dump(info, info_file.open("wt"))
 
     with tempfile.TemporaryDirectory() as temp:
@@ -202,13 +219,6 @@ async def run_job(uid, parts=None):
         await copy_build_files_to_build_dir(dir_to_work, temp, job_config.use_custom_logo)
 
         try:
-            if job_config.use_custom_logo:
-                parts.extend([f"logo/CustomLogo/MainCase{l}-{inv}-{mn}"
-                              for l in ["", "Lid"]
-                              for inv in ["inverted", "normal"]
-                              for mn in ["main", "highlight"]])
-                info["parts"] = parts
-                write_info_json()
 
             make_targets = [f'export/{name}.stl' for name in parts]
 
@@ -282,6 +292,7 @@ def as_form(cls: typing.Type[BaseModel]):
 @as_form
 class CustomVariables(BaseModel):
     use_custom_logo: bool = True
+    fix_svg: bool = False
     MainCase_back_rider: bool = True
     MainCase_top_rider: bool = True
     MainCase_back_rider_cable: bool = True
@@ -313,7 +324,8 @@ class RunningJob(CustomVariables):
 def form_get(request: Request):
     # TODO: Switch to CustomVariables.schema for the generation of the <form>
     variables = CustomVariables()
-    fields = [("main_case_logo_svg", ""), ("main_case_lid_logo_svg", ""), *variables.dict().items()]
+    fields = [("main_case_logo_svg", ""), ("main_case_lid_logo_svg", ""), ("parts_list", all_parts()),
+              *variables.dict().items()]
     return templates.TemplateResponse('customizer.html', context={'request': request, 'fields': fields})
 
 
@@ -367,7 +379,10 @@ async def jobstate(websocket: WebSocket, uid: uuid.UUID):
 async def form_post(request: Request,
                     main_case_logo_svg: Optional[bytes] = File(None),
                     main_case_lid_logo_svg: Optional[bytes] = File(None),
+                    parts_list: Optional[list] = None,
                     variables: CustomVariables = Depends(CustomVariables.as_form)):
+    if set(parts_list) - set(all_parts()):
+        raise HTTPException(status_code=400, detail="Only valid parts can be generated")
     uid = str(uuid.uuid4())
     work_dir = Path(tempfile.gettempdir()) / uid
     logging.info(work_dir)
@@ -391,7 +406,7 @@ async def form_post(request: Request,
     variables_json_file.open("w").write(variables.json())
 
     try:
-        queue.put_nowait((run_job, uid))
+        queue.put_nowait((run_job, dict(uid=uid, parts=parts_list)))
     except asyncio.QueueFull:
         return HTTPException(status_code=503, detail="Queue is full, please try again later")
 
