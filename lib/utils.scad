@@ -133,3 +133,13 @@ module ScrewHoleM3(depth, head_depth=0, elongation=0) {
     elongation=elongation
   );
 }
+
+module load_svg(filename) {
+  // some SVG produce strange geometry. This is a bit slower but fixes the issues.
+  if (fix_svg) {
+    offset(delta = epsilon) import(filename);
+  }
+  else {
+    import(filename);
+  }
+}

@@ -14,6 +14,7 @@ extrude_width = 0.46;
 // Simplifies printing by adding smart bridges to remove need for supports.
 enable_easy_print = true;
 enable_text = true;
+fix_svg = false;
 
 // Used e.g. by easy print algorithms.
 layer_height = 0.2;

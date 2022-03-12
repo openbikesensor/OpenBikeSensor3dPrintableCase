@@ -10,6 +10,17 @@ If you encounter any problems or have feature requests, please open an issue on
 GitHub. If you need assistance related to the contents of this repository,
 please ask in the [project forums](https://forum.openbikesensor.org).
 
+## Cloning
+If you want to build your own case using openscad instead of using the
+readymade exports or if you want to start the customizer be aware
+that you need to clone including git submodules:
+
+```
+git clone --recursive https://github.com/openbikesensor/OpenBikeSensor3DPrintableCase
+# ... or if you forgot the --recursive argument, you can run this in the
+# repository's directory later:
+git submodule update --init --recursive
+```
 
 ## About the files
 
@@ -349,9 +360,11 @@ OpenSCAD is a special case of course: Here submitting `.stl` (for now) and the
 
 ### Customizer webservice
 
-To run the customizer webservice you run it from the dockerfile:
+To run the customizer webservice you run it from the dockerfile (and be sure
+that you cloned the repo recursively before building the cointainer:
 
 ```
+git submodule update --init --recursive
 docker build . -t customizer
 docker run --rm -p 8001:80 customizer 
 ```

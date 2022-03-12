@@ -577,7 +577,7 @@ if (logo_generate_templates) {
     mirror([0, 1, 0])
     rotate([0, 0, -90])
     translate([0, -72-72, 0])
-    import(str("../../logo/", logo_name, "/MainCase.svg"));
+    load_svg(str("../../logo/", logo_name, "/MainCase.svg"));
   }
 }
 
