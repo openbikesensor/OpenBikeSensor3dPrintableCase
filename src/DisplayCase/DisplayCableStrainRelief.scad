@@ -59,7 +59,7 @@ module DisplayCableStrainRelief() {
       for(i=[-1,1])
       translate([0, i*4.4, 10])
       rotate([0, 90, 0])
-      cylinder(d=2.75, h=200);
+      cylinder(d=m3_screw_diameter_loose, h=200);
     }
   }
 }
