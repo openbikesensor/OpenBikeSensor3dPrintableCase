@@ -58,10 +58,24 @@ module DisplayCaseBottom() {
             translate([-left,-20,0.99])
               cube([left+right, 40, 20]);
           }
+
+        }
+        difference() {
+          union() {
+            translate([- left - 2, 2.5 + 21 / 2 - 4, 3])
+              cube([left + right + 2, 6, 20]);
+            translate([- left - 4, 0 + 11, 3])
+              cube([left + right + 4, 5 + 21 / 2 - 11, 30]);
+          }
+          translate([- DisplayCase_outer_width + DisplayCase_outer_large_radius, 45, 0])DisplayCaseHolePattern() {
+            cylinder(d = max(m3_insert_cavity_diameter + 3 * extrude_width, m3_insert_hole_diameter + 5 * extrude_width)
+            , h = 100);
+          }
         }
 
-        translate([-left, 0, 9])
-          cube([left+right, 5+21/2+3, 30]);
+        translate([- left - 4, 13, 9])
+          cube([left + right + 4, 5 + 21 / 2 + 3 - 13, 30]);
+
       }
 
       translate([0, -10-DisplayRail_width/2, 0])

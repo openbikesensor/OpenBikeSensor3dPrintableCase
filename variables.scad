@@ -221,8 +221,8 @@ DisplayCase_outer_radius = 5;
 DisplayCase_outer_width = 30;
 DisplayCase_outer_large_radius = 12;
 DisplayCase_magnet_length = 20;
-DisplayCase_magnet_thickness = 1.9;
-DisplayCase_magnet_housing_width = 4.6;
+DisplayCase_magnet_thickness = 2;
+DisplayCase_magnet_housing_width = 2*DisplayCase_magnet_thickness+default_clearance+2*extrude_width;
 
 DisplayCaseTop_height = 8;
 DisplayCaseTop_magnet_depth = 6.5;

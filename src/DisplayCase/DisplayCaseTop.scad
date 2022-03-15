@@ -68,6 +68,8 @@ module tripleEssCurve() {
     translate(p2)
     circle(r2);
   }
+  translate([-w-2, -h])
+    square([2, h]);
 }
 
 module DisplayCaseBasicShape(height=20, magnet_depth) {
@@ -108,8 +110,8 @@ module DisplayCaseBasicShape(height=20, magnet_depth) {
       cube([DisplayCase_magnet_housing_width, DisplayCase_magnet_length, height]);
     }
 
-    translate([DisplayCase_outer_width, -8-DisplayCase_magnet_length, height-magnet_depth])
-    cube([DisplayCase_magnet_thickness*2, DisplayCase_magnet_length, height]);
+    translate([DisplayCase_outer_width-default_clearance, -8-DisplayCase_magnet_length, height-magnet_depth])
+    cube([DisplayCase_magnet_thickness*2+default_clearance, DisplayCase_magnet_length+default_clearance, height]);
   }
 }
 
