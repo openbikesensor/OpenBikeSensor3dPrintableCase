@@ -115,7 +115,7 @@ MainCase_usb_port_housing_depth = MainCase_pcb_offset.y;
 MainCase_usb_port_cover_clearance = default_clearance;
 
 OBS_height = 72;
-OBS_width = 111;
+OBS_width = 113;
 OBS_width_small = 88;
 OBS_depth = 48;
 
@@ -159,8 +159,8 @@ MainCaseLid_hole_offset = 3.5; // distance from inner wall
 MainCaseLid_hole_positions = [
   [MainCaseLid_hole_offset+wall_thickness, MainCaseLid_hole_offset+wall_thickness],
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, MainCaseLid_hole_offset+wall_thickness],
-  [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
-  [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
+  [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-5],
+  [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-5],
   [OBS_height-MainCaseLid_hole4_offset_x+4.5*cos(frontside_angle), OBS_width-tan(frontside_angle)*MainCaseLid_hole4_offset_x-3.5],
 ];
 

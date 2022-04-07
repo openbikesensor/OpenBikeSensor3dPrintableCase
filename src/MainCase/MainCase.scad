@@ -208,11 +208,22 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             ], fn=$pfn));
 
             // Hole 3
-            translate([OBS_height-wall_thickness, 75, 0])
+            translate([OBS_height-wall_thickness, 77, 0])
             linear_extrude(OBS_depth)
             polygon(polyRound([
               [0, -4, 0],
               [-8, -4, 1],
+              [-8, 2, 1],
+              [-2, 8, 1],
+              [0, 8, 0],
+            ], fn=$pfn));
+
+            // stand-of extension for hole 3
+            translate([OBS_height-wall_thickness, 77, 0])
+            linear_extrude(MainCase_pcb_offset.y + wall_thickness)
+            polygon(polyRound([
+              [0, -7, 0],
+              [-8, -7, 1],
               [-8, 2, 1],
               [-2, 8, 1],
               [0, 8, 0],
@@ -244,8 +255,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
             // hole 5
             difference(){
-              translate([wall_thickness, 75, 0])
-              linear_extrude(OBS_depth)
+              translate([wall_thickness, 77, 0])
+              translate([0,0,MainCase_pcb_offset.y + wall_thickness])linear_extrude(OBS_depth)
               polygon(polyRound([
               [0, -4, 0],
               [8, -4, 1],
@@ -276,8 +287,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
           translate([10, 78, 0])
           cube([OBS_height-26,30,100]);
-          translate([0, OBS_width_small-6, 0])
-          cube([OBS_height-16,30,100]);
+          translate([16, OBS_width_small-6, 0])
+          cube([OBS_height-32,30,100]);
 
           translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
           cube([OBS_height-16,30,100]);
