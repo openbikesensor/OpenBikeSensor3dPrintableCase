@@ -1,0 +1,152 @@
+#
+#  Copyright (C) 2019-2022 OpenBikeSensor Contributors
+#  Contact: https://openbikesensor.org
+#
+#  This file is part of the OpenBikeSensor 3D Printable case.
+#
+#  The OpenBikeSensor firmware is free software: you can redistribute it
+#  and/or modify it under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation, either version 3 of the License,
+#  or (at your option) any later version.
+#
+#  OpenBikeSensor firmware is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+#  General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with the OpenBikeSensor firmware.  If not, see
+#  <http://www.gnu.org/licenses/>.
+#
+name: OpenBikeSensor - CI
+on:
+  # Trigger when pushing in master or pull requests, and when creating
+  # a pull request.
+  push:
+    branches:
+      - main
+      - beta
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+    # could use a container with sq tools already installed
+       image: python:3.9
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Prepare source
+      run: |
+        mkdir -p export
+        echo GITHUB Ref: ${{ github.ref }}
+        MAJOR=`cat version.txt|cut -f2 `
+        if [ "${{ github.ref }}" = "refs/heads/main" ]
+        then
+          PATCH=${GITHUB_RUN_NUMBER}
+          SEPARATOR=.
+          PREPARE_RELEASE=true
+        else
+          PATCH=RC${GITHUB_RUN_NUMBER}
+          SEPARATOR=-
+          PREPARE_RELEASE=false
+        fi
+        VERSION=${MAJOR}${SEPARATOR}${PATCH}
+        echo "OBS_PREPARE_RELEASE=${PREPARE_RELEASE}" >> $GITHUB_ENV
+        echo "OBS_VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "OBS_MAJOR_VERSION=${MAJOR}" >> $GITHUB_ENV
+        echo "OBS_OUTPUT_FILENAME=OpenBikeSensor3DPrintableCase-stl-${VERSION}.zip" >>$GITHUB_ENV
+        echo $VERSION > export/VERSION
+        echo $VERSION > export/version.txt
+        echo Building OBS Version: $VERSION
+
+    - name: Install build dependencies
+      run: |
+        apt-get update
+        apt-get install -qq -y zip make fonts-open-sans openscad xvfb
+
+    - name: Build case
+      # xvfb-run required for thumbnails
+      run: |
+        make clean
+        xvfb-run -a make -j OPENSCAD_OPTIONS="" all
+
+    - name: Package case
+      run: |
+        zip --recurse-paths ${{ env.OBS_OUTPUT_FILENAME }} export render
+
+    - name: Upload Build Asset
+      uses: actions/upload-artifact@v2
+      with:
+        name: obs-${{ env.OBS_VERSION }}
+        path: |
+          export/MainCase/MainCase.stl
+        if-no-files-found: error
+
+
+    - name: Generate changelog
+      id: changelog
+      if: ${{ env.OBS_PREPARE_RELEASE == 'true' }}
+      uses: metcalfc/changelog-generator@v3.0.0
+      with:
+        myToken: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      id: create_release
+      if: ${{ env.OBS_PREPARE_RELEASE == 'true' }}
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.OBS_VERSION }}
+        release_name: ${{ env.OBS_VERSION }}
+        body: |
+          ![GitHub downloads](https://img.shields.io/github/downloads-pre/openbikesensor/OpenBikeSensorFirmware/${{ env.OBS_VERSION }}/total) ![GitHub commits since release](https://img.shields.io/github/commits-since/openbikesensor/OpenBikeSensorFirmware/${{ github.sha }}?label=commits%20since%20${{ env.OBS_VERSION }})
+
+          Version ${{ env.OBS_VERSION }} based on ${{ github.ref }} ${{ github.sha }}
+
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ## :tada: Major features and improvements
+
+          ## :rocket: New features and improvements 
+
+          ## :bug: Bug Fixes
+
+          ## :ghost: Maintenance
+
+          ## :construction_worker: Changes for developers / internal
+        draft: true
+        prerelease: true
+
+    - name: Upload case zip
+      id: upload-release-asset
+      if: ${{ env.OBS_PREPARE_RELEASE == 'true' }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ env.OBS_OUTPUT_FILENAME }}
+        asset_name: ${{ env.OBS_OUTPUT_FILENAME }}
+        asset_content_type: application/zip
+
+    - name: Publish preview images
+      id: push-preview-images
+      if: ${{ env.OBS_PREPARE_RELEASE == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo $env.OBS_VERSION > render/VERSION
+        echo $env.OBS_VERSION > render/version.txt
+        date > render/generated.txt
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add render
+        git commit -m "Generated preview images"
+        git push
