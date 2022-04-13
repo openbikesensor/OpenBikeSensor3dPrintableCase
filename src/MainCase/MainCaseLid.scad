@@ -41,7 +41,7 @@ module MainCaseLid() {
     rim_offset = wall_thickness + MainCaseLid_rim_clearance;
     hole_x = 75;
 
-    dx = function (x) x * tan(frontside_angle);
+    function dx(x) = x * tan(frontside_angle);
     polygon(polyRound([
       [rim_offset+MainCaseLid_rim_radius, rim_offset, 0],
       [rim_offset+MainCaseLid_rim_radius, rim_offset+MainCaseLid_rim_radius, MainCaseLid_rim_radius],
