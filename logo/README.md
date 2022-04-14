@@ -4,7 +4,7 @@ This folder contains logo files to be generated into the STL files, adding a
 customizable logo to your cases. The script generates a "main" part and a
 "highlight" part, where the main part is the normal case file with the logo cut
 out, and the "inner" part is the logo. This can be used in multi-part printing,
-e.g. in Prusa Slicer. In general you will need to follow these steps:
+e.g. in Prusa Slicer or Ultimaker Cura. In general you will need to follow these steps:
 
 * Find your logo as a vector graphics file (e.g. SVG)
 * Scale the logo to the right dimensions, using the frame templates
@@ -12,6 +12,8 @@ e.g. in Prusa Slicer. In general you will need to follow these steps:
 * Generate the STL files with GNU make
 * Import the two STL files into your slicer as a multipart print, or print just
   the main part with a color change at an early layer
+  
+The script will only work on linux.
 
 ## Features
 
@@ -89,7 +91,7 @@ aesthetical reasons, depending on the logo and filaments you use.
 ### Importing into Prusa Slicer
 
 If you're not using Prusa Slicer or a derivative thereof, you will need to find
-your own solution.
+your own solution. If you are using Ultimaker Cura, see below.
 
 For Prusa Slicer, multipart printing is very simple to set up, if your printer
 supports any type of command to switch filaments.  Marlin firmware can be
@@ -121,3 +123,12 @@ keeps being heated after the print (eg. no `M140 S0` command at the end of the p
 you can change filament and start with the next file. Printing brims can be problematic
 if the printed part only touches the build plate on smaller areas than the rest of the
 body does.
+
+### Importing into Ultimaker Cura
+
+To print in Ultimkaer Cura with two colors, follw these steps:
+* Click on the folder in the upper left corner and choose the first file. Make sure that on the left side extruder 1 is selected.
+* Click again on the folder and choose the second file. Now select extruder 2 on the left side. Both files should now be visible next to each other.
+* Select both parts (click, hold shift and click on the other part). Rightclick to bring up the context menu, select `Merge Models`.
+* Normally, they should align now. If not, align them manually.
+* Press `slice` and continue as normal.
