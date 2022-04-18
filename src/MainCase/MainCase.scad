@@ -208,7 +208,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             ], fn=$pfn));
 
             // Hole 3
-            translate([OBS_height-wall_thickness, 77, 0])
+            translate([OBS_height-wall_thickness, 77, 20])
             linear_extrude(OBS_depth)
             polygon(polyRound([
               [0, -4, 0],
@@ -285,7 +285,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             [wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
           ], fn=$pfn));
 
-          translate([10, 78, 0])
+          translate([10+epsilon, 78, 0])
           cube([OBS_height-26,30,100]);
           translate([16, OBS_width_small-6, 0])
           cube([OBS_height-32,30,100]);
