@@ -2,6 +2,8 @@ include <../variables.scad>
 
 use <./Round-Anything/polyround.scad>
 
+function remove_conseq_dupes(list) = [for (i = [0 : 1 : len(list) - 2]) if (!((abs(list[i][0] - list[i+1][0])<0.01) && (abs(list[i][1] - list[i+1][1])<0.01))) list[i]];
+
 
 module mirrorCopy(v, mirrorOffset=0) {
   children();
