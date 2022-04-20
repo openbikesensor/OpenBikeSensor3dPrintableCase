@@ -53,10 +53,9 @@ module MainCaseLid() {
         [rim_offset, hole_x - MainCaseLid_rim_radius, 0],
         [rim_offset + 0.7 * MainCaseLid_rim_radius, hole_x - 0.5 * MainCaseLid_rim_radius, 0.7 * MainCaseLid_rim_radius],
         [rim_offset + 0.7 * MainCaseLid_rim_radius, hole_x, 0],
-        [rim_offset + 0.7 * MainCaseLid_rim_radius, OBS_width_small - rim_offset + dx(rim_offset + 0.7 * MainCaseLid_rim_radius), 0],
-
-        [OBS_height / 2, OBS_width_small + dx(OBS_height / 2) - rim_offset, 0],
-        [OBS_height / 2, OBS_width_small + dx(OBS_height / 2) - rim_offset - 10, 0],
+        [rim_offset + 0.7 * MainCaseLid_rim_radius, OBS_width_small - rim_offset*1 / tan((90 - frontside_angle) / 2) + dx(rim_offset + 0.7 * MainCaseLid_rim_radius), 0],
+        [OBS_height / 2, OBS_width_small + dx(OBS_height / 2) - rim_offset / tan((90 - frontside_angle) / 2), 0],
+        [OBS_height / 2, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, 0],
       // sensor hole circle starts here
         [OBS_height - 16 - rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, 0],
         [OBS_height - 16 - rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 + rs, rs],
@@ -66,7 +65,7 @@ module MainCaseLid() {
         [OBS_height - 16 + rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 - rs, rs],
         [OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 - rs, 0],
       // sensor hole circle ends here.
-        [OBS_height - rim_offset - 10, hole_x - rim_offset * 2, 0],
+        [OBS_height  - 10, hole_x - rim_offset * 2, 0],
         [OBS_height - rim_offset, hole_x - rim_offset * 2, 0],
         [OBS_height - rim_offset, rim_offset + MainCaseLid_rim_radius, 0],
         [OBS_height - rim_offset - MainCaseLid_rim_radius, rim_offset + MainCaseLid_rim_radius, MainCaseLid_rim_radius],
