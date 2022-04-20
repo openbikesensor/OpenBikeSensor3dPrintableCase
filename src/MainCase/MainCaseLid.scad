@@ -1,3 +1,5 @@
+include <../../lib/BOSL2/std.scad>
+include <../../lib/BOSL2/rounding.scad>
 include <../../variables.scad>
 include <../../lib/utils.scad>
 
@@ -37,13 +39,13 @@ module MainCaseLid() {
     ], 180), fn=$pfn));
   }
 
-  module RimPolygon() {
+  module Rim(chamfer_size) {
     rim_offset = wall_thickness + MainCaseLid_rim_clearance;
     hole_x = 75;
     rs = MainCase_sensor_hole_diameter / 2 + 2; //shorthand for readabilty: radius around the sensor hole.
 
     dx = function (x) x * tan(frontside_angle);
-    polygon(remove_conseq_dupes(polyRound([
+    rimPolyPoints = remove_conseq_dupes(polyRound([
         [rim_offset + MainCaseLid_rim_radius, rim_offset, 0],
         [rim_offset + MainCaseLid_rim_radius, rim_offset + MainCaseLid_rim_radius, MainCaseLid_rim_radius],
         [rim_offset, rim_offset + MainCaseLid_rim_radius, 0],
@@ -55,7 +57,7 @@ module MainCaseLid() {
 
         [OBS_height / 2, OBS_width_small + dx(OBS_height / 2) - rim_offset, 0],
         [OBS_height / 2, OBS_width_small + dx(OBS_height / 2) - rim_offset - 10, 0],
-        // sensor hole circle starts here
+      // sensor hole circle starts here
         [OBS_height - 16 - rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, 0],
         [OBS_height - 16 - rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 + rs, rs],
         [OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 + rs, 0],
@@ -63,39 +65,17 @@ module MainCaseLid() {
         [OBS_height - 16 + rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, 0],
         [OBS_height - 16 + rs, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 - rs, rs],
         [OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16 - rs, 0],
-        // sensor hole circle ends here.
+      // sensor hole circle ends here.
         [OBS_height - rim_offset - 10, hole_x - rim_offset * 2, 0],
         [OBS_height - rim_offset, hole_x - rim_offset * 2, 0],
         [OBS_height - rim_offset, rim_offset + MainCaseLid_rim_radius, 0],
         [OBS_height - rim_offset - MainCaseLid_rim_radius, rim_offset + MainCaseLid_rim_radius, MainCaseLid_rim_radius],
         [OBS_height - rim_offset - MainCaseLid_rim_radius, rim_offset, 0],
-      ], fn = $pfn)));
-    *translate([OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16])circle(r =
-          MainCase_sensor_hole_diameter / 2 + MainCase_sensor_hole_ledge + rim_offset / 2);
-  }
+      ], fn = $pfn));
 
-  module Rim(chamfer_size) {
-    translate([0, 0, -MainCaseLid_rim_thickness+chamfer_size])
-    minkowski(){
-      // If the chamfer is not rendered, the minkowski() has only one child
-      // (the base shape), therefore it will only render the child and not
-      // operate on it.
-      if (chamfer_size) {
-        rotate([180,0,0])ChamferPyramid(chamfer_size);
-      }
-
-      intersection() {
-        difference() {
-          linear_extrude(MainCaseLid_rim_thickness-chamfer_size)
-            offset(r=-chamfer_size)
-            RimPolygon();
-
-          translate([0, 0, -1])
-            linear_extrude(MainCaseLid_rim_thickness + 2)
-            offset(r=-(MainCaseLid_rim_width-chamfer_size))
-            RimPolygon();
-        }
-      }
+    translate([0, 0, - MainCaseLid_rim_thickness])difference() {
+      offset_sweep(rimPolyPoints, height = MainCaseLid_rim_thickness, bottom = os_chamfer(chamfer_size),  steps = 4, check_valid = false);
+      offset_sweep(offset(rimPolyPoints, r = - MainCaseLid_rim_width, closed = true), height = MainCaseLid_rim_thickness, bottom = os_chamfer(-chamfer_size), steps = 4, check_valid = false, $fn = 15);
     }
   }
 
