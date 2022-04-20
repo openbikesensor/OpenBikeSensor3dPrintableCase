@@ -42,7 +42,7 @@ module MainCaseLid() {
   module Rim(chamfer_size) {
     rim_offset = wall_thickness + MainCaseLid_rim_clearance;
     hole_x = 75;
-    rs = MainCase_sensor_hole_diameter / 2 + 2; //shorthand for readabilty: radius around the sensor hole.
+    rs = MainCase_sensor_hole_diameter / 2 + 2.4; //shorthand for readabilty: radius around the sensor hole.
 
     dx = function (x) x * tan(frontside_angle);
     rimPolyPoints = remove_conseq_dupes(polyRound([
@@ -73,8 +73,8 @@ module MainCaseLid() {
       ], fn = $pfn));
 
     translate([0, 0, - MainCaseLid_rim_thickness])difference() {
-      offset_sweep(rimPolyPoints, height = MainCaseLid_rim_thickness, bottom = os_chamfer(chamfer_size),  steps = 4, check_valid = false);
-      offset_sweep(offset(rimPolyPoints, r = - MainCaseLid_rim_width, closed = true), height = MainCaseLid_rim_thickness, bottom = os_chamfer(-chamfer_size), steps = 4, check_valid = false, $fn = 15);
+      offset_sweep(rimPolyPoints, height = MainCaseLid_rim_thickness, bottom = os_chamfer(chamfer_size),  steps = 2, check_valid = true,$fn = 16);
+      offset_sweep(offset(rimPolyPoints, r = - MainCaseLid_rim_width, closed = true), height = MainCaseLid_rim_thickness, bottom = os_chamfer(-chamfer_size), steps = 2, check_valid = true, $fn = 16);
     }
   }
 
