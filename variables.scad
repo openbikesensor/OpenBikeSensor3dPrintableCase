@@ -121,7 +121,7 @@ OBS_depth = 48;
 
 MainCase_gps_antenna_y_offset = 32;
 MainCase_gps_antenna_housing_hole_width = 26;
-MainCase_gps_antenna_housing_hole_height = 26;
+MainCase_gps_antenna_housing_hole_height = MainCase_gps_antenna_housing_hole_width;
 
 MainCase_gps_antenna_lid_thickness = 2;
 MainCase_gps_antenna_lid_offset = 3;
@@ -131,8 +131,8 @@ MainCase_gps_antenna_lid_tab_height = 1;
 
 MainCase_gps_antenna_height = 9;
 MainCase_gps_antenna_housing_depth = MainCase_gps_antenna_height+MainCase_gps_antenna_lid_thickness;
-MainCase_gps_antenna_housing_top_width = 25;
-MainCase_gps_antenna_housing_top_height = 38;
+MainCase_gps_antenna_housing_top_width = MainCase_gps_antenna_housing_hole_width-1;
+MainCase_gps_antenna_housing_top_height = MainCase_gps_antenna_housing_hole_height+12;
 MainCase_gps_antenna_housing_top_radius = 2;
 MainCase_gps_antenna_housing_bottom_offset = 2;
 MainCase_gps_antenna_housing_bottom_width = MainCase_gps_antenna_housing_top_width + 2 * MainCase_gps_antenna_height;
