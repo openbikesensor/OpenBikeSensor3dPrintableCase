@@ -297,6 +297,7 @@ class CustomVariables(BaseModel):
     MainCase_top_rider: bool = True
     MainCase_back_rider_cable: bool = True
     MainCase_top_rider_cable: bool = True
+    MainCase_gps_antenna_housing_hole_width: float = Field(26, title='diameter in mm', ge=22, le=30)
     m3_screw_diameter_tight: float = Field(3, title='diameter in mm', ge=2.6, le=3.6)
     m3_screw_diameter_loose: float = Field(3.25, title='in mm', ge=2.9, le=3.7)
     m3_insert_hole_diameter: float = Field(4, title='in mm', ge=3.5, le=5.6)
