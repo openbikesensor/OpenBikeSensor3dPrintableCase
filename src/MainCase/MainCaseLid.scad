@@ -133,7 +133,7 @@ if (logo_generate_templates) {
       MainCaseLid();
     }
     mirror([1, 0, 0])
-    translate([-104, -72-72, 0])
+    translate([-108, -72-72, 0])
     load_svg(str("../../logo/", logo_name, "/MainCaseLid.svg"));
   }
 }
