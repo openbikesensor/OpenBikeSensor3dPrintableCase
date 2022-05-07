@@ -202,21 +202,6 @@ MountAttachment_holes_x_offset = -0.5;
 MountAttachment_holes_dx = 15;
 MountAttachment_holes_dy = 33;
 
-HandlebarRail_rail_height = 7;
-HandlebarRail_rail_length = 32.4;
-HandlebarRail_rail_total_height = HandlebarRail_rail_height + 1.25 + 1.95 + 1.3;
-HandlebarRail_stopblock_width = 24;
-HandlebarRail_stopblock_radius = 1;
-HandlebarRail_stopblock_depth = 6.6;
-HandlebarRail_stopblock_height = 26.2;
-HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
-HandlebarRail_stopblock_magnet_lift = 3.2;
-HandlebarRail_stopblock_magnet_height = 10;
-HandlebarRail_stopblock_magnet_width = 22;
-HandlebarRail_stopblock_magnet_thickness = 1.9;
-HandlebarRail_tube_radius = 18;
-HandlebarRail_tube_indent = 1;
-
 DisplayCase_outer_radius = 5;
 DisplayCase_outer_width = 30;
 DisplayCase_outer_large_radius = 12;
@@ -254,6 +239,21 @@ DisplayRail_chamfer_size = 2;
 DisplayRail_top_height = 2;
 DisplayRail_bottom_height = 1;
 DisplayRail_total_height = DisplayRail_chamfer_size + DisplayRail_top_height + DisplayRail_bottom_height;
+
+HandlebarRail_rail_height = 7;
+HandlebarRail_rail_length = DisplayCase_outer_width+DisplayCase_magnet_housing_width;
+HandlebarRail_rail_total_height = HandlebarRail_rail_height + 1.25 + 1.95 + 1.3;
+HandlebarRail_stopblock_width = 24;
+HandlebarRail_stopblock_radius = 1;
+HandlebarRail_stopblock_depth = 6.6;
+HandlebarRail_stopblock_height = 26.2;
+HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
+HandlebarRail_stopblock_magnet_lift = 3.2;
+HandlebarRail_stopblock_magnet_height = 10;
+HandlebarRail_stopblock_magnet_width = 22;
+HandlebarRail_stopblock_magnet_thickness = 1.9;
+HandlebarRail_tube_radius = 18;
+HandlebarRail_tube_indent = 1;
 
 StandardMountAdapter_width = 29;
 StandardMountAdapter_length = 62;
