@@ -243,15 +243,13 @@ DisplayRail_total_height = DisplayRail_chamfer_size + DisplayRail_top_height + D
 HandlebarRail_rail_height = 7;
 HandlebarRail_rail_length = DisplayCase_outer_width+DisplayCase_magnet_housing_width;
 HandlebarRail_rail_total_height = HandlebarRail_rail_height + 1.25 + 1.95 + 1.3;
-HandlebarRail_stopblock_width = 26;
+HandlebarRail_stopblock_width = 25;
 HandlebarRail_stopblock_radius = 1;
 HandlebarRail_stopblock_depth = 6.6;
 HandlebarRail_stopblock_height = 26.2;
 HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
 HandlebarRail_stopblock_magnet_lift = 3.2;
-HandlebarRail_stopblock_magnet_height = 10.4;
-HandlebarRail_stopblock_magnet_width = 22;
-HandlebarRail_stopblock_magnet_thickness = 2.1;
+
 HandlebarRail_tube_radius = 18;
 HandlebarRail_tube_indent = 1;
 
