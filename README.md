@@ -201,6 +201,14 @@ the magnets.
 
 ![Mounting/HandlebarRail](./render/thumbnails/Mounting/HandlebarRail.png)
 
+An alternative Handlebar rail can be mounted like most bike computers with a
+rubber o ring;
+![Mounting/HandlebarRailOring](./render/thumbnails/Mounting/HandlebarRailOring.png)
+
+Often you find magnets where one magnet is strong enough for your display - you
+can use a platic decoy to save on magnets in these cases
+![Mounting/DisplayMagnetDummy](./render/thumbnails/Mounting/DisplayMagnetDummy.png)
+
 #### Bike rack mount
 
 The bike rack mount can be used to attach a "Top Rider" main case to a standard
