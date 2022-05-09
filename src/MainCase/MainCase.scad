@@ -404,7 +404,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       }
       // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
-      cylinder(d=6, h=20);
+      cylinder(d=6+2*default_clearance, h=20);
 
       if(enable_text) {
         translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
