@@ -395,8 +395,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           if (enable_easy_print) {
             translate([0, 0, 21.6/2]){
               union(){
-                translate([0,-(24-6)/2+3,0.3])cube([60,6, 21.6], center=true);
-                translate([0,-(24-6)/2+3,0.6])cube([6,6, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.3])cube([60,6+2*default_clearance, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.6])cube([6+2*default_clearance,6+2*default_clearance, 21.6], center=true);
               }
             }
           }
