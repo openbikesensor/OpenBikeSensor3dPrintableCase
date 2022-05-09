@@ -421,7 +421,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // Hole for USB Charger Port
     translate([MainCase_usb_port_x_offset, 0, m3_insert_hole_depth + wall_thickness - MainCase_usb_port_vertical_offset])
     hull()for(i=[-1, 1])for(j=[-1, 1]) {
-      translate([i/2*6.5, 0, j/2*0.7])
+      translate([i/2*6.5, 0, j/2*1])
       rotate([-90, 0, 0])
       cylinder(r=1.5, h=20, center=true);
     }
