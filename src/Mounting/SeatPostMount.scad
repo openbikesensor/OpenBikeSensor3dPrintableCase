@@ -58,9 +58,9 @@ module SeatPostMountCutout(diameter, angle, length, cutaway) {
 
         for (i = [-1, 1]) {
           w = 9;
-          translate([0, 0, i*16-angle/5])
+          translate([0, 0, i*16-angle/3])
           difference() {
-            cube([diameter+8, diameter+8, w], center=true);
+            cylinder(r=diameter/2+7, h=w+2, center=true);
             cylinder(r=diameter/2+3, h=w+2, center=true);
           }
         }
