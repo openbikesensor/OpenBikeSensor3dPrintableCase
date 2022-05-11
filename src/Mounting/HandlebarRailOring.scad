@@ -44,7 +44,7 @@ module HandlebarRailStopblock() {
       translate([0, -HandlebarRail_stopblock_magnet_thickness, HandlebarRail_rail_total_height + HandlebarRail_stopblock_magnet_lift + HandlebarRail_stopblock_magnet_height / 2])
       cube([HandlebarRail_stopblock_magnet_width, HandlebarRail_stopblock_magnet_thickness * 2, HandlebarRail_stopblock_magnet_height], center=true);
 
-      #translate([0, -HandlebarRail_stopblock_magnet_thickness*1.5, HandlebarRail_stopblock_height-3+epsilon])
+      translate([0, -HandlebarRail_stopblock_magnet_thickness*1.5, HandlebarRail_stopblock_height-3+epsilon])
       cube([HandlebarRail_stopblock_magnet_width, HandlebarRail_stopblock_magnet_thickness, 6], center=true);
     }
   }
@@ -80,7 +80,7 @@ module HandlebarRail() {
         translate([0, 50, 0])
         rotate([90, 0, 0])
         cylinder(r=HandlebarRail_tube_radius, h=100);
-        #translate([7.6,HandlebarRail_rail_length/2,HandlebarRail_tube_radius - HandlebarRail_tube_indent+5])
+          translate([7.6,HandlebarRail_rail_length/2,HandlebarRail_tube_radius - HandlebarRail_tube_indent+5])
         rotate([0,10,0])HandlebarRailOringCutout(r_torus=6,r_oring=1.2);
           translate([-7.6,HandlebarRail_rail_length/2,HandlebarRail_tube_radius - HandlebarRail_tube_indent+5])
         rotate([0,-10,0])HandlebarRailOringCutout(r_torus=6,r_oring=1.3);

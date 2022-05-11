@@ -248,6 +248,9 @@ HandlebarRail_stopblock_radius = 1;
 HandlebarRail_stopblock_depth = 6.6;
 HandlebarRail_stopblock_height = 26.2;
 HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
+HandlebarRail_stopblock_magnet_height = 10.4;
+HandlebarRail_stopblock_magnet_width = 20.8;
+HandlebarRail_stopblock_magnet_thickness = 2.1;
 HandlebarRail_stopblock_magnet_lift = 3.2;
 
 HandlebarRail_tube_radius = 18;
