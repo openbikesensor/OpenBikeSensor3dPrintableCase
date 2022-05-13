@@ -27,7 +27,7 @@ setuptools.setup(
         "aiofiles",
         "fastapi",
         "python-multipart",
-        "jinja2",
+        "jinja2 < 3.0",
         "pyyaml",
         "pydantic",
         "sse_starlette",
