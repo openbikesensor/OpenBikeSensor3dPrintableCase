@@ -96,6 +96,7 @@ UsbCover_indent_width = 12;
 UsbCover_wing_offset = 2.2;
 UsbCover_wing_width = 2.6;
 UsbCover_wing_length = 2.0;
+UsbCover_clearance_correction = 0.0; // printing a smaller-than-spec part for main cases that have not enough clearance themselves
 
 MainCase_small_corner_radius = 5;
 MainCase_switch_offset_x = 25;
