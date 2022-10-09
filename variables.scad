@@ -66,8 +66,8 @@ m3_screw_head_diameter = 6; // can have a little clearance
 m3_hex_nut_diameter = 6.45; // outer circle, *not* wrench size (S), but `S*2/sqrt(3)`, plus clearance
 m3_hex_nut_thickness = 2.5; // found different nut specifications, 2.5 is the maximum thickness I found named
 m3_insert_hole_diameter = 4;
-m3_insert_hole_depth = 5.75;
-m3_insert_cavity_depth = 5.75 - 4.5;  // size of cavity on the bottom for displaced plastic
+m3_insert_hole_depth = 6.0 ;
+m3_insert_cavity_depth = 6.0 - 4.5;  // size of cavity on the bottom for displaced plastic
 m3_insert_cavity_diameter = m3_insert_hole_diameter + 1;
 
 
