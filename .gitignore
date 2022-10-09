@@ -1,5 +1,6 @@
 render/*
 !render/thumbnails
+!render/generated.txt
 export/logo/*
 !export/logo/OpenBikeSensor
 logo/*
