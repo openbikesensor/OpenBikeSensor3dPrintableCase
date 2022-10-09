@@ -112,7 +112,7 @@ module GpsAntennaLid() {
   difference() {
     intersection() {
       GpsAntennaHousingPyramid();
-      GpsAntennaLidCutBody(0.15);
+      GpsAntennaLidCutBody(default_clearance);
     }
 
     translate([0, MainCase_gps_antenna_housing_top_height / 2 - MainCase_gps_antenna_housing_screw_offset,  MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
