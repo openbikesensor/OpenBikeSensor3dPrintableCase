@@ -65,7 +65,7 @@ module DisplayCaseBottom() {
             translate([- left - 2, 2.5 + 21 / 2 - 4, 3])
               cube([left + right + 2, 6, 20]);
             translate([- left - 4, 0 + 11, 3])
-              cube([left + right + 4, 5 + 21 / 2 - 11+2.2, 30]);
+              cube([left + right + 4, 5 + 21 / 2 - 11+1.3, 30]);
           }
           translate([- DisplayCase_outer_width + DisplayCase_outer_large_radius, 45, 0])DisplayCaseHolePattern() {
             cylinder(d = max(m3_insert_cavity_diameter + 3 * extrude_width, m3_insert_hole_diameter + 5 * extrude_width)
@@ -73,7 +73,7 @@ module DisplayCaseBottom() {
           }
         }
 
-        translate([- left - 4, 13, 9])
+        translate([- left - 4, 13, 5.8])
           cube([left + right + 4, 5 + 21 / 2 + 3 - 13, 30]);
 
       }
