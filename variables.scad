@@ -223,8 +223,9 @@ DisplayCaseTop_pcb_standoff = 1.7;
 DisplayCaseTop_hole_diameter = 3.3;
 DisplayCaseTop_cable_clearance = 12.5;
 DisplayCaseTop_button_diameter = 12;
+DisplayCaseTop_button_nut_diameter = 16.3;
 DisplayCaseTop_button_outside_diameter = 18;
-DisplayCaseTop_button_outside_depth = 4;
+DisplayCaseTop_button_outside_depth = 3;
 DisplayCaseTop_pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2, DisplayCaseTop_height];
 
 DisplayCaseBottom_height = 11;
