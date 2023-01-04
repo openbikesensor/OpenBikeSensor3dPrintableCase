@@ -45,7 +45,7 @@ module HandlebarRailStopblock() {
       cube([HandlebarRail_stopblock_magnet_width, HandlebarRail_stopblock_magnet_thickness * 2, HandlebarRail_stopblock_magnet_height], center=true);
 
       translate([0, -HandlebarRail_stopblock_magnet_thickness/2, HandlebarRail_stopblock_height-3])
-      cube([HandlebarRail_stopblock_magnet_width, HandlebarRail_stopblock_magnet_thickness, 6], center=true);
+      cube([HandlebarRail_stopblock_magnet_width, HandlebarRail_stopblock_magnet_thickness, 7], center=true);
     }
   }
 }
@@ -64,22 +64,54 @@ module HandlebarRail() {
     union() {
       HandlebarRailRail();
       HandlebarRailStopblock();
+
+        block_width=18;
+
+      // 90° block for handle stem
+      translate([7, 18-(block_width/2), 0])
+      cube([45,block_width,7]);
     }
 
     translate([0, 0, -HandlebarRail_tube_radius + HandlebarRail_tube_indent]) {
       union () {
         // tube
-        translate([0, 50, 0])
-        rotate([90, 0, 0])
-        cylinder(r=HandlebarRail_tube_radius, h=100);
+        // translate([0, 50, 0])
+        // rotate([90, 0, 0])
+        // cylinder(r=HandlebarRail_tube_radius, h=100);
 
         // ziptie wide
-        translate([0, 4, 0])
-        HandlebarRailZiptieCutout(11);
+        //translate([0, 4, 0])
+        //HandlebarRailZiptieCutout(11);
 
         // ziptie small
-        translate([0, HandlebarRail_rail_length - 4 - 5.5, 0])
-        HandlebarRailZiptieCutout(5.5);
+        //translate([0, HandlebarRail_rail_length - 4 - 5.5, 0])
+        //HandlebarRailZiptieCutout(5.5);
+
+        // 90° tube for handle stem
+        translate([-40, 18, 0.4])
+        rotate([90, 0, 90])
+        cylinder(r=HandlebarRail_tube_radius, h=100);
+
+        // 90° 1st zip for handle stem
+        translate([18, 18, -1])
+        rotate([0, 0, 90])
+        HandlebarRailZiptieCutout(6);
+
+        // 90° 2nd zip for handle stem
+        translate([28, 18, -1])
+        rotate([0, 0, 90])
+        HandlebarRailZiptieCutout(6);
+
+        // 90° 3rd zip for handle stem
+        translate([38, 18, -1])
+        rotate([0, 0, 90])
+        HandlebarRailZiptieCutout(6);
+
+        // 90° 4th zip for handle stem
+        translate([48, 18, -1])
+        rotate([0, 0, 90])
+        HandlebarRailZiptieCutout(6);
+
       }
     }
   }
