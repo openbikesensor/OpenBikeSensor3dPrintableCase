@@ -137,18 +137,18 @@ module DisplayCaseTop() {
         difference() {
           union () {
             translate([0, 0, -100])
-            cylinder(d=3.3, h=200);
+            cylinder(d=m3_screw_diameter_loose, h=200);
 
             translate([0, 0, 0])
-            cylinder(d=6.4, h=2.7);
+            cylinder(d=m3_screw_head_diameter, h=2.7);
 
-            translate([-3.3/2, -3.3, 8-3.3])
-            cube([3.3, 3.3, 20]);
+            translate([-m3_screw_diameter_loose/2, -m3_screw_diameter_loose, 8-3.3])
+            cube([m3_screw_diameter_loose, m3_screw_diameter_loose, 20]);
           }
 
           if(enable_easy_print)
           translate([0, 0, 2.7])
-          EasyPrintHoleShink(3.3, 6.4, 2);
+          EasyPrintHoleShink(3.3, m3_screw_head_diameter, 2);
         }
       }
 
@@ -183,6 +183,8 @@ module DisplayCaseTop() {
           union () {
             translate([0, 0, -1])
             cylinder(d=DisplayCaseTop_button_diameter, h=20);
+            translate([0, 0, -pcb_depth+DisplayCaseTop_pcb_standoff+DisplayCaseTop_pcb_origin.z])
+              cylinder(h=5,d=DisplayCaseTop_button_nut_diameter);
 
             translate([0, 0, -1])
             cylinder(d=DisplayCaseTop_button_outside_diameter, h=1+DisplayCaseTop_button_outside_depth);
@@ -192,7 +194,18 @@ module DisplayCaseTop() {
           translate([0, 0, DisplayCaseTop_button_outside_depth])
           EasyPrintHoleShink(DisplayCaseTop_button_diameter, DisplayCaseTop_button_outside_diameter, 3);
         }
-      }
+      };
+
+      translate(DisplayCaseTop_pcb_origin - [0, DisplayCaseTop_pcb_height / 2-epsilon,pcb_depth-DisplayCaseTop_pcb_standoff]) linear_extrude(4)
+        polygon(polyRound([
+            [-10.5,0,0],
+            [-8.5, 0, 2],
+            [-8.5, -6, 0],
+            [0,-4.4,0],
+            [9.9,-4.4,2],
+            [9.9,0,2],
+            [12.9,0,0]
+          ]));
     }
 
     translate(DisplayCaseTop_pcb_origin)

@@ -24,12 +24,16 @@ git submodule update --init --recursive
 
 ## About the files
 
+We expect a recent version of OpenSCAD, for development we currently use OpenSCAD 2021.
+
 This repository contains a lot of files for different options
 
 * The `export/` folder contains the latest prebuilt `.stl` files for 3D printing.
   You can use those unless you want to make customizations. If you contribute
   changes to the models, you can refresh the models you changed using the
-  ``make export-all`` command.
+  ``make export-all`` command. If your ``openscad`` binary does not reside
+  in ``/usr/bin/openscad`` you can specify its location by overriding the
+  ``OPENSCAD`` variable like so (substitute your specific openscad path): ``make -j OPENSCAD=/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD``
 * The `legacy/` folder contains old versions of the case, including lots of
   variants that were created but unmaintained. These were built with
   proprietary software packages and often available in their native format(s)
@@ -200,6 +204,14 @@ the display. The display can now slide onto this rail and is held in place by
 the magnets.
 
 ![Mounting/HandlebarRail](./render/thumbnails/Mounting/HandlebarRail.png)
+
+An alternative Handlebar rail can be mounted like most bike computers with a
+rubber o ring;
+![Mounting/HandlebarRailOring](./render/thumbnails/Mounting/HandlebarRailOring.png)
+
+Often you find magnets where one magnet is strong enough for your display - you
+can use a platic decoy to save on magnets in these cases
+![Mounting/DisplayMagnetDummy](./render/thumbnails/Mounting/DisplayMagnetDummy.png)
 
 #### Bike rack mount
 

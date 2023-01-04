@@ -112,7 +112,7 @@ module GpsAntennaLid() {
   difference() {
     intersection() {
       GpsAntennaHousingPyramid();
-      GpsAntennaLidCutBody(0.15);
+      GpsAntennaLidCutBody(default_clearance);
     }
 
     translate([0, MainCase_gps_antenna_housing_top_height / 2 - MainCase_gps_antenna_housing_screw_offset,  MainCase_gps_antenna_housing_depth - MainCase_gps_antenna_lid_thickness])
@@ -208,11 +208,22 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             ], fn=$pfn));
 
             // Hole 3
-            translate([OBS_height-wall_thickness, 75, 0])
+            translate([OBS_height-wall_thickness, 77, 20])
             linear_extrude(OBS_depth)
             polygon(polyRound([
               [0, -4, 0],
               [-8, -4, 1],
+              [-8, 2, 1],
+              [-2, 8, 1],
+              [0, 8, 0],
+            ], fn=$pfn));
+
+            // stand-of extension for hole 3
+            translate([OBS_height-wall_thickness, 77, 0])
+            linear_extrude(MainCase_pcb_offset.y + wall_thickness)
+            polygon(polyRound([
+              [0, -7, 0],
+              [-8, -7, 1],
               [-8, 2, 1],
               [-2, 8, 1],
               [0, 8, 0],
@@ -244,8 +255,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
 
             // hole 5
             difference(){
-              translate([wall_thickness, 75, 0])
-              linear_extrude(OBS_depth)
+              translate([wall_thickness, 77, 0])
+              translate([0,0,MainCase_pcb_offset.y + wall_thickness])linear_extrude(OBS_depth)
               polygon(polyRound([
               [0, -4, 0],
               [8, -4, 1],
@@ -274,10 +285,10 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
             [wall_thickness, OBS_depth-2*m3_insert_hole_depth, 0],
           ], fn=$pfn));
 
-          translate([10, 78, 0])
+          translate([10+epsilon, 78, 0])
           cube([OBS_height-26,30,100]);
-          translate([0, OBS_width_small-6, 0])
-          cube([OBS_height-16,30,100]);
+          translate([16, OBS_width_small-6, 0])
+          cube([OBS_height-32,30,100]);
 
           translate([0, MainCase_pcb_offset.y + wall_thickness-30, 0])
           cube([OBS_height-16,30,100]);
@@ -384,8 +395,8 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
           if (enable_easy_print) {
             translate([0, 0, 21.6/2]){
               union(){
-                translate([0,-(24-6)/2+3,0.3])cube([60,6, 21.6], center=true);
-                translate([0,-(24-6)/2+3,0.6])cube([6,6, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.3])cube([60,6+2*default_clearance, 21.6], center=true);
+                translate([0,-(24-6)/2+3,0.6])cube([6+2*default_clearance,6+2*default_clearance, 21.6], center=true);
               }
             }
           }
@@ -393,7 +404,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
       }
       // Hole for the switches' lever
       translate([0, -4-wall_thickness, 8])
-      cylinder(d=6, h=20);
+      cylinder(d=6+2*default_clearance, h=20);
 
       if(enable_text) {
         translate([11,-1.5,-0.49])linear_extrude(0.6)rotate([0,0,180]) text("I / O",font="open sans:style=Bold", size=8);
@@ -410,7 +421,7 @@ module MainCase(without_inserts=false, top_rider=MainCase_top_rider, back_rider=
     // Hole for USB Charger Port
     translate([MainCase_usb_port_x_offset, 0, m3_insert_hole_depth + wall_thickness - MainCase_usb_port_vertical_offset])
     hull()for(i=[-1, 1])for(j=[-1, 1]) {
-      translate([i/2*6.5, 0, j/2*0.7])
+      translate([i/2*6.5, 0, j/2*1])
       rotate([-90, 0, 0])
       cylinder(r=1.5, h=20, center=true);
     }

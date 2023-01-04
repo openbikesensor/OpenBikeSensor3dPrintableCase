@@ -66,8 +66,8 @@ m3_screw_head_diameter = 6; // can have a little clearance
 m3_hex_nut_diameter = 6.45; // outer circle, *not* wrench size (S), but `S*2/sqrt(3)`, plus clearance
 m3_hex_nut_thickness = 2.5; // found different nut specifications, 2.5 is the maximum thickness I found named
 m3_insert_hole_diameter = 4;
-m3_insert_hole_depth = 5.75;
-m3_insert_cavity_depth = 5.75 - 4.5;  // size of cavity on the bottom for displaced plastic
+m3_insert_hole_depth = 6.0 ;
+m3_insert_cavity_depth = 6.0 - 4.5;  // size of cavity on the bottom for displaced plastic
 m3_insert_cavity_diameter = m3_insert_hole_diameter + 1;
 
 
@@ -116,7 +116,7 @@ MainCase_usb_port_housing_depth = MainCase_pcb_offset.y;
 MainCase_usb_port_cover_clearance = default_clearance;
 
 OBS_height = 72;
-OBS_width = 111;
+OBS_width = 113;
 OBS_width_small = 88;
 OBS_depth = 48;
 
@@ -160,8 +160,8 @@ MainCaseLid_hole_offset = 3.5; // distance from inner wall
 MainCaseLid_hole_positions = [
   [MainCaseLid_hole_offset+wall_thickness, MainCaseLid_hole_offset+wall_thickness],
   [OBS_height-MainCaseLid_hole_offset-wall_thickness, MainCaseLid_hole_offset+wall_thickness],
-  [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
-  [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-8],
+  [MainCaseLid_hole_offset+wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-5],
+  [OBS_height-MainCaseLid_hole_offset-wall_thickness, OBS_width_small-MainCaseLid_hole_offset-wall_thickness-5],
   [OBS_height-MainCaseLid_hole4_offset_x+4.5*cos(frontside_angle), OBS_width-tan(frontside_angle)*MainCaseLid_hole4_offset_x-3.5],
 ];
 
@@ -203,21 +203,6 @@ MountAttachment_holes_x_offset = -0.5;
 MountAttachment_holes_dx = 15;
 MountAttachment_holes_dy = 33;
 
-HandlebarRail_rail_height = 7;
-HandlebarRail_rail_length = 32.4;
-HandlebarRail_rail_total_height = HandlebarRail_rail_height + 1.25 + 1.95 + 1.3;
-HandlebarRail_stopblock_width = 24;
-HandlebarRail_stopblock_radius = 1;
-HandlebarRail_stopblock_depth = 6.6;
-HandlebarRail_stopblock_height = 26.2;
-HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
-HandlebarRail_stopblock_magnet_lift = 3.2;
-HandlebarRail_stopblock_magnet_height = 10;
-HandlebarRail_stopblock_magnet_width = 22;
-HandlebarRail_stopblock_magnet_thickness = 1.9;
-HandlebarRail_tube_radius = 18;
-HandlebarRail_tube_indent = 1;
-
 DisplayCase_outer_radius = 5;
 DisplayCase_outer_width = 30;
 DisplayCase_outer_large_radius = 12;
@@ -238,8 +223,9 @@ DisplayCaseTop_pcb_standoff = 1.7;
 DisplayCaseTop_hole_diameter = 3.3;
 DisplayCaseTop_cable_clearance = 12.5;
 DisplayCaseTop_button_diameter = 12;
+DisplayCaseTop_button_nut_diameter = 16.3;
 DisplayCaseTop_button_outside_diameter = 18;
-DisplayCaseTop_button_outside_depth = 4;
+DisplayCaseTop_button_outside_depth = 3;
 DisplayCaseTop_pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2, DisplayCaseTop_height];
 
 DisplayCaseBottom_height = 11;
@@ -255,6 +241,22 @@ DisplayRail_chamfer_size = 2;
 DisplayRail_top_height = 2;
 DisplayRail_bottom_height = 1;
 DisplayRail_total_height = DisplayRail_chamfer_size + DisplayRail_top_height + DisplayRail_bottom_height;
+
+HandlebarRail_rail_height = 7;
+HandlebarRail_rail_length = DisplayCase_outer_width+DisplayCase_magnet_housing_width;
+HandlebarRail_rail_total_height = HandlebarRail_rail_height + 1.25 + 1.95 + 1.3;
+HandlebarRail_stopblock_width = 25;
+HandlebarRail_stopblock_radius = 1;
+HandlebarRail_stopblock_depth = 6.6;
+HandlebarRail_stopblock_height = 26.2;
+HandlebarRail_stopblock_magnet_wall_thickness = 0.8;
+HandlebarRail_stopblock_magnet_height = 10.4;
+HandlebarRail_stopblock_magnet_width = 20.8;
+HandlebarRail_stopblock_magnet_thickness = 2.1;
+HandlebarRail_stopblock_magnet_lift = 3.2;
+
+HandlebarRail_tube_radius = 18;
+HandlebarRail_tube_indent = 1;
 
 StandardMountAdapter_width = 29;
 StandardMountAdapter_length = 62;
