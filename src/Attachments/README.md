@@ -8,3 +8,12 @@ This is an extension to the OpenBikeSensor that houses:
 - [A raspberry Pi Zero Camera Cable](https://www.amazon.de/dp/B079H41LSY?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 - [A Micro USB charger board](https://www.kt-micro.de/shop/Stromversorgung/Akku-Ladetechnik/Laderegler-nur-Akku/300mA-Lader-fuer-1S-Lithium-Polymer-Akku-3-7V-LiPo-mit-Micro-USB-Buchse::100.html)
 - [A LiPo Battery pack with protection circuit](https://www.kt-micro.de/shop/Stromversorgung/Akkus-und-Batterien/Li-Po-1S-3-7V/Li-Po-Spezial-Akkus/bis-10-000-mAh/1800mAh-Lipo-Akku-LxBxH-50-x-34-x-10-mm-3-7V-1S-JST-Stecker-103450::646.html)
+
+
+## Printing
+All the objects are in one STL file - To print it is easiest to split the STL file in the slicer (e.g. PrusaSlicer, SuperSlicer) and orient the parts for printing manually.
+The STL shows them all in their final mounting positions.
+
+If Cura is to be used splitting can be done in PrusaSlicer and the build plate exported for printing in Cura.
+
+Should print mostly without support, with the possible exception of the camera sviwel mount - which profits from organic/tree supports for the ledges.
