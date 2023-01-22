@@ -13,7 +13,7 @@ PNGS=$(patsubst src/%.scad,render/%.png,$(SRCS))
 THUMBNAILS=$(patsubst src/%.scad,render/thumbnails/%.png,$(SRCS))
 
 LOGOS=$(shell find logo/ -mindepth 1 -maxdepth 1 -type d -not -name template | xargs -L1 basename)
-FILES_WITH_LOGO := MainCase/MainCase MainCase/MainCaseLid
+FILES_WITH_LOGO := MainCase/MainCase MainCase/MainCaseLid Attachments/CamLid
 LOGO_PARTS := main highlight
 LOGO_MODES := normal inverted
 

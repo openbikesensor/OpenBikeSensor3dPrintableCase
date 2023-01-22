@@ -145,3 +145,9 @@ module load_svg(filename) {
     import(filename);
   }
 }
+
+module power_switch() translate([0,0,-switch_case_size[2]/2]){
+  cube(switch_case_size,center=true);
+  cylinder(d=switch_stem_diameter,h=switch_case_size[2]/2+switch_stem_length);
+  translate([1,0,switch_case_size[2]/2+switch_stem_length])rotate([0,15,0])  cylinder(d=3,h=switch_handle_length);
+}
