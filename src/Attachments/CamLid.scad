@@ -11,7 +11,7 @@ include <../../lib/PiZero.scad>
 use <../../lib/RPiCam-v2.scad>
 use <../DisplayCase/DisplayCaseTop.scad>
 CamLid_height = 21;
-CamLid_pi_position = [20, 41.5, 8 - wall_thickness - PiSizeZ + 14.8];
+CamLid_pi_position = [20, 41.5, 8 - wall_thickness - PiSizeZ + 13.3];
 CamLid_pi_rotation = [0, 180, 270];
 CamLid_battery_dimensions = [54, 34.5, 10.5];
 CamLid_battery_position = [31, 41.5, 0];
@@ -169,7 +169,12 @@ module CamLid() {
       translate(switch_position + [0, 0, 13.5 / 2 + 2.5]) rotate([0, 270, 0])cylinder(h = 10, d = m3_screw_diameter_tight);
 
 
-      pi_mount_stem_locations()translate([0, 0, 2.01])mirror([0, 0, 1])cylinder(d = m3_screw_diameter_tight, h = 10);
+      pi_mount_stem_locations(){
+        translate([0, 0, 2.01])mirror([0, 0, 1])cylinder(d = m3_screw_diameter_tight, h = 10);
+        #translate([0, 0, 2.01 + 1.5 + m3_screw_head_depth])mirror([0, 0, 1])cylinder(d = m3_screw_head_diameter, h = m3_screw_head_depth);
+        translate([0, 0, 2.01 + 100])mirror([0, 0, 1])cylinder(d = m3_screw_head_diameter + 2, h = 100);
+
+      }
       translate([0, 0, epsilon])mirror([0, 0, 1])sensor_hole();
       translate(cam_hole_position)rotate([0, 90, 0])cylinder(d = flex_cable_width + 2, h = 10);
       translate([0, 0, epsilon])battery();
@@ -179,7 +184,9 @@ module CamLid() {
       translate([56, 28.25, 12.5])rotate([0, 90, 180])charger();
       translate(CamLid_converter_position)converter();
       // holes for the battery brace
-      battery_brace_screw_locations()      cylinder(d = m3_screw_diameter_tight, h = CamLid_battery_dimensions[2] + epsilon);
+      battery_brace_screw_locations()        cylinder(d = m3_screw_diameter_tight, h = CamLid_battery_dimensions[2] + epsilon);
+
+
     }
     translate(CamLid_pi_position)pi();
     battery_brace();
@@ -190,8 +197,12 @@ module CamLid() {
 module battery_brace() {
   difference() {
     hull()battery_brace_screw_locations()    translate([0, 0, CamLid_battery_dimensions[2] + 0.2])cylinder(h = 1.5, d = 8);
-    battery_brace_screw_locations()    translate([0, 0, CamLid_battery_dimensions[2] + 0.2 - epsilon])cylinder(h = 10, d = m3_screw_diameter_loose);
+    battery_brace_screw_locations()    {
+      translate([0, 0, CamLid_battery_dimensions[2] + 0.2 - epsilon])cylinder(h = 10, d = m3_screw_diameter_loose);
+      translate([0, 0, CamLid_battery_dimensions[2] + 0.2+0.6-epsilon])cylinder(d = m3_screw_head_diameter, h = 8);
+    }
   }
+
 }
 
 module cam_sviwel_bottom(ds = 0.5, dc = 0, hmult = 2.1) {
