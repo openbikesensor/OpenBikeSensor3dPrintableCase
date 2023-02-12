@@ -26,9 +26,12 @@ cbr = CamBox_radius;
 cbh = CamBox_height;
 cbw = CamBox_width;
 
-CamLid_pi_position = [38, CamBox_height - 18, 3];
+charger_dimensions = [12.4, 26.2, 4.25];
 
-CamLid_converter_position = [15, 80, 0];
+CamLid_pi_position = [38.5, CamBox_height - 18, 3];
+
+converter_position = [51, CamLid_pi_position[1] - 28.5, 0];
+charger_position = [28.2, CamLid_pi_position[1] - 18, 5];
 CamLid_converter_dimensions = [22.3, 4.3, 11.5];
 
 
@@ -73,19 +76,16 @@ module battery(outset = 0) {
 }
 
 module charger() {
-  translate([0, 0, - 0.25])cube([12.4, 26.2, 4.25], center = false);
+  translate([0, 0, - 0.25])cube(charger_dimensions, center = false);
   translate([(12.4 - 8.5) / 2, 25, - 0.25])cube([8.5, 3, 3.5], center = false);
   corners = [[0, 0, 1], [0, 8, 1], [11, 8, 1], [11, 0, 1]];
   translate([(12.4 - 11) / 2, 28.251, - (8 - 3) / 2])rotate([90, 0, 0])polyRoundExtrude(corners, 1, 0.5, - 0.5);
 }
 
-module charger_bay() {
-  corners = [[0, 1, 0], [8, 1, 0], [8, 20, 1], [0, 20, 1]];
-  polyRoundExtrude(corners, 10.5, 0, 0);
-  corners_low = [[0, 1, 0], [8, 1, 0], [8, 30, 1], [0, 30, 1]];
-  polyRoundExtrude(corners_low, 2, 0, 0);
-  corners_low_2 = [[0, 28, 0], [4, 28, 0], [4, 30, 1], [0, 30, 1]];
-  polyRoundExtrude(corners_low_2, 10.5, 0, 0);
+module charger_bay(outset = 2) {
+  cd = charger_dimensions + [outset, outset, outset];
+  corners = [[cd[1], 0, 1], [cd[1], cd[0], 1], [0, cd[0], 1], [0, 0, 1]];
+  translate(charger_position - [outset / 2, outset / 2, 0])translate([-charger_dimensions[1],-charger_dimensions[0],-charger_dimensions[2]])polyRoundExtrude(corners, 3, 0, 0);
 }
 
 module battery_bay() {
@@ -100,10 +100,9 @@ module battery_bay() {
 }
 
 module converter_bay(outset = 2) {
-  cd = CamLid_converter_dimensions + [outset, outset, 0];
-  corners = [[- outset, - outset, 1], [cd[0], - outset, 1], [cd[0], cd[1], 1], [- outset, cd[1], 1]];
-  polyRoundExtrude(corners, cd[2] - epsilon, 0, 0);
-
+  cd = CamLid_converter_dimensions + [outset, outset, outset];
+  corners = [[cd[0], cd[2], 1], [cd[0], 0, 1], [0, 0, 1], [0, cd[2], 1]];
+  translate(converter_position - [outset / 2, outset / 2, 0])polyRoundExtrude(corners, 3, 0, 1);
 }
 
 module pi_mount_stem_locations() {
@@ -269,22 +268,24 @@ module Switches() {
 module CamLid() {
   difference() {
     union() {
+      converter_bay();
+      charger_bay();
       CamBoxBody();
       translate(cam_hole_position)rotate([90, 0, 0])cam_sviwel();
-      #translate([28.2, CamLid_pi_position[1] - 15, 5])rotate([0, 180, 90])charger();
       if ($preview)translate(CamLid_pi_position)pi();
       difference() {
         pi_mount_stem_locations() translate([0, 0, - CamLid_pi_position[2] + PiSizeZ])cylinder(r = PiHoleClearRad, h = CamLid_pi_position[2]);
         pi_mount_stem_locations() translate([0, 0, - CamLid_pi_position[2] + PiSizeZ + epsilon])cylinder(d = m3_screw_diameter_tight, h = CamLid_pi_position[2]);
 
       }
-      translate([5, 14, 0])#rotate([90, 0, 0])converter();
       CamScrewMounts();
       translate(switch_position + [- 4.6, - 9.8, 0])cube([4, 20, 16.8]);
 
       //Cover();
     }
-    #Switches();
+    Switches();
+    #translate(charger_position)rotate([0, 180, 90])charger();
+    #translate(converter_position)mirror([0, 1, 0])rotate([90, 0, 0])converter();
 
   }
 }
