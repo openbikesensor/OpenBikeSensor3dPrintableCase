@@ -18,10 +18,13 @@ CamLid_pi_rotation = [0, 180, 270];
 
 
 battery_screw_positions = [[20, 10, 0], [48, 74, 0]];
-CamBox_width = 85;
+CamBox_width = 88;
 CamBox_height = 63;
 CamBox_depth = 24;
 CamBox_radius = 8;
+cbr = CamBox_radius;
+cbh = CamBox_height;
+cbw = CamBox_width;
 
 CamLid_pi_position = [38, CamBox_height - 18, 3];
 
@@ -34,17 +37,20 @@ switch_stem_diameter = 6.2;
 switch_stem_length = 8.5;
 switch_handle_length = 10;
 
-switch_position = [OBS_height - 1.6, 25, 0.5];
+switch_position = [CamBox_width - wall_thickness, 25, 0.7];
 
 CamLid_battery_dimensions = [50, 34, 10.2];
-CamLid_battery_position = [CamLid_battery_dimensions[0] / 2 + 2 * wall_thickness, CamBox_height - CamLid_battery_dimensions[1] / 2 - 2 * wall_thickness - 10, CamBox_depth -
-  CamLid_battery_dimensions[2] - wall_thickness];
+CamLid_battery_position = [
+        CamLid_battery_dimensions[0] / 2 + wall_thickness + 2.5,
+    CamBox_height / 2,
+        CamBox_depth - CamLid_battery_dimensions[2] - wall_thickness - 0.9
+  ];
 CamLid_battery_rotation = [0, 0, 0];
 
 m3_insert_hole_depth = 7;
 flex_cable_width = 16.05;
 
-cam_hole_position = [CamBox_width / 2, 2 * wall_thickness, CamBox_depth / 2 - wall_thickness / 2];
+cam_hole_position = [CamBox_width / 2, 2 * wall_thickness + 0.1, CamBox_depth / 2 - wall_thickness / 2];
 
 module switch(clearance = true) {
   translate([- 11.5 / 2, 0, - 0.5])cube([11.5, 5, 6]);
@@ -60,8 +66,10 @@ module switch(clearance = true) {
   translate([- 6.2 / 2, - 6, (5 - 3.2) / 2])cube([6.2, 6, 3.2]);
 }
 
-module battery() {
-  translate(CamLid_battery_position + [0, 0, CamLid_battery_dimensions[2] / 2])rotate(CamLid_battery_rotation)cube(CamLid_battery_dimensions, center = true);
+module battery(outset = 0) {
+  translate(CamLid_battery_position + [0.5 * outset, 0, CamLid_battery_dimensions[2] / 2])
+    rotate(CamLid_battery_rotation)
+      cube(CamLid_battery_dimensions + [0.5 * outset, outset, outset], center = true);
 }
 
 module charger() {
@@ -134,18 +142,6 @@ module MountAdapter() {
   }
 }
 
-module button_hole() {
-  // Hole for the sensor
-  translate([OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, 0]) {
-    translate([0, 0, - 15])
-      cylinder(r = DisplayCaseTop_button_diameter / 2, h = 20);
-    //the sensor has about 1.5 mm space for the silicone edge.
-    translate([0, 0, 0])        cylinder(r = MainCase_sensor_hole_diameter / 2 + 1.2, h = wall_thickness - 1.5);
-  }
-  translate([OBS_height - 16, OBS_width - 1 / tan((90 - frontside_angle) / 2) * 16, - 20]) {
-    cylinder(r = MainCase_sensor_hole_diameter / 2 + MainCase_sensor_hole_ledge, h = 20);
-  }
-}
 
 box_corners = function(inset)  [
     [inset, inset, CamBox_radius - inset],
@@ -158,10 +154,10 @@ cam_box_lid_screw_positions_array = [for (i = [CamBox_radius, CamBox_width - Cam
     [i, j]];
 
 function cam_box_lid_screw_mount_polygon(shift) = [
-    [- CamBox_radius+shift, - CamBox_radius+shift, CamBox_radius-shift],
-    [4, - CamBox_radius+shift, 0],
+    [- CamBox_radius + shift, - CamBox_radius + shift, CamBox_radius - shift],
+    [4, - CamBox_radius + shift, 0],
     [4, 4, 4],
-    [- CamBox_radius+shift, 4, 0]
+    [- CamBox_radius + shift, 4, 0]
   ];
 
 
@@ -172,41 +168,125 @@ module CamBoxBody() {
         polyRoundExtrude(box_corners(0), CamBox_depth, 0, 0);
         translate([0, 0, wall_thickness])polyRoundExtrude(box_corners(wall_thickness), CamBox_depth, 0, 0);
       }
-      #translate(cam_hole_position)rotate([90, 0, 0])cylinder(d = flex_cable_width + 2, h = 10);
-
+      translate(cam_hole_position)rotate([90, 0, 0])cylinder(d = flex_cable_width + 2, h = 10, $fn = 180);
     }
 }
 
 module CamScrewMounts() {
   angles = [0, 270, 90, 180];
   for (i = [0:1:3]) {
-    intersection() {
-      hull() {
-        translate([0, 0, CamBox_depth - 9])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 6, 0);
-        translate([0, 0, CamBox_depth - 9])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) translate([- CamBox_radius, - CamBox_radius, - 7])
-          polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 6, 0);
+    difference() {
+      intersection() {
+        hull() {
+          translate([0, 0, CamBox_depth - 7])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 4, 0);
+          translate([0, 0, CamBox_depth - 7])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) translate([- CamBox_radius, - CamBox_radius, - 6])
+            polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 4, 0);
+        }
+        translate([0, 0, CamBox_depth - 13])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 30, 0);
+
       }
-      translate([0, 0, CamBox_depth - 20])translate(cam_box_lid_screw_positions_array[i]) rotate([0, 0, angles[i]]) polyRoundExtrude(cam_box_lid_screw_mount_polygon(0), 30, 0);
+
+      translate([0, 0, CamBox_depth - 8])translate(cam_box_lid_screw_positions_array[i])cylinder(d = m3_screw_diameter_tight, h = 99);
 
     }
   }
 }
 
-module Corners(){
-  translate([0,0,CamBox_depth-wall_thickness-0.9])polyRoundExtrude(box_corners(wall_thickness+0.2),0.8,0,0);
+function corner_polygon(i, dd = 0) = [
+    [cbr + i, i - 2, 3 - dd],
+    [cbr + i, cbr + i, 4 + dd],
+    [i - 2, cbr + i, 3 - dd],
+    [i - 2, cbh - cbr - i, 3 - dd],
+    [cbr + i, cbh - cbr - i, 4 + dd],
+    [cbr + i, cbh - i + 2, 3 - dd],
+    [cbw - cbr - i, cbh - i + 2, 3 - dd],
+    [cbw - cbr - i, cbh - cbr - i, 4 + dd],
+    [cbw - i + 2, cbh - cbr - i, 3 - dd],
+    [cbw - i + 2, cbr + i, 3 - dd],
+    [cbw - cbr - i, cbr + i, 4 + dd],
+    [cbw - cbr - i, i - 2, 3 - dd],
+  // the notch where the camera mount sviwels
+    [cbw * 0.66 + i, i - 2, 0],
+    [cbw * 0.66 + i, i + 1, 0],
+    [cbw * 0.33 - i, i + 1, 0],
+    [cbw * 0.33 - i, i - 2, 0],
+  ];
 
+battery_brace_polygon = [
+    [- CamLid_battery_dimensions[0] / 2 + 20, - CamLid_battery_dimensions[1] / 2 - 5, 4],
+    [CamLid_battery_dimensions[0] / 2 + 10, 0, 4],
+    [- CamLid_battery_dimensions[0] / 2 + 20, , CamLid_battery_dimensions[1] / 2 + 5, 4],
+    [- CamLid_battery_dimensions[0] / 2 + 10, CamLid_battery_dimensions[1] / 2 + 5, 4],
+    [- CamLid_battery_dimensions[0] / 2 + 10, - CamLid_battery_dimensions[1] / 2 - 5, 4]
+  ];
+
+
+module RimPolygon(inset = 2) {
+  translate([0, 0, - MainCaseLid_rim_thickness])difference()
+    {
+      offset_sweep(polyRound(corner_polygon(inset)), height = MainCaseLid_rim_thickness, bottom = os_chamfer(0.5),
+      steps = 2, check_valid = true, $fn = 16);
+      translate([0, 0, - epsilon])offset_sweep(polyRound(corner_polygon(inset + 1.6, 1.6)), height = MainCaseLid_rim_thickness + 2 * epsilon, bottom = os_chamfer(- 0.5),
+      steps = 2, check_valid = true, $fn = 16);
+    }
+}
+
+module Cover() {
+  difference() {
+    union() {
+      translate([0, 0, CamBox_depth - wall_thickness - 0.9])polyRoundExtrude(box_corners(wall_thickness + 0.2), 1.2, 0, 0);
+      translate([0, 0, CamBox_depth - wall_thickness + 0.1])polyRoundExtrude(box_corners(0), 0.8, 0, 0);
+
+      echo(corner_polygon(wall_thickness + 0.2));
+      translate([0, 0, CamBox_depth - wall_thickness - 0.8])RimPolygon(4.5);
+      translate(CamLid_battery_position + [0, 0, - 0.8])polyRoundExtrude(battery_brace_polygon, CamLid_battery_dimensions[2] + 0.8, 0, 0);
+
+    }
+    translate([- epsilon, 0, 0])battery();
+    translate([0, 0, CamLid_battery_position[2] + 3])cube([65, 65, 0.1]);
+    for (m = [[- 1, 0], [1, 0], [0, 1]]) {
+      translate(CamLid_battery_position + [m[1] * (CamLid_battery_dimensions[0] / 2 + 2.5) + (m[1] - 1) * 10, m[0] * (CamLid_battery_dimensions[1] / 2 + 2.5), - 0.8])cylinder(d =
+      m3_screw_diameter_tight, h = 10);
+      translate(CamLid_battery_position + [m[1] * (CamLid_battery_dimensions[0] / 2 + 2.5) + (m[1] - 1) * 10, m[0] * (CamLid_battery_dimensions[1] / 2 + 2.5), - 0.8])cylinder(d =
+      m3_screw_diameter_loose, h = 3.8);
+    }
+    for (x = cam_box_lid_screw_positions_array) {
+      translate(x)cylinder(d = m3_screw_diameter_loose, h = 100);
+    }
+  }
+}
+
+module Switches() {
+  // switches
+  translate(switch_position)rotate([0, 0, 90])switch(false);
+  translate(switch_position + [0, 0, 11.5])rotate([0, 0, 90])switch(false);
+
+  // screw hole to mount switches
+  translate(switch_position + [- 0.4 - epsilon, 0, 11.5 / 2 + 2.5]) rotate([0, 90, 0])cylinder(h = 10, d = m3_screw_diameter_loose);
+  translate(switch_position + [- 0.4 - epsilon, 0, 11.5 / 2 + 2.5]) rotate([0, 270, 0])cylinder(h = 10, d = m3_screw_diameter_tight);
 }
 
 module CamLid() {
-  CamBoxBody();
-  translate(cam_hole_position)rotate([90, 0, 0])cam_sviwel();
-  #battery();
-  #translate([28.2, CamLid_pi_position[1] - 15, 5])rotate([0, 180, 90])charger();
-  if ($preview)translate(CamLid_pi_position)pi();
-  pi_mount_stem_locations() translate([0, 0, - CamLid_pi_position[2] + PiSizeZ])cylinder(r2 = PiHoleClearRad, r1 = PiHoleClearRad, h = CamLid_pi_position[2]);
-  translate([5, 14, 0])#rotate([90, 0, 0])converter();
-  CamScrewMounts();
-  Corners();
+  difference() {
+    union() {
+      CamBoxBody();
+      translate(cam_hole_position)rotate([90, 0, 0])cam_sviwel();
+      #translate([28.2, CamLid_pi_position[1] - 15, 5])rotate([0, 180, 90])charger();
+      if ($preview)translate(CamLid_pi_position)pi();
+      difference() {
+        pi_mount_stem_locations() translate([0, 0, - CamLid_pi_position[2] + PiSizeZ])cylinder(r = PiHoleClearRad, h = CamLid_pi_position[2]);
+        pi_mount_stem_locations() translate([0, 0, - CamLid_pi_position[2] + PiSizeZ + epsilon])cylinder(d = m3_screw_diameter_tight, h = CamLid_pi_position[2]);
+
+      }
+      translate([5, 14, 0])#rotate([90, 0, 0])converter();
+      CamScrewMounts();
+      translate(switch_position + [- 4.6, - 9.8, 0])cube([4, 20, 16.8]);
+
+      //Cover();
+    }
+    #Switches();
+
+  }
 }
 
 module battery_brace() {
@@ -293,4 +373,4 @@ if (logo_generate_templates) {
       load_svg(str("../../logo/", logo_name, "/MainCaseLid.svg"));
   }
 };
-echo(box_corners(3));
+
