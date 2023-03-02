@@ -1,0 +1,3 @@
+# For the most recent release you can find the files conveniently zipped [here under "assets"](https://github.com/openbikesensor/OpenBikeSensor3dPrintableCase/releases)
+
+This folder contains the stl files for convenience. It is recommended however to download the latest released files as a zipped bundle [here under "assets"](https://github.com/openbikesensor/OpenBikeSensor3dPrintableCase/releases) instead.
