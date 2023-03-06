@@ -72,11 +72,11 @@ module StandardMountAdapterBody() {
   }
 }
 
-module StandardMountAdapter(channels=true) {
+module StandardMountAdapter(channels=true, screwholes=true) {
   difference() {
     StandardMountAdapterBody();
 
-    translate([0, 0, StandardMountAdapter_thickness])
+    if(screwholes)translate([0, 0, StandardMountAdapter_thickness])
     StandardMountAdapterScrewHoles()
     ScrewHoleM3(depth=100, head_depth= StandardMountAdapter_thickness - (8 - m3_hex_nut_thickness)/2 );
 
