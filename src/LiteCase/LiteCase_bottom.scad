@@ -37,7 +37,7 @@ Lite_ESP_dimensions = [53, 29, 4.8];
 
 Lite_USB_position_x = 55;
 Lite_USB_position_y = 0;
-Lite_USB_position_z = - 15;
+Lite_USB_position_z = - 14.5;
 
 Lite_screwmount_top = 4;
 Lite_screwmount_bottom = 6;
@@ -47,10 +47,15 @@ Lite_USB = [Lite_USB_position_x, Lite_USB_position_y, Lite_USB_position_z];
 
 Lite_ESP_position = [Lite_ESP_position_x, Lite_ESP_position_y, Lite_ESP_position_z];
 
-sensor_x = - Lite_transducer_position[2]+.5;
+sensor_x = - Lite_transducer_position[2] + .5;
 sensor_y = Lite_transducer_position[0];
 
 function angle_three_points_2d(pa, pb, pc) = asin(cross(pb - pa, pb - pc) / (norm(pb - pa) * norm(pb - pc)));
+
+module rounded_cube(x, y, z, r, r2, center = true) {
+  t = center ? - [x / 2, y / 2, z / 2]: [0, 0, 0];
+  translate(t)polyRoundExtrude([[0, 0, max(r, r2)], [0, y, max(r, r2)], [x, y, max(r, r2)], [x, 0, max(r, r2)]], z, r, r2);
+}
 
 module SidePolygon() {
   corners = [
@@ -64,7 +69,6 @@ module SidePolygon() {
   translate([sensor_x, sensor_y])polygon(polyRound(corners, fn = 150));
 }
 
-
 module MidPolygon() {
   corners = [[square_x, - lite_w / 2, 5], [- boardcorner_x, - boardcorner_y, 5], [- boardcorner_x, boardcorner_y, 5], [square_x, lite_w / 2, 5], [lite_l, lite_w / 2, 5], [lite_l, -
   lite_w / 2, 5]];
@@ -72,7 +76,7 @@ module MidPolygon() {
 }
 
 module LidCutter() {
-  translate([30, 0, Lite_ESP_position_z + 0.8])cube([90, 60, 0.1], center = true);
+  translate([40, 0, Lite_ESP_position_z + 0.8])cube([120, 90, 0.1], center = true);
 }
 
 module Box() {
@@ -114,7 +118,8 @@ module Ultrasonic(i, onlyboards = false, h = 30) {
 }
 
 module USB_hole() {
-  translate(Lite_USB)cube([20, 12, 10], center = true);
+  translate(Lite_USB)
+    rounded_cube(45, 11, 11, 1.5, 1.5, center = true);
 }
 
 module Screwbump(size = 6, hole_diameter = 2.8, height = 6, bottom = true, toppart = 2.1) {
@@ -168,9 +173,19 @@ difference() {
       Screwbump(size = 4, hole_diameter = 2.8, height = Lite_screwmount_height, bottom = true, toppart = Lite_screwmount_top);
     translate([lite_w - 7.3, - 12, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, - 90])
       Screwbump(size = 4, hole_diameter = 2.8, height = Lite_screwmount_height, bottom = true, toppart = Lite_screwmount_top);
-    translate([23.8, - 3.5, - 17.9])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false);
+    translate([23.8, - 3.5, - 17.9])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false, twoholes=false);
     difference() {
-      rotate([90, 90, 0])Box();
+      union() {
+        rotate([90, 90, 0])Box();
+        translate(Lite_USB + [0, 0, - 3.5 - 1.6 + 1]) {
+          rounded_cube(28, 10, 6.5, 0, 1.5, center = true);
+
+          difference() {
+            rounded_cube(30, 15, 6.5, 0, 1.5, center = true);
+            #translate([8, - 20, - 5])cube([4, 60, 20]);
+          }
+        }
+      }
       hull()    translate([23.8, - 3.5, - 18])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false);
 
     }
@@ -179,4 +194,4 @@ difference() {
   LidCutter();
 }
 
-if ($preview) translate([80,0,0])LiteElectronics();
+if ($preview) translate([80, 0, 0])LiteElectronics();
