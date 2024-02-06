@@ -3,7 +3,7 @@
 This repository contains the 3d-printable models for OpenBikeSensor enclosures.
 
 [Project Website](https://openbikesensor.org) |
-[Model selection](https://www.openbikesensor.org/docs/hardware/general/models/) (German) |
+[Model selection](https://www.openbikesensor.org/device/) (German) |
 [3D printing instructions](https://www.openbikesensor.org/docs/hardware/general/case/) (German)
 
 If you encounter any problems or have feature requests, please open an issue on
@@ -100,8 +100,8 @@ electronics. The core part are a `MainCase` and a `MainCaseLid`, which is
 installed with five M3x8 bolts in the lid, matching the five threaded heatset
 inserts in the body.
 
-The PCB is installed into the main body with 3 heatset inserts and M3x8 bolts.
-One additional heatset insert is required for the `GPSAntennaLid` (see below).
+The PCB is installed into the main body with 3 heat-set inserts and M3x8 bolts.
+One additional heat-set insert is required for the `GPSAntennaLid` (see below).
 This totals 9 inserts to be placed after printing.
 
 ![MainCase/MainCase](./render/thumbnails/MainCase/MainCase.png)
@@ -127,12 +127,12 @@ of 3x3x3mm neodymium magnets.
 
 ### Display case
 
-The display case consists of two halfes, `DisplayCaseTop` and
+The display case consists of two halfs, `DisplayCaseTop` and
 `DisplayCaseBottom`. The display case contains the I2C display and a push
 button and is attached to the main device with a cable that exits through a
 hole in the bottom part.
 
-The bottom part contains 3 threaded heatset inserts and a pocket for two
+The bottom part contains 3 threaded heat-set inserts and a pocket for two
 20x10x1.9mm neodymium magnets. The magnets hold the display in the rail on the
 handlebar (see `HandlebarRail`).
 
@@ -168,7 +168,7 @@ different attachment needs, but this one is the default.
 
 #### Seat post mount
 
-The `SeatPostMount` gets attached to the seat post of the bicycle with zipties.
+The `SeatPostMount` gets attached to the seat post of the bicycle with zip ties.
 
 *Hint: A piece of an old bicycle tube can prevent it from turning or shifting.*
 
@@ -200,7 +200,7 @@ the pin, and the device, in place.
 
 #### Handlebar rail
 
-Attach the `HandlebarRail` to the handlebar of your bike with two zipties or a single
+Attach the `HandlebarRail` to the handlebar of your bike with two zip ties or a single
 hose clamp. Again, a piece from an old bicycle tube can prevent turning and shifting.
 
 The large wall contains a pocket for two 20x10x1.9mm neodymium magnets, pushed
@@ -289,7 +289,7 @@ default_clearance
 ### Top Rider vs. Back Rider
 
 A "top rider" variant main case has an attachment port on the bottom (when
-mounted), while a "back rider" has it on the front. The "tranditional" OBS case
+mounted), while a "back rider" has it on the front. The "traditional" OBS case
 therefore is a back rider variant, as it used to always sit behind the seat
 post, attached horizontally. However, many cyclists configure their bikes in a
 way that there is not enough room for a whole OBS below the seat, so a
