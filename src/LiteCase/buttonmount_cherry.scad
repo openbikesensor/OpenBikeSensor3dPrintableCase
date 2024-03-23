@@ -1,7 +1,7 @@
 $fn = $preview ? 20 : 60;
 z = [0, 0, 1];
 y = [0, 1, 0];
-x = [1,0,0];
+x = [1, 0, 0];
 cz = 1.2;
 h = 15;
 cxy = 13.7;
@@ -22,7 +22,7 @@ module hole() {
 
 module handlebar()
 {
-   # translate((50) / 2 * y - 18.5 * z)rotate([90, 0, 0])cylinder(d = 25.4, h = 50);
+    # translate((50) / 2 * y - 18.5 * z)rotate([90, 0, 0])cylinder(d = 25.4, h = 50);
 }
 
 module cable() {
@@ -35,32 +35,38 @@ module cable() {
 difference() {
     union() {
         translate(z4 * z)cube(sizef, center = true);
-        translate(-4*z)cube([5, cxy+16, 8],center=true);
+        translate(-4 * z)cube([7, cxy + 16, 8], center = true);
     }
+
     hole();
-    #for (i=[-1,1]) translate((cxy + 8) / 2 * y*i) rubber_ring();
+    #for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i) rubber_ring();
     handlebar();
     cable();
 }
+difference() {
+    translate(-0.1 * z)cube([7, cxy + 16, 0.2], center = true);
+    hole();
+}
+
 
 module rubber_ring() {
     translate(-18.5 * z)
         rotate([90, 0, 0])
             rotate_extrude()
                 translate([25.4 / 2 + 1.5 + 1, 0, 0])
-        {
-            hull() {
-                circle(d = 3);
-                translate([5, 0, 0])circle(d = 3);}
-        }
+                    {
+                        hull() {
+                            circle(d = 3);
+                            translate([5, 0, 0])circle(d = 3);}
+                    }
 }
 
 
-module bottom_shape(diam=5) {
+module bottom_shape(diam = 5) {
     difference() {
         translate([0, 0, -7.5])cube([15, 15, 15], center = true);
         translate(2 * z)handlebar();
-        for (i = [-1, 1])rotate([0, 25 * i, 0])translate([i * (diam+1.5), 0, 0])rotate_extrude() hull() {
+        for (i = [-1, 1])rotate([0, 20 * i, 0])translate([i * (diam + 1.5), 0, 0])rotate_extrude() hull() {
             translate([4, 0, 0]) circle(d = 3);
             translate([4, 4, 0]) circle(d = 3);
         }
@@ -70,7 +76,7 @@ module bottom_shape(diam=5) {
 }
 
 //rotate(-x*90)linear_extrude(cxy-5*3)
-module bottom(width=cxy, diam=5) {
+module bottom(width = cxy, diam = 5) {
     rotate(-x * 90)linear_extrude(cxy - diam)    projection(cut = true) {
         rotate(x * 90)bottom_shape(diam);
     }
@@ -84,4 +90,4 @@ module bottom(width=cxy, diam=5) {
     }
 }
 
-translate(y*40) bottom();
+translate(y * 25) bottom();
