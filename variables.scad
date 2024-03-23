@@ -301,3 +301,14 @@ logo_generate_templates = false; // set to true to generate 2D template SVGs
 logo_name = "OpenBikeSensor"; // name of a folder inside `logo/`
 logo_mode = "normal"; // "normal" or "inverted"
 logo_part = "main"; // "main" or "highlight"
+
+
+// Lite case
+
+// Lite handlebar button
+SMALLEST_POSSIBLE = .01;
+$stem_throw = 4;
+$cherry_bevel = false;
+$stem_inner_slop = 0.01;
+$rounded_cherry_stem_d = 5.5;
+extra_vertical = 0.2;

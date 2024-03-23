@@ -1,3 +1,7 @@
+include <../../variables.scad>
+use <../../lib/utils.scad>
+
+
 $fn = $preview ? 20 : 60;
 z = [0, 0, 1];
 y = [0, 1, 0];
@@ -12,6 +16,7 @@ z2 = -cz * 1.5;
 sizet = [cxy + 2, cxy + 2, 4];
 sizef = [cxy + 5, cxy + 5, h];
 z4 = -sizef[2] / 2;
+SMALLEST_POSSIBLE = 0.01;
 
 if ($preview) import("/home/paulg/Downloads/kailh_low.stl");
 module hole() {
@@ -32,22 +37,27 @@ module cable() {
     }
 }
 
-difference() {
-    union() {
-        translate(z4 * z)cube(sizef, center = true);
-        translate(-4 * z)cube([7, cxy + 16, 8], center = true);
+module button(detail = true) {
+    difference() {
+        union() {
+            translate(z4 * z)cube(sizef, center = true);
+            translate(-4 * z)cube([7, cxy + 16, 8], center = true);
+        }
+
+        if (detail) {
+            hole();
+            for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i) rubber_ring();
+            handlebar();
+            cable();
+        }
     }
-
-    hole();
-    #for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i) rubber_ring();
-    handlebar();
-    cable();
-}
-difference() {
-    translate(-0.1 * z)cube([7, cxy + 16, 0.2], center = true);
-    hole();
+    difference() {
+        translate(-0.1 * z)cube([7, cxy + 16, 0.2], center = true);
+        hole();
+    }
 }
 
+button();
 
 module rubber_ring() {
     translate(-18.5 * z)
@@ -91,3 +101,32 @@ module bottom(width = cxy, diam = 5) {
 }
 
 translate(y * 25) bottom();
+module buttoncutter(spacing = .5) {
+    translate(-(spacing + 3.5) * z)minkowski() {
+        cube(spacing,center=true);
+        union() {button(detail = false);
+            hull() {
+                linear_extrude(1)translate((-cxy / 2 - 1) * (x + y))square([cxy + 2, cxy + 2]);
+                translate(z * 2.5)linear_extrude(1)translate((-cxy / 2) * (x + y))square([cxy, cxy]);
+            }
+        }
+    }
+}
+
+
+module buttontop(wall=3) {
+    translate(-6 * z)rounded_cherry_stem(6, 5, 4);
+    translate(-6 * z)rounded_cherry_stem(6, 5, 4);
+    difference() {
+        hull() {
+            translate(-z)linear_extrude(1)translate((-cxy / 2 - 1) * (x + y))square([cxy + 2, cxy + 2]);
+            translate(-5*z)linear_extrude(1)translate((-(cxy+5+wall )/ 2 ) * (x + y))square([cxy + 5+wall, cxy + 5+wall]);
+            translate(-8*z)linear_extrude(1)translate((-(cxy+5+wall )/ 2 ) * (x + y))square([cxy + 5+wall, cxy + 5+wall]);
+
+        }
+        translate(-z)buttoncutter();
+
+    }
+}
+
+translate(-30 * y)buttontop();

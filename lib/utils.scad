@@ -145,3 +145,51 @@ module load_svg(filename) {
     import(filename);
   }
 }
+
+
+/*
+The code below is from keyv2
+https://github.com/rsheldiii/KeyV2
+
+which is licensed under GPL
+
+We only need the round cherry key stem
+*/
+
+
+
+module rounded_cherry_stem(depth, slop, throw) {
+    difference() {
+        cylinder(d = $rounded_cherry_stem_d, h = depth);
+
+        // inside cross
+        // translation purely for aesthetic purposes, to get rid of that awful lattice
+        inside_cherry_cross($stem_inner_slop);
+    }
+}
+
+module inside_cherry_cross(slop) {
+    // inside cross
+    // translation purely for aesthetic purposes, to get rid of that awful lattice
+    translate([0, 0, -SMALLEST_POSSIBLE]) {
+        linear_extrude(height = $stem_throw) {
+            square(cherry_cross(slop, extra_vertical)[0], center = true);
+            square(cherry_cross(slop, extra_vertical)[1], center = true);
+        }
+    }
+
+    // Guides to assist insertion and mitigate first layer squishing
+    if ($cherry_bevel) {
+        for (i = cherry_cross(slop, extra_vertical)) hull() {
+            linear_extrude(height = 0.01, center = false) offset(delta = 0.4) square(i, center = true);
+            translate([0, 0, 0.5]) linear_extrude(height = 0.01, center = false)  square(i, center = true);
+        }
+    }
+}
+
+function cherry_cross(slop, extra_vertical = 0) = [
+    // horizontal tine
+        [4.03 + slop, 1.25 + slop / 3],
+    // vertical tine
+        [1.15 + slop / 3, 4.23 + extra_vertical + slop / 3 + SMALLEST_POSSIBLE],
+    ];
