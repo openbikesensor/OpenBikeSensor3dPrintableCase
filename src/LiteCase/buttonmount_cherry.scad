@@ -27,7 +27,7 @@ module hole() {
 
 module handlebar()
 {
-    # translate((50) / 2 * y - 18.5 * z)rotate([90, 0, 0])cylinder(d = 25.4, h = 50);
+    translate((50) / 2 * y - 18.5 * z)rotate([90, 0, 0])cylinder(d = 25.4, h = 50);
 }
 
 module cable() {
@@ -41,7 +41,7 @@ module button(detail = true) {
     difference() {
         union() {
             translate(z4 * z)cube(sizef, center = true);
-            translate(-4 * z)cube([7, cxy + 16, 8], center = true);
+            if (detail) translate(-4 * z)cube([7, cxy + 16, 8], center = true);
         }
 
         if (detail) {
@@ -51,7 +51,7 @@ module button(detail = true) {
             cable();
         }
     }
-    difference() {
+    if (detail)difference() {
         translate(-0.1 * z)cube([7, cxy + 16, 0.2], center = true);
         hole();
     }
@@ -59,7 +59,7 @@ module button(detail = true) {
 
 button();
 
-module rubber_ring() {
+module rubber_ring(inner=false) {
     translate(-18.5 * z)
         rotate([90, 0, 0])
             rotate_extrude()
@@ -67,7 +67,8 @@ module rubber_ring() {
                     {
                         hull() {
                             circle(d = 3);
-                            translate([5, 0, 0])circle(d = 3);}
+                            translate([inner?-5:5, 0, 0])circle(d = 3);
+                        }
                     }
 }
 
@@ -87,23 +88,23 @@ module bottom_shape(diam = 5) {
 
 //rotate(-x*90)linear_extrude(cxy-5*3)
 module bottom(width = cxy, diam = 5) {
-    rotate(-x * 90)linear_extrude(cxy - diam)    projection(cut = true) {
+    rotate(-x * 90)linear_extrude(width - diam)    projection(cut = true) {
         rotate(x * 90)bottom_shape(diam);
     }
     difference() {
         bottom_shape(diam);
-        translate(y * 20)cube([40, 40, 40], center = true);
+        translate(y * (20 +0.01))cube([40, 40, 40], center = true);
     }
     translate(y * (width - diam))difference() {
         bottom_shape(diam);
-        translate(-y * 20)cube([40, 40, 40], center = true);
+        translate(-y * (20 + 0.01))cube([40, 40, 40], center = true);
     }
 }
 
 translate(y * 25) bottom();
 module buttoncutter(spacing = .5) {
     translate(-(spacing + 3.5) * z)minkowski() {
-        cube(spacing,center=true);
+        cube(spacing, center = true);
         union() {button(detail = false);
             hull() {
                 linear_extrude(1)translate((-cxy / 2 - 1) * (x + y))square([cxy + 2, cxy + 2]);
@@ -114,18 +115,20 @@ module buttoncutter(spacing = .5) {
 }
 
 
-module buttontop(wall=3) {
-    translate(-6 * z)rounded_cherry_stem(6, 5, 4);
-    translate(-6 * z)rounded_cherry_stem(6, 5, 4);
+module buttontop(wall = 3) {
+    translate(-6 * z)rounded_cherry_stem(6, 0.2, 4);
+    translate(-6 * z)rounded_cherry_stem(6, 0.2, 4);
     difference() {
         hull() {
             translate(-z)linear_extrude(1)translate((-cxy / 2 - 1) * (x + y))square([cxy + 2, cxy + 2]);
-            translate(-5*z)linear_extrude(1)translate((-(cxy+5+wall )/ 2 ) * (x + y))square([cxy + 5+wall, cxy + 5+wall]);
-            translate(-8*z)linear_extrude(1)translate((-(cxy+5+wall )/ 2 ) * (x + y))square([cxy + 5+wall, cxy + 5+wall]);
+            translate(-5 * z)linear_extrude(1)translate((-(cxy + 5 + wall) / 2) * (x + y))square([cxy + 5 + wall, cxy +
+                5 + wall]);
+            translate(-11 * z)linear_extrude(1)translate((-(cxy + 5 + wall) / 2) * (x + y))square([cxy + 5 + wall, cxy +
+                5 + wall]);
 
         }
         translate(-z)buttoncutter();
-
+        #for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i+z*-6) rubber_ring(true);
     }
 }
 

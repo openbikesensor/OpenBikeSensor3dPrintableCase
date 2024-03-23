@@ -308,7 +308,7 @@ logo_part = "main"; // "main" or "highlight"
 // Lite handlebar button
 SMALLEST_POSSIBLE = .01;
 $stem_throw = 4;
-$cherry_bevel = false;
-$stem_inner_slop = 0.01;
+$cherry_bevel = true;
+$stem_inner_slop = 0.2;
 $rounded_cherry_stem_d = 5.5;
 extra_vertical = 0.2;
