@@ -2,7 +2,7 @@ include <../../variables.scad>
 use <../../lib/utils.scad>
 
 
-$fn = $preview ? 20 : 60;
+$fn = 60;
 z = [0, 0, 1];
 y = [0, 1, 0];
 x = [1, 0, 0];
@@ -36,22 +36,30 @@ module cable() {
         translate([4.5, 0, -12])rotate([90, 0, 0])cylinder(d = 4, h = 20);
     }
 }
+module hookbase()     linear_extrude(0.01) hull() {
+    for(i=[-1,1])translate([0,i*3,0])circle(d=2.5);
+}
+hull(){
+translate(0.5*[cxy+5,0,-17])rotate([0,90,0]) hookbase();
+    
+translate(0.5*[cxy+10,0,-17])rotate([0,45,0]) scale([sqrt(2),1,1])hookbase();
 
+}
 module button(detail = true) {
     difference() {
         union() {
             translate(z4 * z)cube(sizef, center = true);
-            if (detail) translate(-4 * z)cube([7, cxy + 16, 8], center = true);
+            *if (detail) translate(-4 * z)cube([7, cxy + 16, 8], center = true);
         }
 
         if (detail) {
             hole();
-            for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i) rubber_ring();
+            *for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i) rubber_ring();
             handlebar();
             cable();
         }
     }
-    if (detail)difference() {
+    *if (detail)difference() {
         translate(-0.1 * z)cube([7, cxy + 16, 0.2], center = true);
         hole();
     }
@@ -128,7 +136,7 @@ module buttontop(wall = 3) {
 
         }
         translate(-z)buttoncutter();
-        #for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i+z*-6) rubber_ring(true);
+        *for (i = [-1, 1]) translate((cxy + 8) / 2 * y * i+z*-6) rubber_ring(true);
     }
 }
 
