@@ -30,7 +30,7 @@ module StandardMountAdapterScrewHoles(head_depth=6, depth=100) {
   children();
 }
 
-module StandardMountAdapterBody() {
+module StandardMountAdapterBody(twoholes=true) {
   module _half_base_shape(width=StandardMountAdapter_width) {
     union () {
       // base
@@ -52,12 +52,12 @@ module StandardMountAdapterBody() {
     }
   }
 
-  module _body_half() {
+  module _body_half(hole=true) {
     difference() {
       _half_base_shape();
 
       // locking pin hole
-      translate([0, StandardMountAdapter_length/2, StandardMountAdapter_thickness])
+      if (hole) translate([0, StandardMountAdapter_length/2, StandardMountAdapter_thickness])
       rotate([-90, 0, 0])
       LockingPinHole();
     }
@@ -65,18 +65,18 @@ module StandardMountAdapterBody() {
 
 
   union () {
-    _body_half();
+    _body_half(hole=twoholes);
 
     rotate([0, 0, 180])
     _body_half();
   }
 }
 
-module StandardMountAdapter(channels=true) {
+module StandardMountAdapter(channels=true, screwholes=true, twoholes=true) {
   difference() {
-    StandardMountAdapterBody();
+    StandardMountAdapterBody(twoholes=twoholes);
 
-    translate([0, 0, StandardMountAdapter_thickness])
+    if(screwholes)translate([0, 0, StandardMountAdapter_thickness])
     StandardMountAdapterScrewHoles()
     ScrewHoleM3(depth=100, head_depth= StandardMountAdapter_thickness - (8 - m3_hex_nut_thickness)/2 );
 
