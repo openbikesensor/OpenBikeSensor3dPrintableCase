@@ -64,6 +64,7 @@ jobs:
         echo $VERSION > export/VERSION
         echo $VERSION > export/version.txt
         echo Building OBS Version: $VERSION
+        git config --global --add safe.directory /__w/OpenBikeSensor3dPrintableCase/OpenBikeSensor3dPrintableCase
 
     - name: Generate changelog
       id: changelog
