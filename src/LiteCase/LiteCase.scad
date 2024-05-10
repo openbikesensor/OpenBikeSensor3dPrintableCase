@@ -12,7 +12,7 @@ lite_w = 80 - 18;
 
 
 // 0,0,0: Mitte des Lite-PCB, auf der Seite mit dem OpenBIkeSensor logo, x: Richtung USB-Port, Z: Richtung Ultraschallsensoren
-$fn = 20;
+$fn = 120;
 
 Lite_PCB_x = 44;
 Lite_PCB_y = 29.2;
