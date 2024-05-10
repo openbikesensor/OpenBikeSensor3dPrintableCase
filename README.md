@@ -63,6 +63,11 @@ is meant to get you started, without having to check for compatibility and
 without cross referencing multiple parts of the documentation to build your own
 version of the device.
 
+
+
+> **Warning**
+> We only keep the rail shapes constant between versions. When printing make sure that your ``MainCase`` and ``MainCaseLid`` come from the same release. The same is true for ``DisplayCase`` Top and Bottom. The Idea is that OpenBikeSensors can be mounted on a different bike with older version mounts, but the current version lid won't necessarily fit onto last years case.
+
 To get a standard variant, print these parts:
 
 ```
