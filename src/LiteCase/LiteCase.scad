@@ -12,7 +12,7 @@ lite_w = 80 - 18;
 
 
 // 0,0,0: Mitte des Lite-PCB, auf der Seite mit dem OpenBIkeSensor logo, x: Richtung USB-Port, Z: Richtung Ultraschallsensoren
-$fn = 120;
+$fn = 20;
 
 Lite_PCB_x = 44;
 Lite_PCB_y = 29.2;
@@ -168,36 +168,58 @@ module LiteElectronics(onlyboards = false) {
   USB_hole();
 }
 
-difference() {
-  union() {
-    translate([- 7, 0, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, 90])
-      Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart = Lite_screwmount_top);
-    translate([lite_w - 7.3, 12, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, - 90])
-      Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart = Lite_screwmount_top);
-    translate([lite_w - 7.3, - 12, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, - 90])
-      Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart = Lite_screwmount_top);
-    translate([23.8, - 3.5, - 17.9])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false, twoholes = false);
-    difference() {
-      union() {
-        rotate([90, 90, 0])Box();
-        difference() {
-          translate(Lite_USB + [0, 0, - 3.5 - 1.6 + 1]) {
-            rounded_cube(28, 16.5, 6.5, 0, 1.5, center = true);
 
-            difference() {
-              #rounded_cube(30, 15, 6.5, 0, 1.5, center = true);
-              translate([8, - 20, - 5])cube([4, 60, 20]);
+module lite_case() {
+  difference() {
+    union() {
+      translate([-7, 0, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, 90])
+        Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart =
+        Lite_screwmount_top);
+      translate([lite_w - 7.3, 12, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, -90])
+        Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart =
+        Lite_screwmount_top);
+      translate([lite_w - 7.3, -12, Lite_ESP_position_z + 0.8 + 0.05 - Lite_screwmount_top])rotate([0, 0, -90])
+        Screwbump(size = 4, hole_diameter = 3.2, height = Lite_screwmount_height, bottom = true, toppart =
+        Lite_screwmount_top);
+      translate([23.8, -3.5, -17.9])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false,
+      twoholes = false);
+      difference() {
+        union() {
+          rotate([90, 90, 0])Box();
+          difference() {
+            translate(Lite_USB + [0, 0, -3.5 - 1.6 + 1]) {
+              rounded_cube(28, 16.5, 6.5, 0, 1.5, center = true);
+
+              difference() {
+                #rounded_cube(30, 15, 6.5, 0, 1.5, center = true);
+                translate([8, -20, -5])cube([4, 60, 20]);
+              }
             }
+            translate(Lite_USB + [10, 0, 0])cube([4, 20, 12.5], center = true);
           }
-          translate(Lite_USB + [10, 0, 0])cube([4, 20, 12.5], center = true);
         }
-      }
-      hull()    translate([23.8, - 3.5, - 18])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels = false);
+        hull()    translate([23.8, -3.5, -18])rotate([180, 0, 90])StandardMountAdapter(screwholes = false, channels =
+        false);
 
+      }
     }
+    LiteElectronics();
+    LidCutter();
   }
-  LiteElectronics();
-  LidCutter();
+
+}
+
+// split into conveniently printable parts and orient for printing.
+rotate([0,180,0])translate([-30,0,-Lite_ESP_position_z-0.8])difference() {
+  lite_case();
+
+  translate([40, 0, Lite_ESP_position_z + 0.8+49.95])cube([120, 90, 100], center = true);
+}
+
+rotate([0,180,0])translate([-30,40,Lite_ESP_position_z-lite_l/2+1.6])intersection() {
+  lite_case();
+
+  translate([40, 0, Lite_ESP_position_z + 0.8+49.95])cube([120, 90, 100], center = true);
 }
 
 if ($preview) translate([80, 0, 0])LiteElectronics();
