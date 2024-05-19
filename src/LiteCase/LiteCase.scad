@@ -215,6 +215,7 @@ rotate([0,180,0])translate([-30,0,-Lite_ESP_position_z-0.8])difference() {
 
   translate([40, 0, Lite_ESP_position_z + 0.8+49.95])cube([120, 90, 100], center = true);
 }
+for (i=[-8,8]) translate([-40,i,0])cylinder(r=4,h=0.2);
 
 rotate([0,180,0])translate([-30,40,Lite_ESP_position_z-lite_l/2+1.6])intersection() {
   lite_case();
