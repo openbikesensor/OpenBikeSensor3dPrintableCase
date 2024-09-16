@@ -80,7 +80,7 @@ module DisplayCaseBasicShape(height=20, magnet_depth) {
           translate([DisplayCase_outer_radius, -DisplayCase_outer_radius, 0])
           cylinder(r=DisplayCase_outer_radius, h=height);
 
-          translate([25, -DisplayCase_outer_radius, 0])
+          #translate([DisplayCase_outer_width-4, -DisplayCase_outer_radius, 0])
           cylinder(r=DisplayCase_outer_radius, h=height);
 
           translate([DisplayCase_outer_width - DisplayCase_outer_large_radius, -45, 0])
@@ -117,7 +117,7 @@ module DisplayCaseBasicShape(height=20, magnet_depth) {
 
 module DisplayCaseHolePattern() {
   translate([DisplayCase_outer_radius, -DisplayCase_outer_radius])children();
-  translate([25, -DisplayCase_outer_radius])children();
+  translate([DisplayCase_outer_width-4, -DisplayCase_outer_radius])children();
   translate([DisplayCase_outer_radius+2, -(DisplayCase_outer_radius+DisplayCaseTop_pcb_height+DisplayCaseTop_hole_diameter+1)])rotate([0, 0, 180])children();
 }
 
