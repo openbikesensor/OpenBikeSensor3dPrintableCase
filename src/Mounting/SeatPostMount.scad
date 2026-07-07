@@ -48,7 +48,7 @@ module SeatPostMountCutout(diameter, angle, length, cutaway) {
   translate([0, width/2, max(MountRail_total_height, length) + diameter/cos(angle)/2 + SeatPostMount_stop_plate_width/2 * sin(angle)]) {
     rotate([0, -90+angle, 0]) {
       union () {
-        cylinder(d=diameter, h=200, center=true, $fn=$fn*4);
+        rotate([0,0,1])cylinder(d=diameter, h=diameter+200, center=true, $fn=$fn*4);
 
         translate([0, -HUGE/2, -HUGE/2])
         cube(HUGE);
@@ -58,7 +58,7 @@ module SeatPostMountCutout(diameter, angle, length, cutaway) {
 
         for (i = [-1, 1]) {
           w = 9;
-          translate([0, 0, i*16-angle/4])
+          translate([0, 0, i*16-tan(angle)*diameter/2])
           difference() {
             cylinder(r=diameter/2+7, h=w, center=true);
             cylinder(r=diameter/2+3, h=w, center=true);
