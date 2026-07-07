@@ -38,8 +38,8 @@ class Element():
 
 
 class Loop(Element):
-    _startswith = re.compile("^\s+(?:outer|inner) loop$")
-    _endswith = re.compile("^\s+endloop$")
+    _startswith = re.compile(r"^\s+(?:outer|inner) loop$")
+    _endswith = re.compile(r"^\s+endloop$")
     _footer = "endloop"
 
     def parse(self, line):
@@ -50,14 +50,14 @@ class Loop(Element):
 
 
 class Facet(Element):
-    _startswith = re.compile("^\s+facet\s+(.*)$")
-    _endswith = re.compile("^\s+endfacet$")
+    _startswith = re.compile(r"^\s+facet\s+(.*)$")
+    _endswith = re.compile(r"^\s+endfacet$")
     _contains = (Loop,)
 
 
 class Model(Element):
-    _startswith = re.compile("^\s*solid\s+(.*)$")
-    _endswith = re.compile("^\s*endsolid\s+(.*)$")
+    _startswith = re.compile(r"^\s*solid\s+(.*)$")
+    _endswith = re.compile(r"^\s*endsolid\s+(.*)$")
     _contains = (Facet,)
 
 
