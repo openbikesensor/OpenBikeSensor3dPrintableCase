@@ -219,6 +219,8 @@ DisplayCaseTop_window_offset = 2; // to bottom
 DisplayCaseTop_window_radius = 1.5;
 DisplayCaseTop_pcb_width = 26.5;
 DisplayCaseTop_pcb_height = 27.2;
+DisplayCaseTop_large_pcb_width = 28.0; // large pcb variant (DisplayCaseTopLarge)
+DisplayCaseTop_large_pcb_height = 28.0; // large pcb variant (DisplayCaseTopLarge)
 DisplayCaseTop_pcb_standoff = 1.7;
 DisplayCaseTop_hole_diameter = 3.3;
 DisplayCaseTop_cable_clearance = 12.5;
@@ -227,6 +229,7 @@ DisplayCaseTop_button_nut_diameter = 16.3;
 DisplayCaseTop_button_outside_diameter = 18;
 DisplayCaseTop_button_outside_depth = 3;
 DisplayCaseTop_pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2, DisplayCaseTop_height];
+DisplayCaseTop_large_pcb_origin = [-DisplayCase_outer_width/2, -DisplayCase_outer_radius-DisplayCaseTop_hole_diameter/2-DisplayCaseTop_pcb_height/2 - 0.4, DisplayCaseTop_height]; // large pcb variant (DisplayCaseTopLarge
 
 DisplayCaseBottom_height = 11;
 DisplayCaseBottom_magnet_depth = 10.4 - DisplayCaseTop_magnet_depth;
